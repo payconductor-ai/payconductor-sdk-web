@@ -222,23 +222,32 @@
       );
     };
     window.addEventListener("message", eventHandler);
-    const setupIframeLoadListener = () => {
+    const trySendConfig = () => {
       const el = getIframe();
       if (!el) return false;
-      el.addEventListener("load", () => sendConfigToIframe(), {
-        once: true,
-      });
-      return true;
+      try {
+        const readyState =
+          (el as any).contentDocument?.readyState ??
+          (el as any).contentWindow?.document?.readyState;
+        if (readyState === "complete") {
+          sendConfigToIframe();
+          return true;
+        }
+      } catch {}
+      return false;
     };
-    if (!setupIframeLoadListener()) {
-      const iframeObserver = new MutationObserver(() => {
-        if (setupIframeLoadListener()) iframeObserver.disconnect();
-      });
-      iframeObserver.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
-    }
+    const pollForIframe = () => {
+      if (trySendConfig()) return;
+      const el = getIframe();
+      if (el) {
+        el.addEventListener("load", () => sendConfigToIframe(), {
+          once: true,
+        });
+        return;
+      }
+      setTimeout(pollForIframe, 50);
+    };
+    pollForIframe();
   });
 </script>
 

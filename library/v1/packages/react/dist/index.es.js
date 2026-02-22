@@ -1,22 +1,22 @@
 import { jsx as D } from "react/jsx-runtime";
-import { useState as T, useEffect as U, useRef as G } from "react";
-const S = "https://iframe.payconductor.ai/v1", b = "http://localhost:5175/v1", H = 3e4, q = "600px";
-var R = /* @__PURE__ */ ((e) => (e.Init = "Init", e.Config = "Config", e.Update = "Update", e.ConfirmPayment = "ConfirmPayment", e.Validate = "Validate", e.Reset = "Reset", e))(R || {}), w = /* @__PURE__ */ ((e) => (e.Ready = "Ready", e.Error = "Error", e.PaymentComplete = "PaymentComplete", e.PaymentFailed = "PaymentFailed", e.PaymentPending = "PaymentPending", e.ValidationError = "ValidationError", e.PaymentMethodSelected = "PaymentMethodSelected", e))(w || {});
-const B = typeof window < "u" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && !window.location.search.includes("production"), W = (B ? b : S) + "?" + window.location.search, k = [b, S], j = q, Q = H, l = {
-  INIT: R.Init,
-  CONFIG: R.Config,
-  UPDATE: R.Update,
-  CONFIRM_PAYMENT: R.ConfirmPayment,
-  VALIDATE: R.Validate,
-  RESET: R.Reset,
-  READY: w.Ready,
-  ERROR: w.Error,
-  PAYMENT_COMPLETE: w.PaymentComplete,
-  PAYMENT_FAILED: w.PaymentFailed,
-  PAYMENT_PENDING: w.PaymentPending,
-  VALIDATION_ERROR: w.ValidationError,
-  PAYMENT_METHOD_SELECTED: w.PaymentMethodSelected
-}, ne = {
+import { useState as M, useEffect as U, useRef as H } from "react";
+const v = "https://iframe.payconductor.ai/v1", F = "http://localhost:5175/v1", q = 3e4, W = "600px";
+var T = /* @__PURE__ */ ((e) => (e.Init = "Init", e.Config = "Config", e.Update = "Update", e.ConfirmPayment = "ConfirmPayment", e.Validate = "Validate", e.Reset = "Reset", e))(T || {}), h = /* @__PURE__ */ ((e) => (e.Ready = "Ready", e.Error = "Error", e.PaymentComplete = "PaymentComplete", e.PaymentFailed = "PaymentFailed", e.PaymentPending = "PaymentPending", e.ValidationError = "ValidationError", e.PaymentMethodSelected = "PaymentMethodSelected", e))(h || {});
+const B = typeof window < "u" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && !window.location.search.includes("production"), k = B ? F : v, j = [F, v], Q = W, $ = q, l = {
+  INIT: T.Init,
+  CONFIG: T.Config,
+  UPDATE: T.Update,
+  CONFIRM_PAYMENT: T.ConfirmPayment,
+  VALIDATE: T.Validate,
+  RESET: T.Reset,
+  READY: h.Ready,
+  ERROR: h.Error,
+  PAYMENT_COMPLETE: h.PaymentComplete,
+  PAYMENT_FAILED: h.PaymentFailed,
+  PAYMENT_PENDING: h.PaymentPending,
+  VALIDATION_ERROR: h.ValidationError,
+  PAYMENT_METHOD_SELECTED: h.PaymentMethodSelected
+}, oe = {
   INVALID_CLIENT: "InvalidClient",
   INVALID_TOKEN: "InvalidToken",
   NETWORK_ERROR: "NetworkError",
@@ -25,13 +25,13 @@ const B = typeof window < "u" && (window.location.hostname === "localhost" || wi
   VALIDATION_ERROR: "ValidationError",
   TIMEOUT: "Timeout"
 };
-function $(e) {
+function z(e) {
   const r = new URLSearchParams({
     publicKey: e.publicKey
   });
-  return `${W}?${r.toString()}`;
+  return `${k}?${r.toString()}`;
 }
-function z() {
+function g() {
   return crypto.randomUUID();
 }
 function J(e, r) {
@@ -46,7 +46,7 @@ function J(e, r) {
 function L() {
   return /* @__PURE__ */ new Map();
 }
-function M(e, r, t, n) {
+function A(e, r, t, n) {
   return new Promise((i, u) => {
     if (!e || !("contentWindow" in e)) {
       u(new Error("Iframe not defined"));
@@ -60,51 +60,51 @@ function M(e, r, t, n) {
       u(new Error("Pending requests not initialized"));
       return;
     }
-    const f = z();
-    r.set(f, {
+    const s = g();
+    r.set(s, {
       resolve: i,
       reject: u
     }), e.contentWindow.postMessage({
       type: t,
       data: n,
-      requestId: f
+      requestId: s
     }, "*"), setTimeout(() => {
-      r != null && r.has(f) && (r.delete(f), u(new Error("Request timeout")));
-    }, Q);
+      r != null && r.has(s) && (r.delete(s), u(new Error("Request timeout")));
+    }, $);
   });
 }
-function F(e, r, t) {
-  return M(e, r, l.CONFIRM_PAYMENT, {
+function b(e, r, t) {
+  return A(e, r, l.CONFIRM_PAYMENT, {
     orderId: t.orderId
   });
 }
 function X(e, r, t) {
-  return M(e, r, l.VALIDATE, t);
+  return A(e, r, l.VALIDATE, t);
 }
 function Z(e, r) {
-  return M(e, r, l.RESET);
-}
-function g(e, r, t) {
-  return M(e, r, l.CONFIG, t);
+  return A(e, r, l.RESET);
 }
 function x(e, r, t) {
-  return M(e, r, l.INIT, t);
+  return A(e, r, l.CONFIG, t);
 }
-function p(e, r, t, n, i, u, f, P, m, I) {
-  if (!J(e.origin, k))
+function p(e, r, t) {
+  return A(e, r, l.INIT, t);
+}
+function ee(e, r, t, n, i, u, s, R, m, I) {
+  if (!J(e.origin, j))
     return;
   const C = e.data, {
-    requestId: s,
+    requestId: f,
     type: E,
     data: d,
     error: y
   } = C;
-  if (s && (r != null && r.has(s))) {
+  if (f && (r != null && r.has(f))) {
     const {
-      resolve: h,
-      reject: A
-    } = r.get(s);
-    r.delete(s), y ? A(new Error(String(y.message))) : h(d);
+      resolve: w,
+      reject: _
+    } = r.get(f);
+    r.delete(f), y ? _(new Error(String(y.message))) : w(d);
     return;
   }
   if (E === l.READY) {
@@ -116,11 +116,11 @@ function p(e, r, t, n, i, u, f, P, m, I) {
     return;
   }
   if (E === l.PAYMENT_COMPLETE) {
-    d && typeof d == "object" && "status" in d && (f == null || f(d));
+    d && typeof d == "object" && "status" in d && (s == null || s(d));
     return;
   }
   if (E === l.PAYMENT_FAILED) {
-    d && typeof d == "object" && "status" in d && (P == null || P(d));
+    d && typeof d == "object" && "status" in d && (R == null || R(d));
     return;
   }
   if (E === l.PAYMENT_PENDING) {
@@ -132,27 +132,27 @@ function p(e, r, t, n, i, u, f, P, m, I) {
     return;
   }
 }
-function re(e) {
-  const [r, t] = T(
+function ae(e) {
+  const [r, t] = M(
     () => !1
-  ), [n, i] = T(
+  ), [n, i] = M(
     () => !1
-  ), [u, f] = T(() => null), [P, m] = T(
+  ), [u, s] = M(() => null), [R, m] = M(
     () => ""
-  ), [I, C] = T(() => null);
+  ), [I, C] = M(() => null);
   return U(() => {
-    const s = (...o) => {
+    const f = (...o) => {
       e.debug && console.log("[PayConductor]", ...o);
-    }, E = $({
+    }, E = z({
       publicKey: e.publicKey
     });
     m(E), t(!0);
     const d = L();
     let y = !1;
-    s("init", e.publicKey), s("iframeUrl", E);
-    const h = () => {
-      var _, a;
-      const o = (a = (_ = window.PayConductor) == null ? void 0 : _.frame) == null ? void 0 : a.iframe;
+    f("init", e.publicKey), f("iframeUrl", E);
+    const w = () => {
+      var P, a;
+      const o = (a = (P = window.PayConductor) == null ? void 0 : P.frame) == null ? void 0 : a.iframe;
       if (o) {
         if (o instanceof HTMLIFrameElement) return o;
         if (typeof o == "object" && o !== null) {
@@ -164,7 +164,7 @@ function re(e) {
       return document.querySelector(
         ".payconductor-element iframe"
       ) ?? void 0;
-    }, A = {
+    }, _ = {
       get iframe() {
         return document.querySelector(
           ".payconductor-element iframe"
@@ -182,37 +182,37 @@ function re(e) {
       paymentMethods: e.paymentMethods,
       defaultPaymentMethod: e.defaultPaymentMethod
     }, Y = {
-      confirmPayment: (o) => (s("→ CONFIRM_PAYMENT", {
+      confirmPayment: (o) => (f("→ CONFIRM_PAYMENT", {
         orderId: o.orderId
-      }), F(h(), d, o)),
-      validate: (o) => (s("→ VALIDATE", o), X(h(), d, o)),
-      reset: () => (s("→ RESET"), Z(h(), d)),
+      }), b(w(), d, o)),
+      validate: (o) => (f("→ VALIDATE", o), X(w(), d, o)),
+      reset: () => (f("→ RESET"), Z(w(), d)),
       getSelectedPaymentMethod: () => I
     };
     window.PayConductor = {
-      frame: A,
+      frame: _,
       config: V,
       api: Y,
       selectedPaymentMethod: I
-    }, s("registered"), window.dispatchEvent(
+    }, f("registered"), window.dispatchEvent(
       new CustomEvent("payconductor:registered", {
         detail: window.PayConductor
       })
     );
-    const O = async () => {
+    const S = async () => {
       if (!y) {
-        const o = h();
+        const o = w();
         if (!o) {
-          s("→ CONFIG skipped: iframe not found");
+          f("→ CONFIG skipped: iframe not found");
           return;
         }
-        y = !0, s("→ CONFIG", {
+        y = !0, f("→ CONFIG", {
           theme: e.theme,
           locale: e.locale,
           paymentMethods: e.paymentMethods,
           defaultPaymentMethod: e.defaultPaymentMethod,
           showPaymentButtons: e.showPaymentButtons
-        }), g(o, d, {
+        }), x(o, d, {
           theme: e.theme,
           locale: e.locale,
           paymentMethods: e.paymentMethods,
@@ -222,17 +222,17 @@ function re(e) {
         });
       }
     }, K = (o) => {
-      var _;
-      (_ = o.data) != null && _.type && s("←", o.data.type, o.data.data ?? ""), p(
+      var P;
+      (P = o.data) != null && P.type && f("←", o.data.type, o.data.data ?? ""), ee(
         o,
         d,
         (a) => {
           var c;
-          i(a), A.isReady = a, (c = window.PayConductor) != null && c.frame && (window.PayConductor.frame.isReady = a), a && O();
+          i(a), _.isReady = a, (c = window.PayConductor) != null && c.frame && (window.PayConductor.frame.isReady = a), a && S();
         },
         (a) => {
           var c;
-          f(a), A.error = a, (c = window.PayConductor) != null && c.frame && (window.PayConductor.frame.error = a);
+          s(a), _.error = a, (c = window.PayConductor) != null && c.frame && (window.PayConductor.frame.error = a);
         },
         () => {
           var a;
@@ -261,21 +261,28 @@ function re(e) {
       );
     };
     window.addEventListener("message", K);
-    const v = () => {
-      const o = h();
-      return o ? (o.addEventListener("load", () => O(), {
-        once: !0
-      }), !0) : !1;
+    const G = () => {
+      var P, a, c;
+      const o = w();
+      if (!o) return !1;
+      try {
+        if ((((P = o.contentDocument) == null ? void 0 : P.readyState) ?? ((c = (a = o.contentWindow) == null ? void 0 : a.document) == null ? void 0 : c.readyState)) === "complete")
+          return S(), !0;
+      } catch {
+      }
+      return !1;
+    }, O = () => {
+      if (G()) return;
+      const o = w();
+      if (o) {
+        o.addEventListener("load", () => S(), {
+          once: !0
+        });
+        return;
+      }
+      setTimeout(O, 50);
     };
-    if (!v()) {
-      const o = new MutationObserver(() => {
-        v() && o.disconnect();
-      });
-      o.observe(document.body, {
-        childList: !0,
-        subtree: !0
-      });
-    }
+    O();
   }, []), /* @__PURE__ */ D(
     "div",
     {
@@ -288,17 +295,17 @@ function re(e) {
     }
   );
 }
-function oe(e) {
-  const r = G(null), [t, n] = T(() => ""), [i, u] = T(() => !1);
+function ie(e) {
+  const r = H(null), [t, n] = M(() => ""), [i, u] = M(() => !1);
   return U(() => {
-    const f = (m) => {
+    const s = (m) => {
       m != null && m.frame && (n(m.frame.iframeUrl || ""), u(!0));
-    }, P = typeof window < "u" ? window.PayConductor : null;
-    if (P)
-      f(P);
+    }, R = typeof window < "u" ? window.PayConductor : null;
+    if (R)
+      s(R);
     else {
       const m = (I) => {
-        f(I.detail), window.removeEventListener("payconductor:registered", m);
+        s(I.detail), window.removeEventListener("payconductor:registered", m);
       };
       window.addEventListener("payconductor:registered", m);
     }
@@ -318,7 +325,7 @@ function oe(e) {
           src: t,
           style: {
             width: "100%",
-            height: e.height || j,
+            height: e.height || Q,
             border: "none"
           }
         }
@@ -326,7 +333,7 @@ function oe(e) {
     }
   );
 }
-function ae() {
+function de() {
   const e = typeof window < "u" ? window.PayConductor : null, r = e != null && e.config ? {
     publicKey: e.config.publicKey,
     orderId: e.config.orderId,
@@ -364,7 +371,7 @@ function N(e) {
   }
   return document.querySelector(".payconductor-element iframe") ?? null;
 }
-function ie() {
+function ce() {
   const e = () => typeof window < "u" ? window.PayConductor : null, r = (t, n) => {
     const i = e();
     if (!i) return;
@@ -377,13 +384,13 @@ function ie() {
   return {
     init: async (t) => {
       const n = N(e()), i = L();
-      return x(n || void 0, i, t);
+      return p(n || void 0, i, t);
     },
     confirmPayment: async (t) => {
       const n = N(e()), i = L();
       if (!t.orderId)
         throw new Error("Order ID is required");
-      return F(n || void 0, i, t);
+      return b(n || void 0, i, t);
     },
     validate: (t) => {
       const n = e();
@@ -425,7 +432,7 @@ function ie() {
     submit: async () => {
       const t = N(e()), n = L();
       try {
-        return await M(t || void 0, n, l.CONFIRM_PAYMENT, {}), {
+        return await A(t || void 0, n, l.CONFIRM_PAYMENT, {}), {
           paymentMethod: void 0
         };
       } catch (i) {
@@ -441,19 +448,19 @@ function ie() {
   };
 }
 export {
-  k as ALLOWED_ORIGINS,
-  ne as ERROR_CODES,
-  W as IFRAME_BASE_URL,
-  j as IFRAME_DEFAULT_HEIGHT_VALUE,
+  j as ALLOWED_ORIGINS,
+  oe as ERROR_CODES,
+  k as IFRAME_BASE_URL,
+  Q as IFRAME_DEFAULT_HEIGHT_VALUE,
   l as POST_MESSAGES,
-  re as PayConductor,
-  oe as PayConductorCheckoutElement,
-  Q as REQUEST_TIMEOUT,
-  $ as buildIframeUrl,
-  re as default,
-  z as generateRequestId,
+  ae as PayConductor,
+  ie as PayConductorCheckoutElement,
+  $ as REQUEST_TIMEOUT,
+  z as buildIframeUrl,
+  ae as default,
+  g as generateRequestId,
   J as isValidOrigin,
-  ae as usePayConductor,
-  ie as usePayconductorElement
+  de as usePayConductor,
+  ce as usePayconductorElement
 };
 //# sourceMappingURL=index.es.js.map

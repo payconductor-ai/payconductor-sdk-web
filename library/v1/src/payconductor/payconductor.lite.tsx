@@ -57,8 +57,8 @@ export default function PayConductor(props: PayConductorEmbedProps) {
 			if (ref) {
 				if (ref instanceof HTMLIFrameElement) return ref;
 				if (typeof ref === "object" && ref !== null) {
-					if ("current" in ref) return (ref as any).current ?? undefined;
-					if ("value" in ref) return (ref as any).value ?? undefined;
+					if ("current" in ref) return ref.current ?? undefined;
+					if ("value" in ref) return ref.value ?? undefined;
 				}
 				return ref as HTMLIFrameElement;
 			}
@@ -169,19 +169,30 @@ export default function PayConductor(props: PayConductorEmbedProps) {
 
 		window.addEventListener("message", eventHandler);
 
-		const setupIframeLoadListener = () => {
+		const trySendConfig = () => {
 			const el = getIframe();
 			if (!el) return false;
-			el.addEventListener("load", () => sendConfigToIframe(), { once: true });
-			return true;
+			try {
+				const readyState = el.contentDocument?.readyState ?? el.contentWindow?.document?.readyState;
+				if (readyState === "complete") {
+					sendConfigToIframe();
+					return true;
+				}
+			} catch {}
+			return false;
 		};
 
-		if (!setupIframeLoadListener()) {
-			const iframeObserver = new MutationObserver(() => {
-				if (setupIframeLoadListener()) iframeObserver.disconnect();
-			});
-			iframeObserver.observe(document.body, { childList: true, subtree: true });
-		}
+		const pollForIframe = () => {
+			if (trySendConfig()) return;
+			const el = getIframe();
+			if (el) {
+				el.addEventListener("load", () => sendConfigToIframe(), { once: true });
+				return;
+			}
+			setTimeout(pollForIframe, 50);
+		};
+
+		pollForIframe();
 	});
 
 	return (
