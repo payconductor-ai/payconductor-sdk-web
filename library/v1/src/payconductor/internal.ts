@@ -133,7 +133,7 @@ export function handleMessageEvent(
 	const payload: MessagePayload = event.data;
 	const { requestId, type, data, error } = payload;
 
-	if (requestId && pendingMap?.has(requestId)) {
+	if (requestId && pendingMap && pendingMap.has(requestId)) {
 		const { resolve, reject } = pendingMap.get(requestId)!;
 		pendingMap.delete(requestId);
 
@@ -142,12 +142,6 @@ export function handleMessageEvent(
 		} else {
 			resolve(data);
 		}
-		return;
-	}
-
-	if (type === POST_MESSAGES.READY) {
-		setIsReady(true);
-		onReady?.();
 		return;
 	}
 

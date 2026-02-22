@@ -57,8 +57,9 @@ export default function PayConductor(props: PayConductorEmbedProps) {
 			if (ref) {
 				if (ref instanceof HTMLIFrameElement) return ref;
 				if (typeof ref === "object" && ref !== null) {
-					if ("current" in ref) return ref.current ?? undefined;
-					if ("value" in ref) return ref.value ?? undefined;
+					const obj = ref as Record<string, unknown>;
+					if ("current" in obj && obj.current instanceof HTMLIFrameElement) return obj.current;
+					if ("value" in obj && obj.value instanceof HTMLIFrameElement) return obj.value;
 				}
 				return ref as HTMLIFrameElement;
 			}
