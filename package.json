@@ -1,5 +1,5 @@
 {
-  "name": "@payconductor/sdk-web",
+  "name": "@payconductor/sdk-web-repo",
   "version": "1.0.5",
   "scripts": {
     "sync": "bun scripts/sdk.ts"
