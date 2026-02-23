@@ -1,5 +1,6 @@
 {
   "name": "@payconductor/sdk-web-repo",
+  "private": true,
   "version": "1.0.5",
   "scripts": {
     "sync": "bun scripts/sdk.ts"

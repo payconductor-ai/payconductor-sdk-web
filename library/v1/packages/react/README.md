@@ -1,8 +1,8 @@
-# @payconductor-sdk-web/library-react
+# @payconductor/react
 
 React SDK for [PayConductor](https://payconductor.ai) payment integration.
 
-[![npm version](https://img.shields.io/npm/v/@payconductor-sdk-web/library-react.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor-sdk-web/library-react)
+[![npm version](https://img.shields.io/npm/v/@payconductor/react.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor/react)
 
 ## Requirements
 
@@ -11,13 +11,13 @@ Minimum React version: **v16.8**.
 ## Installation
 
 ```bash
-npm install @payconductor-sdk-web/library-react payconductor-sdk
+npm install @payconductor/react payconductor-sdk
 # or
-yarn add @payconductor-sdk-web/library-react payconductor-sdk
+yarn add @payconductor/react payconductor-sdk
 # or
-pnpm add @payconductor-sdk-web/library-react payconductor-sdk
+pnpm add @payconductor/react payconductor-sdk
 # or
-bun add @payconductor-sdk-web/library-react payconductor-sdk
+bun add @payconductor/react payconductor-sdk
 ```
 
 ## Quick Start
@@ -30,7 +30,7 @@ import {
   usePayconductorElement,
   type PaymentMethod,
   type PaymentResult,
-} from '@payconductor-sdk-web/library-react';
+} from '@payconductor/react';
 import {
   AvailablePaymentMethods,
   Configuration,
@@ -221,7 +221,7 @@ import type {
   PicPayPaymentData,
   CardPaymentData,
   BillingDetails,
-} from '@payconductor-sdk-web/library-react';
+} from '@payconductor/react';
 ```
 
 ## Payment Flow

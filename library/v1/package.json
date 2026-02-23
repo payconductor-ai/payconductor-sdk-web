@@ -1,5 +1,6 @@
 {
   "name": "@payconductor/sdk-web-v1",
+  "private": true,
   "scripts": {
     "start": "watch \"npm run build\" ./src",
     "clean:src": "node scripts/clean-src.js",

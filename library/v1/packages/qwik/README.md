@@ -1,8 +1,8 @@
-# @payconductor-sdk-web/library-qwik
+# @payconductor/qwik
 
 Qwik SDK for [PayConductor](https://payconductor.ai) payment integration.
 
-[![npm version](https://img.shields.io/npm/v/@payconductor-sdk-web/library-qwik.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor-sdk-web/library-qwik)
+[![npm version](https://img.shields.io/npm/v/@payconductor/qwik.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor/qwik)
 
 ## Requirements
 
@@ -11,13 +11,13 @@ Minimum Qwik version: **v1**.
 ## Installation
 
 ```bash
-npm install @payconductor-sdk-web/library-qwik payconductor-sdk
+npm install @payconductor/qwik payconductor-sdk
 # or
-yarn add @payconductor-sdk-web/library-qwik payconductor-sdk
+yarn add @payconductor/qwik payconductor-sdk
 # or
-pnpm add @payconductor-sdk-web/library-qwik payconductor-sdk
+pnpm add @payconductor/qwik payconductor-sdk
 # or
-bun add @payconductor-sdk-web/library-qwik payconductor-sdk
+bun add @payconductor/qwik payconductor-sdk
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ import {
   PayConductorCheckoutElement,
   usePayConductor,
   usePayconductorElement,
-} from '@payconductor-sdk-web/library-qwik';
+} from '@payconductor/qwik';
 import {
   AvailablePaymentMethods,
   Configuration,
@@ -219,7 +219,7 @@ import type {
   PayConductorTheme,
   PayConductorConfig,
   PaymentConfirmData,
-} from '@payconductor-sdk-web/library-qwik';
+} from '@payconductor/qwik';
 ```
 
 ## License

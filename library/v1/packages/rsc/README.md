@@ -1,8 +1,8 @@
-# @payconductor-sdk-web/library-rsc
+# @payconductor/rsc
 
 React Server Components (RSC) SDK for [PayConductor](https://payconductor.ai) payment integration. Optimized for the Next.js App Router.
 
-[![npm version](https://img.shields.io/npm/v/@payconductor-sdk-web/library-rsc.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor-sdk-web/library-rsc)
+[![npm version](https://img.shields.io/npm/v/@payconductor/rsc.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor/rsc)
 
 ## Requirements
 
@@ -12,13 +12,13 @@ React Server Components (RSC) SDK for [PayConductor](https://payconductor.ai) pa
 ## Installation
 
 ```bash
-npm install @payconductor-sdk-web/library-rsc payconductor-sdk
+npm install @payconductor/rsc payconductor-sdk
 # or
-yarn add @payconductor-sdk-web/library-rsc payconductor-sdk
+yarn add @payconductor/rsc payconductor-sdk
 # or
-pnpm add @payconductor-sdk-web/library-rsc payconductor-sdk
+pnpm add @payconductor/rsc payconductor-sdk
 # or
-bun add @payconductor-sdk-web/library-rsc payconductor-sdk
+bun add @payconductor/rsc payconductor-sdk
 ```
 
 ## Quick Start
@@ -83,7 +83,7 @@ import {
   usePayconductorElement,
   type PaymentMethod,
   type PaymentResult,
-} from '@payconductor-sdk-web/library-rsc';
+} from '@payconductor/rsc';
 import { useState } from 'react';
 import { createDraftOrder } from '@/app/actions/orders';
 
@@ -137,7 +137,7 @@ export function CheckoutForm() {
 
 ```tsx
 // app/checkout/page.tsx
-import { PayConductor } from '@payconductor-sdk-web/library-rsc';
+import { PayConductor } from '@payconductor/rsc';
 import { CheckoutForm } from '@/components/CheckoutForm';
 
 export default function CheckoutPage() {
@@ -255,10 +255,10 @@ import type {
   PicPayPaymentData,
   CardPaymentData,
   BillingDetails,
-} from '@payconductor-sdk-web/library-rsc';
+} from '@payconductor/rsc';
 ```
 
-## Differences from `@payconductor-sdk-web/library-react`
+## Differences from `@payconductor/react`
 
 | | `library-react` | `library-rsc` |
 |--|--|--|
