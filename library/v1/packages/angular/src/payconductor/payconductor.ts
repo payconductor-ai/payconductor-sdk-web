@@ -102,8 +102,11 @@ export default class PayConductor {
         if (ref) {
           if (ref instanceof HTMLIFrameElement) return ref;
           if (typeof ref === "object" && ref !== null) {
-            if ("current" in ref) return (ref as any).current ?? undefined;
-            if ("value" in ref) return (ref as any).value ?? undefined;
+            const obj = ref as Record<string, unknown>;
+            if ("current" in obj && obj.current instanceof HTMLIFrameElement)
+              return obj.current;
+            if ("value" in obj && obj.value instanceof HTMLIFrameElement)
+              return obj.value;
           }
           return ref as HTMLIFrameElement;
         }
@@ -236,8 +239,8 @@ export default class PayConductor {
         if (!el) return false;
         try {
           const readyState =
-            (el as any).contentDocument?.readyState ??
-            (el as any).contentWindow?.document?.readyState;
+            el.contentDocument?.readyState ??
+            el.contentWindow?.document?.readyState;
           if (readyState === "complete") {
             sendConfigToIframe();
             return true;

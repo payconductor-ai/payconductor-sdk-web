@@ -126,12 +126,23 @@ export function handleMessageEvent(
 	onPaymentPending?: (data: PaymentResult) => void,
 	onPaymentMethodSelected?: (method: PaymentMethod) => void,
 ) {
-	if (!isValidOrigin(event.origin, ALLOWED_ORIGINS)) {
+	const payload: MessagePayload = event.data;
+	const { requestId, type, data, error } = payload;
+
+	if (type === POST_MESSAGES.READY) {
+		setIsReady(true);
+		onReady?.();
+		if (requestId && pendingMap?.has(requestId)) {
+			const { resolve } = pendingMap.get(requestId)!;
+			pendingMap.delete(requestId);
+			resolve(data);
+		}
 		return;
 	}
 
-	const payload: MessagePayload = event.data;
-	const { requestId, type, data, error } = payload;
+	if (!isValidOrigin(event.origin, ALLOWED_ORIGINS)) {
+		return;
+	}
 
 	if (requestId && pendingMap && pendingMap.has(requestId)) {
 		const { resolve, reject } = pendingMap.get(requestId)!;

@@ -75,7 +75,7 @@ export function handleMessageEvent(event: MessageEvent, pendingMap: Map<string, 
     data,
     error
   } = payload;
-  if (requestId && pendingMap?.has(requestId)) {
+  if (requestId && pendingMap && pendingMap.has(requestId)) {
     const {
       resolve,
       reject
@@ -86,11 +86,6 @@ export function handleMessageEvent(event: MessageEvent, pendingMap: Map<string, 
     } else {
       resolve(data);
     }
-    return;
-  }
-  if (type === POST_MESSAGES.READY) {
-    setIsReady(true);
-    onReady?.();
     return;
   }
   if (type === POST_MESSAGES.ERROR) {
