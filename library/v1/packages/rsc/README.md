@@ -12,18 +12,18 @@ React Server Components (RSC) SDK for [PayConductor](https://payconductor.ai) pa
 ## Installation
 
 ```bash
-npm install @payconductor/rsc payconductor-sdk
+npm install @payconductor/rsc @payconductor/sdk
 # or
-yarn add @payconductor/rsc payconductor-sdk
+yarn add @payconductor/rsc @payconductor/sdk
 # or
-pnpm add @payconductor/rsc payconductor-sdk
+pnpm add @payconductor/rsc @payconductor/sdk
 # or
-bun add @payconductor/rsc payconductor-sdk
+bun add @payconductor/rsc @payconductor/sdk
 ```
 
 ## Quick Start
 
-### 1. Create a Server Action (payconductor-sdk runs server-side)
+### 1. Create a Server Action (@payconductor/sdk runs server-side)
 
 ```ts
 // app/actions/orders.ts
@@ -35,7 +35,7 @@ import {
   DocumentType,
   OrderApi,
   type OrderCreateRequest,
-} from 'payconductor-sdk';
+} from '@payconductor/sdk';
 
 const config = new Configuration({
   username: process.env.PAYCONDUCTOR_CLIENT_ID!,
@@ -100,7 +100,7 @@ export function CheckoutForm() {
     setErrorMessage(null);
 
     try {
-      // 1. Call Server Action — payconductor-sdk runs server-side, credentials never exposed
+      // 1. Call Server Action — @payconductor/sdk runs server-side, credentials never exposed
       const orderId = await createDraftOrder();
 
       // 2. Confirm payment with the obtained orderId
@@ -284,7 +284,7 @@ import type {
    └─ getSelectedPaymentMethod() returns the chosen method
 
 5. User clicks "Checkout" (your button, outside the iframe)
-   └─ Server Action creates Draft order via payconductor-sdk → returns orderId
+   └─ Server Action creates Draft order via @payconductor/sdk → returns orderId
    └─ confirmPayment({ orderId })
    └─ iframe collects form data → POST /orders/:id/confirm
 

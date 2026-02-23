@@ -1,8 +1,8 @@
-# @payconductor-sdk-web/library-angular
+# @payconductor/angular
 
 Angular SDK for [PayConductor](https://payconductor.ai) payment integration.
 
-[![npm version](https://img.shields.io/npm/v/@payconductor-sdk-web/library-angular.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor-sdk-web/library-angular)
+[![npm version](https://img.shields.io/npm/v/@payconductor/angular.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor/angular)
 
 ## Requirements
 
@@ -11,13 +11,13 @@ Minimum Angular version: **v14**.
 ## Installation
 
 ```bash
-npm install @payconductor-sdk-web/library-angular payconductor-sdk
+npm install @payconductor/angular @payconductor/sdk
 # or
-yarn add @payconductor-sdk-web/library-angular payconductor-sdk
+yarn add @payconductor/angular @payconductor/sdk
 # or
-pnpm add @payconductor-sdk-web/library-angular payconductor-sdk
+pnpm add @payconductor/angular @payconductor/sdk
 # or
-bun add @payconductor-sdk-web/library-angular payconductor-sdk
+bun add @payconductor/angular @payconductor/sdk
 ```
 
 ## Quick Start
@@ -29,14 +29,14 @@ import {
   PayConductorModule,
   type PaymentMethod,
   type PaymentResult,
-} from '@payconductor-sdk-web/library-angular';
+} from '@payconductor/angular';
 import {
   AvailablePaymentMethods,
   Configuration,
   DocumentType,
   OrderApi,
   type OrderCreateRequest,
-} from 'payconductor-sdk';
+} from '@payconductor/sdk';
 
 @Component({
   selector: 'app-checkout',
@@ -89,7 +89,7 @@ export class CheckoutComponent {
     this.errorMessage = null;
 
     try {
-      // 1. Create the Draft order via payconductor-sdk to get the orderId
+      // 1. Create the Draft order via @payconductor/sdk to get the orderId
       const orderRequest: OrderCreateRequest = {
         chargeAmount: 100.00,
         clientIp: '0.0.0.0',
@@ -192,7 +192,7 @@ import type {
   PayConductorTheme,
   PayConductorConfig,
   PaymentConfirmData,
-} from '@payconductor-sdk-web/library-angular';
+} from '@payconductor/angular';
 ```
 
 ## License

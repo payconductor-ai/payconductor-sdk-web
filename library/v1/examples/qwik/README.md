@@ -11,13 +11,13 @@ Minimum Qwik version: **v1**.
 ## Installation
 
 ```sh
-npm install @payconductor/qwik payconductor-sdk
+npm install @payconductor/qwik @payconductor/sdk
 # or
-yarn add @payconductor/qwik payconductor-sdk
+yarn add @payconductor/qwik @payconductor/sdk
 # or
-pnpm add @payconductor/qwik payconductor-sdk
+pnpm add @payconductor/qwik @payconductor/sdk
 # or
-bun add @payconductor/qwik payconductor-sdk
+bun add @payconductor/qwik @payconductor/sdk
 ```
 
 ## Run the example
@@ -44,7 +44,7 @@ import {
   OrderApi,
   type OrderCreateRequest,
   type PaymentResult,
-} from 'payconductor-sdk';
+} from '@payconductor/sdk';
 
 export default component$(() => {
   const { isReady, error } = usePayConductor();
@@ -68,7 +68,7 @@ export default component$(() => {
       });
       const orderApi = new OrderApi(config);
 
-      // 1. Create the Draft order via payconductor-sdk to get the orderId
+      // 1. Create the Draft order via @payconductor/sdk to get the orderId
       const orderRequest: OrderCreateRequest = {
         chargeAmount: 100.00,
         clientIp: '0.0.0.0',
@@ -258,7 +258,7 @@ import type {
    └─ getSelectedPaymentMethod() returns the method
 
 5. User clicks "Checkout" (merchant button, outside the iframe)
-   └─ payconductor-sdk creates Draft order → returns { id: "ord_xxx" }
+   └─ @payconductor/sdk creates Draft order → returns { id: "ord_xxx" }
    └─ confirmPayment({ orderId: "ord_xxx" })
    └─ iframe collects form data → POST /orders/:id/confirm
 

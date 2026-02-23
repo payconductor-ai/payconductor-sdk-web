@@ -78,7 +78,7 @@
       },
     },
     "library/v1/packages/svelte": {
-      "name": "@payconductor-sdk-web/library-svelte",
+      "name": "@payconductor/svelte",
       "version": "0.0.1",
       "devDependencies": {
         "@sveltejs/adapter-auto": "^2.0.0",
@@ -297,7 +297,7 @@
 
     "@payconductor/rsc": ["@payconductor/rsc@workspace:library/v1/packages/rsc"],
 
-    "@payconductor-sdk-web/library-svelte": ["@payconductor-sdk-web/library-svelte@workspace:library/v1/packages/svelte"],
+    "@payconductor/svelte": ["@payconductor/svelte@workspace:library/v1/packages/svelte"],
 
     "@pnpm/config.env-replace": ["@pnpm/config.env-replace@1.1.0", "", {}, "sha512-htyl8TWnKL7K/ESFa1oW2UB5lVDxuF5DpM7tBi6Hu2LNL3mWkIzNLG6N4zoCUP1lCKNxWy/3iu8mS8MvToGd6w=="],
 

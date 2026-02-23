@@ -3,9 +3,9 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "@payconductor-sdk-web/example-react",
+      "name": "@payconductor/example-react",
       "dependencies": {
-        "@payconductor/react": "*",
+        "@payconductor/react": "1.0.0",
         "payconductor-sdk": "*",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
@@ -120,7 +120,7 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
-    "@payconductor/react": ["@payconductor/react@1.0.11", "", { "peerDependencies": { "react": ">=16.8.0", "react-dom": ">=16.8.0" } }, "sha512-CSnFkf+jo0sYaIghVZWtcLcetXhvJt2ahDiJ6DbEh6UTtsKfzq7dOEzTwZvb+BymsE8bFxTW2k2tMiYXLoYJVQ=="],
+    "@payconductor/react": ["@payconductor/react@1.0.0", "", { "peerDependencies": { "react": ">=16.8.0", "react-dom": ">=16.8.0" } }, "sha512-3+WGdDW1GldfBh+q1xAOWXsNQXVGG4bZUHP+EkphmWfiMx1sYj5oDeS5jiscwtROBc/JXK/pVUdr2r+/kxSt5A=="],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-beta.27", "", {}, "sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA=="],
 

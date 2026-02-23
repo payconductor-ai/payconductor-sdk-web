@@ -1,13 +1,13 @@
 {
-  "name": "@payconductor-sdk-web/example-react",
+  "name": "@payconductor/example-react",
   "scripts": {
     "build": "tsc && vite build",
     "dev": "vite",
     "serve": "vite preview"
   },
   "dependencies": {
-    "@payconductor/react": "*",
-    "payconductor-sdk": "*",
+    "@payconductor/react": "1.0.0",
+    "@payconductor/sdk": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

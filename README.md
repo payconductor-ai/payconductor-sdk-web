@@ -2,8 +2,8 @@
 
 A unified payment SDK that provides seamless integration with PayConductor's payment iframe across multiple JavaScript frameworks.
 
-![NPM Version RSC](https://img.shields.io/npm/v/%40payconductor-sdk-web%2Flibrary-rsc)
-![NPM Version React](https://img.shields.io/npm/v/%40payconductor-sdk-web%2Flibrary-react)
+![NPM Version RSC](https://img.shields.io/npm/v/%40payconductor%2Frsc)
+![NPM Version React](https://img.shields.io/npm/v/%40payconductor%2Freact)
 
 ## Features
 
@@ -46,7 +46,7 @@ import {
   DocumentType,
   OrderApi,
   type OrderCreateRequest,
-} from 'payconductor-sdk';
+} from '@payconductor/sdk';
 
 const sdkConfig = new Configuration({
   username: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || 'your_client_id',
@@ -59,7 +59,7 @@ function CheckoutForm() {
   const { confirmPayment, getSelectedPaymentMethod } = usePayconductorElement();
 
   const handleFinalize = async () => {
-    // 1. Create the Draft order via payconductor-sdk to get the orderId
+    // 1. Create the Draft order via @payconductor/sdk to get the orderId
     const orderRequest: OrderCreateRequest = {
       chargeAmount: 100.00,
       clientIp: '0.0.0.0',
@@ -136,8 +136,8 @@ function App() {
 </template>
 
 <script setup>
-import { PayConductor, PayConductorCheckoutElement, usePayConductor, usePayconductorElement } from '@payconductor-sdk-web/library-vue';
-import { AvailablePaymentMethods, Configuration, DocumentType, OrderApi } from 'payconductor-sdk';
+import { PayConductor, PayConductorCheckoutElement, usePayConductor, usePayconductorElement } from '@payconductor/vue';
+import { AvailablePaymentMethods, Configuration, DocumentType, OrderApi } from '@payconductor/sdk';
 
 const { isReady } = usePayConductor();
 const { confirmPayment, getSelectedPaymentMethod } = usePayconductorElement();
@@ -149,7 +149,7 @@ const sdkConfig = new Configuration({
 const orderApi = new OrderApi(sdkConfig);
 
 const handleFinalize = async () => {
-  // 1. Create the Draft order via payconductor-sdk to get the orderId
+  // 1. Create the Draft order via @payconductor/sdk to get the orderId
   const { data } = await orderApi.orderCreate({
     chargeAmount: 100.00,
     clientIp: '0.0.0.0',
@@ -191,8 +191,8 @@ const onPaymentMethodSelected = (method) => console.log(method);
     PayConductorCheckoutElement,
     usePayConductor,
     usePayconductorElement,
-  } from '@payconductor-sdk-web/library-svelte';
-  import { AvailablePaymentMethods, Configuration, DocumentType, OrderApi } from 'payconductor-sdk';
+  } from '@payconductor/svelte';
+  import { AvailablePaymentMethods, Configuration, DocumentType, OrderApi } from '@payconductor/sdk';
 
   const { isReady, error } = usePayConductor();
   const { confirmPayment, getSelectedPaymentMethod } = usePayconductorElement();
@@ -424,13 +424,13 @@ const theme = {
 | Framework | Package |
 |-----------|---------|
 | React | `@payconductor/react` |
-| Vue | `@payconductor-sdk-web/library-vue` |
-| Svelte | `@payconductor-sdk-web/library-svelte` |
+| Vue | `@payconductor/vue` |
+| Svelte | `@payconductor/svelte` |
 | Qwik | `@payconductor/qwik` |
-| Angular | `@payconductor-sdk-web/library-angular` |
-| Solid | `@payconductor-sdk-web/library-solid` |
-| Preact | `@payconductor-sdk-web/library-preact` |
-| Web Components | `@payconductor-sdk-web/library-webcomponent` |
+| Angular | `@payconductor/angular` |
+| Solid | `@payconductor/solid` |
+| Preact | `@payconductor/preact` |
+| Web Components | `@payconductor/webcomponent` |
 | React (Next.js RSC) | `@payconductor/rsc` |
 
 ## Development

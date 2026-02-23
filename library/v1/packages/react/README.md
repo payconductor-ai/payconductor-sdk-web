@@ -11,13 +11,13 @@ Minimum React version: **v16.8**.
 ## Installation
 
 ```bash
-npm install @payconductor/react payconductor-sdk
+npm install @payconductor/react @payconductor/sdk
 # or
-yarn add @payconductor/react payconductor-sdk
+yarn add @payconductor/react @payconductor/sdk
 # or
-pnpm add @payconductor/react payconductor-sdk
+pnpm add @payconductor/react @payconductor/sdk
 # or
-bun add @payconductor/react payconductor-sdk
+bun add @payconductor/react @payconductor/sdk
 ```
 
 ## Quick Start
@@ -37,7 +37,7 @@ import {
   DocumentType,
   OrderApi,
   type OrderCreateRequest,
-} from 'payconductor-sdk';
+} from '@payconductor/sdk';
 
 const sdkConfig = new Configuration({
   username: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || 'your_client_id',
@@ -58,7 +58,7 @@ function CheckoutForm() {
     setErrorMessage(null);
 
     try {
-      // 1. Create the Draft order via payconductor-sdk to get the orderId
+      // 1. Create the Draft order via @payconductor/sdk to get the orderId
       const orderRequest: OrderCreateRequest = {
         chargeAmount: 100.00,
         clientIp: '0.0.0.0',
@@ -241,7 +241,7 @@ import type {
    └─ getSelectedPaymentMethod() returns the chosen method
 
 5. User clicks "Checkout" (your button, outside the iframe)
-   └─ payconductor-sdk creates Draft order → returns orderId
+   └─ @payconductor/sdk creates Draft order → returns orderId
    └─ confirmPayment({ orderId })
    └─ iframe collects form data → POST /orders/:id/confirm
 

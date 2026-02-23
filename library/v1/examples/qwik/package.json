@@ -1,5 +1,5 @@
 {
-  "name": "@payconductor-sdk-web/example-qwik",
+  "name": "@payconductor/example-qwik",
   "trustedDependencies": [
     "sharp"
   ],
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@payconductor/qwik": "*",
-    "payconductor-sdk": "*",
+    "@payconductor/sdk": "*",
     "@builder.io/qwik": "^1.2.18",
     "@builder.io/qwik-city": "^1.2.18",
     "@types/eslint": "^8.44.4",

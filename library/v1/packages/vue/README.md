@@ -1,8 +1,8 @@
-# @payconductor-sdk-web/library-vue
+# @payconductor/vue
 
 Vue SDK for [PayConductor](https://payconductor.ai) payment integration.
 
-[![npm version](https://img.shields.io/npm/v/@payconductor-sdk-web/library-vue.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor-sdk-web/library-vue)
+[![npm version](https://img.shields.io/npm/v/@payconductor/vue.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor/vue)
 
 ## Requirements
 
@@ -11,13 +11,13 @@ Minimum Vue version: **v3**.
 ## Installation
 
 ```bash
-npm install @payconductor-sdk-web/library-vue payconductor-sdk
+npm install @payconductor/vue @payconductor/sdk
 # or
-yarn add @payconductor-sdk-web/library-vue payconductor-sdk
+yarn add @payconductor/vue @payconductor/sdk
 # or
-pnpm add @payconductor-sdk-web/library-vue payconductor-sdk
+pnpm add @payconductor/vue @payconductor/sdk
 # or
-bun add @payconductor-sdk-web/library-vue payconductor-sdk
+bun add @payconductor/vue @payconductor/sdk
 ```
 
 ## Quick Start
@@ -58,14 +58,14 @@ import {
   usePayconductorElement,
   type PaymentMethod,
   type PaymentResult,
-} from '@payconductor-sdk-web/library-vue';
+} from '@payconductor/vue';
 import {
   AvailablePaymentMethods,
   Configuration,
   DocumentType,
   OrderApi,
   type OrderCreateRequest,
-} from 'payconductor-sdk';
+} from '@payconductor/sdk';
 
 const { isReady } = usePayConductor();
 const { confirmPayment, getSelectedPaymentMethod } = usePayconductorElement();
@@ -87,7 +87,7 @@ const handleFinalize = async () => {
   errorMessage.value = null;
 
   try {
-    // 1. Create the Draft order via payconductor-sdk to get the orderId
+    // 1. Create the Draft order via @payconductor/sdk to get the orderId
     const orderRequest: OrderCreateRequest = {
       chargeAmount: 100.00,
       clientIp: '0.0.0.0',
@@ -218,7 +218,7 @@ import type {
   PayConductorTheme,
   PayConductorConfig,
   PaymentConfirmData,
-} from '@payconductor-sdk-web/library-vue';
+} from '@payconductor/vue';
 ```
 
 ## License

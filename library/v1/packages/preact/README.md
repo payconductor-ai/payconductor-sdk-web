@@ -1,8 +1,8 @@
-# @payconductor-sdk-web/library-preact
+# @payconductor/preact
 
 Preact SDK for [PayConductor](https://payconductor.ai) payment integration.
 
-[![npm version](https://img.shields.io/npm/v/@payconductor-sdk-web/library-preact.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor-sdk-web/library-preact)
+[![npm version](https://img.shields.io/npm/v/@payconductor/preact.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor/preact)
 
 ## Requirements
 
@@ -11,13 +11,13 @@ Minimum Preact version: **v10**.
 ## Installation
 
 ```bash
-npm install @payconductor-sdk-web/library-preact payconductor-sdk
+npm install @payconductor/preact @payconductor/sdk
 # or
-yarn add @payconductor-sdk-web/library-preact payconductor-sdk
+yarn add @payconductor/preact @payconductor/sdk
 # or
-pnpm add @payconductor-sdk-web/library-preact payconductor-sdk
+pnpm add @payconductor/preact @payconductor/sdk
 # or
-bun add @payconductor-sdk-web/library-preact payconductor-sdk
+bun add @payconductor/preact @payconductor/sdk
 ```
 
 ## Quick Start
@@ -31,14 +31,14 @@ import {
   usePayconductorElement,
   type PaymentMethod,
   type PaymentResult,
-} from '@payconductor-sdk-web/library-preact';
+} from '@payconductor/preact';
 import {
   AvailablePaymentMethods,
   Configuration,
   DocumentType,
   OrderApi,
   type OrderCreateRequest,
-} from 'payconductor-sdk';
+} from '@payconductor/sdk';
 
 const sdkConfig = new Configuration({
   username: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || 'your_client_id',
@@ -59,7 +59,7 @@ function CheckoutForm() {
     setErrorMessage(null);
 
     try {
-      // 1. Create the Draft order via payconductor-sdk to get the orderId
+      // 1. Create the Draft order via @payconductor/sdk to get the orderId
       const orderRequest: OrderCreateRequest = {
         chargeAmount: 100.00,
         clientIp: '0.0.0.0',
@@ -216,7 +216,7 @@ import type {
   PayConductorTheme,
   PayConductorConfig,
   PaymentConfirmData,
-} from '@payconductor-sdk-web/library-preact';
+} from '@payconductor/preact';
 ```
 
 ## License

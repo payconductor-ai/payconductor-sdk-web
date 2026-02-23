@@ -1,8 +1,8 @@
-# @payconductor-sdk-web/library-webcomponent
+# @payconductor/webcomponent
 
 Web Components SDK for [PayConductor](https://payconductor.ai) payment integration. Framework-agnostic — works with any HTML page or framework.
 
-[![npm version](https://img.shields.io/npm/v/@payconductor-sdk-web/library-webcomponent.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor-sdk-web/library-webcomponent)
+[![npm version](https://img.shields.io/npm/v/@payconductor/webcomponent.svg?style=flat-square)](https://www.npmjs.com/package/@payconductor/webcomponent)
 
 ## Requirements
 
@@ -11,26 +11,26 @@ Browser with Custom Elements v1 support (all modern browsers).
 ## Installation
 
 ```bash
-npm install @payconductor-sdk-web/library-webcomponent payconductor-sdk
+npm install @payconductor/webcomponent @payconductor/sdk
 # or
-yarn add @payconductor-sdk-web/library-webcomponent payconductor-sdk
+yarn add @payconductor/webcomponent @payconductor/sdk
 # or
-pnpm add @payconductor-sdk-web/library-webcomponent payconductor-sdk
+pnpm add @payconductor/webcomponent @payconductor/sdk
 # or
-bun add @payconductor-sdk-web/library-webcomponent payconductor-sdk
+bun add @payconductor/webcomponent @payconductor/sdk
 ```
 
 ## Quick Start
 
 ```ts
-import '@payconductor-sdk-web/library-webcomponent';
+import '@payconductor/webcomponent';
 import {
   AvailablePaymentMethods,
   Configuration,
   DocumentType,
   OrderApi,
   type OrderCreateRequest,
-} from 'payconductor-sdk';
+} from '@payconductor/sdk';
 
 const sdkConfig = new Configuration({
   username: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || 'your_client_id',
@@ -65,7 +65,7 @@ checkoutButton.addEventListener('click', async () => {
   checkoutButton.textContent = 'Processing...';
 
   try {
-    // 1. Create the Draft order via payconductor-sdk to get the orderId
+    // 1. Create the Draft order via @payconductor/sdk to get the orderId
     const orderRequest: OrderCreateRequest = {
       chargeAmount: 100.00,
       clientIp: '0.0.0.0',
@@ -158,7 +158,7 @@ import type {
   PayConductorTheme,
   PayConductorConfig,
   PaymentConfirmData,
-} from '@payconductor-sdk-web/library-webcomponent';
+} from '@payconductor/webcomponent';
 ```
 
 ## License
