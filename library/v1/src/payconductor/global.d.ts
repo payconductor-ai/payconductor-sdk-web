@@ -1,9 +1,8 @@
 import { PayConductorContextValue } from "./types";
-import { PaymentMethod } from "./iframe/types";
 
 export interface PayConductorWindow {
 	PayConductor:
-		| (PayConductorContextValue & { selectedPaymentMethod?: PaymentMethod | null })
+		| PayConductorContextValue
 		| null;
 }
 

@@ -1,9 +1,6 @@
 import { PayConductorContextValue } from "./types";
-import { PaymentMethod } from "./iframe/types";
 export interface PayConductorWindow {
-  PayConductor: (PayConductorContextValue & {
-    selectedPaymentMethod?: PaymentMethod | null;
-  }) | null;
+  PayConductor: PayConductorContextValue | null;
 }
 declare global {
   interface Window extends PayConductorWindow {}

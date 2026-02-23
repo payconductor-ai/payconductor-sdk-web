@@ -119,7 +119,10 @@ export default defineComponent({
       },
       set iframe(_: HTMLIFrameElement | Element | unknown | null) {},
       iframeUrl,
-      isReady: false,
+      isReady:
+        window.PayConductor && window.PayConductor.frame
+          ? window.PayConductor.frame.isReady
+          : false,
       error: null,
     };
     const config: PayConductorConfig = {

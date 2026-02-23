@@ -74,7 +74,7 @@ export function handleMessageEvent(event: MessageEvent, pendingMap: Map<string, 
   } = payload;
   if (type === POST_MESSAGES.READY) {
     setIsReady(true);
-    window.PayConductor.frame.isReady = true;
+    if (window.PayConductor && window.PayConductor.frame) window.PayConductor.frame.isReady = true;
     onReady?.();
     if (requestId && pendingMap?.has(requestId)) {
       const {

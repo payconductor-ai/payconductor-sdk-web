@@ -44,6 +44,11 @@ export default defineComponent({
       if (!ctx?.frame) return;
       this.iframeUrl = ctx.frame.iframeUrl || "";
       this.isLoaded = true;
+      if (window.PayConductor && window.PayConductor.frame)
+        window.PayConductor.frame.isReady = true;
+      console.log("init", {
+        PayConductor: window.PayConductor,
+      });
     };
     const ctx = typeof window !== "undefined" ? window.PayConductor : null;
     if (ctx) {

@@ -20,6 +20,9 @@ export default function PayConductorCheckoutElement(
       if (!ctx?.frame) return;
       state.iframeUrl = ctx.frame.iframeUrl || "";
       state.isLoaded = true;
+      if (window.PayConductor && window.PayConductor.frame)
+        window.PayConductor.frame.isReady = true;
+      console.log("init", { PayConductor: window.PayConductor });
     };
 
     const ctx = typeof window !== "undefined" ? window.PayConductor : null;

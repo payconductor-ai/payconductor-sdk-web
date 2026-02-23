@@ -43,10 +43,10 @@ function X(e, r) {
     }
   });
 }
-function L() {
+function N() {
   return /* @__PURE__ */ new Map();
 }
-function M(e, r, t, n) {
+function C(e, r, t, n) {
   return new Promise((d, u) => {
     if (!e || !("contentWindow" in e)) {
       u(new Error("Iframe not defined"));
@@ -74,45 +74,45 @@ function M(e, r, t, n) {
   });
 }
 function b(e, r, t) {
-  return M(e, r, f.CONFIRM_PAYMENT, {
+  return C(e, r, f.CONFIRM_PAYMENT, {
     orderId: t.orderId
   });
 }
 function Z(e, r, t) {
-  return M(e, r, f.VALIDATE, t);
+  return C(e, r, f.VALIDATE, t);
 }
 function g(e, r) {
-  return M(e, r, f.RESET);
+  return C(e, r, f.RESET);
 }
 function x(e, r, t) {
-  return M(e, r, f.CONFIG, t);
+  return C(e, r, f.CONFIG, t);
 }
 function p(e, r, t) {
-  return M(e, r, f.INIT, t);
+  return C(e, r, f.INIT, t);
 }
-function ee(e, r, t, n, d, u, s, R, m, w) {
-  const C = e.data, {
+function ee(e, r, t, n, d, u, s, R, m, P) {
+  const L = e.data, {
     requestId: l,
     type: E,
     data: c,
     error: y
-  } = C;
+  } = L;
   if (E === f.READY) {
-    if (t(!0), d == null || d(), l && (r != null && r.has(l))) {
+    if (t(!0), window.PayConductor && window.PayConductor.frame && (window.PayConductor.frame.isReady = !0), d == null || d(), l && (r != null && r.has(l))) {
       const {
-        resolve: I
+        resolve: w
       } = r.get(l);
-      r.delete(l), I(c);
+      r.delete(l), w(c);
     }
     return;
   }
   if (X(e.origin, k)) {
     if (l && r && r.has(l)) {
       const {
-        resolve: I,
-        reject: _
+        resolve: w,
+        reject: M
       } = r.get(l);
-      r.delete(l), y ? _(new Error(String(y.message))) : I(c);
+      r.delete(l), y ? M(new Error(String(y.message))) : w(c);
       return;
     }
     if (E === f.ERROR) {
@@ -132,7 +132,7 @@ function ee(e, r, t, n, d, u, s, R, m, w) {
       return;
     }
     if (E === f.PAYMENT_METHOD_SELECTED) {
-      c && typeof c == "object" && "paymentMethod" in c && (w == null || w(c.paymentMethod));
+      c && typeof c == "object" && "paymentMethod" in c && (P == null || P(c.paymentMethod));
       return;
     }
   }
@@ -144,7 +144,7 @@ function ae(e) {
     () => !1
   ), [u, s] = A(() => null), [R, m] = A(
     () => ""
-  ), [w, C] = A(() => null);
+  ), [P, L] = A(() => null);
   return U(() => {
     const l = (...o) => {
       e.debug && console.log("[PayConductor]", ...o);
@@ -152,12 +152,12 @@ function ae(e) {
       publicKey: e.publicKey
     });
     m(E), t(!0);
-    const c = L();
+    const c = N();
     let y = !1;
     l("init", e.publicKey), l("iframeUrl", E);
-    const I = () => {
-      var P, i;
-      const o = (i = (P = window.PayConductor) == null ? void 0 : P.frame) == null ? void 0 : i.iframe;
+    const w = () => {
+      var I, i;
+      const o = (i = (I = window.PayConductor) == null ? void 0 : I.frame) == null ? void 0 : i.iframe;
       if (o) {
         if (o instanceof HTMLIFrameElement) return o;
         if (typeof o == "object" && o !== null) {
@@ -172,7 +172,7 @@ function ae(e) {
       return document.querySelector(
         ".payconductor-element iframe"
       ) ?? void 0;
-    }, _ = {
+    }, M = {
       get iframe() {
         return document.querySelector(
           ".payconductor-element iframe"
@@ -181,7 +181,7 @@ function ae(e) {
       set iframe(o) {
       },
       iframeUrl: E,
-      isReady: !1,
+      isReady: window.PayConductor && window.PayConductor.frame ? window.PayConductor.frame.isReady : !1,
       error: null
     }, V = {
       publicKey: e.publicKey,
@@ -192,16 +192,16 @@ function ae(e) {
     }, Y = {
       confirmPayment: (o) => (l("→ CONFIRM_PAYMENT", {
         orderId: o.orderId
-      }), b(I(), c, o)),
-      validate: (o) => (l("→ VALIDATE", o), Z(I(), c, o)),
-      reset: () => (l("→ RESET"), g(I(), c)),
-      getSelectedPaymentMethod: () => w
+      }), b(w(), c, o)),
+      validate: (o) => (l("→ VALIDATE", o), Z(w(), c, o)),
+      reset: () => (l("→ RESET"), g(w(), c)),
+      getSelectedPaymentMethod: () => P
     };
     window.PayConductor = {
-      frame: _,
+      frame: M,
       config: V,
       api: Y,
-      selectedPaymentMethod: w
+      selectedPaymentMethod: P
     }, l("registered"), window.dispatchEvent(
       new CustomEvent("payconductor:registered", {
         detail: window.PayConductor
@@ -209,7 +209,7 @@ function ae(e) {
     );
     const S = async () => {
       if (!y) {
-        const o = I();
+        const o = w();
         if (!o) {
           l("→ CONFIG skipped: iframe not found");
           return;
@@ -230,17 +230,17 @@ function ae(e) {
         });
       }
     }, K = (o) => {
-      var P;
-      (P = o.data) != null && P.type && l("←", o.data.type, o.data.data ?? ""), ee(
+      var I;
+      (I = o.data) != null && I.type && l("←", o.data.type, o.data.data ?? ""), ee(
         o,
         c,
         (i) => {
           var a;
-          d(i), _.isReady = i, (a = window.PayConductor) != null && a.frame && (window.PayConductor.frame.isReady = i), i && S();
+          d(i), M.isReady = i, (a = window.PayConductor) != null && a.frame && (window.PayConductor.frame.isReady = i), i && S();
         },
         (i) => {
           var a;
-          s(i), _.error = i, (a = window.PayConductor) != null && a.frame && (window.PayConductor.frame.error = i);
+          s(i), M.error = i, (a = window.PayConductor) != null && a.frame && (window.PayConductor.frame.error = i);
         },
         () => {
           var i;
@@ -264,24 +264,24 @@ function ae(e) {
         },
         (i) => {
           var a;
-          C(i), window.PayConductor && (window.PayConductor.selectedPaymentMethod = i), (a = e.onPaymentMethodSelected) == null || a.call(e, i);
+          L(i), window.PayConductor && (window.PayConductor.selectedPaymentMethod = i), (a = e.onPaymentMethodSelected) == null || a.call(e, i);
         }
       );
     };
     window.addEventListener("message", K);
     const H = () => {
-      var P, i, a;
-      const o = I();
+      var I, i, a;
+      const o = w();
       if (!o) return !1;
       try {
-        if ((((P = o.contentDocument) == null ? void 0 : P.readyState) ?? ((a = (i = o.contentWindow) == null ? void 0 : i.document) == null ? void 0 : a.readyState)) === "complete")
+        if ((((I = o.contentDocument) == null ? void 0 : I.readyState) ?? ((a = (i = o.contentWindow) == null ? void 0 : i.document) == null ? void 0 : a.readyState)) === "complete")
           return S(), !0;
       } catch {
       }
       return !1;
     }, O = () => {
       if (H()) return;
-      const o = I();
+      const o = w();
       if (o) {
         o.addEventListener("load", () => S(), {
           once: !0
@@ -307,13 +307,15 @@ function ie(e) {
   const r = G(null), [t, n] = A(() => ""), [d, u] = A(() => !1);
   return U(() => {
     const s = (m) => {
-      m != null && m.frame && (n(m.frame.iframeUrl || ""), u(!0));
+      m != null && m.frame && (n(m.frame.iframeUrl || ""), u(!0), window.PayConductor && window.PayConductor.frame && (window.PayConductor.frame.isReady = !0), console.log("init", {
+        PayConductor: window.PayConductor
+      }));
     }, R = typeof window < "u" ? window.PayConductor : null;
     if (R)
       s(R);
     else {
-      const m = (w) => {
-        s(w.detail), window.removeEventListener("payconductor:registered", m);
+      const m = (P) => {
+        s(P.detail), window.removeEventListener("payconductor:registered", m);
       };
       window.addEventListener("payconductor:registered", m);
     }
@@ -361,7 +363,7 @@ function de() {
     ...t
   };
 }
-function N(e) {
+function _(e) {
   var r;
   if ((r = e == null ? void 0 : e.frame) != null && r.iframe) {
     const t = e.frame.iframe;
@@ -383,7 +385,7 @@ function ce() {
   const e = () => typeof window < "u" ? window.PayConductor : null, r = (t, n) => {
     const d = e();
     if (!d) return;
-    const u = N(d);
+    const u = _(d);
     u != null && u.contentWindow && u.contentWindow.postMessage({
       type: t,
       data: n
@@ -391,11 +393,11 @@ function ce() {
   };
   return {
     init: async (t) => {
-      const n = N(e()), d = L();
+      const n = _(e()), d = N();
       return p(n || void 0, d, t);
     },
     confirmPayment: async (t) => {
-      const n = N(e()), d = L();
+      const n = _(e()), d = N();
       if (!t.orderId)
         throw new Error("Order ID is required");
       return b(n || void 0, d, t);
@@ -438,9 +440,9 @@ function ce() {
       r(f.UPDATE, t);
     },
     submit: async () => {
-      const t = N(e()), n = L();
+      const t = _(e()), n = N();
       try {
-        return await M(t || void 0, n, f.CONFIRM_PAYMENT, {}), {
+        return await C(t || void 0, n, f.CONFIRM_PAYMENT, {}), {
           paymentMethod: void 0
         };
       } catch (d) {

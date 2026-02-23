@@ -112,6 +112,11 @@ class PayConductorCheckoutElement extends HTMLElement {
       this.update();
       this.state.isLoaded = true;
       this.update();
+      if (window.PayConductor && window.PayConductor.frame)
+        window.PayConductor.frame.isReady = true;
+      console.log("init", {
+        PayConductor: window.PayConductor,
+      });
     };
     const ctx = typeof window !== "undefined" ? window.PayConductor : null;
     if (ctx) {
