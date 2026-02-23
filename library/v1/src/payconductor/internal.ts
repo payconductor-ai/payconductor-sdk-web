@@ -131,6 +131,7 @@ export function handleMessageEvent(
 
 	if (type === POST_MESSAGES.READY) {
 		setIsReady(true);
+		window.PayConductor.frame.isReady = true;
 		onReady?.();
 		if (requestId && pendingMap?.has(requestId)) {
 			const { resolve } = pendingMap.get(requestId)!;
