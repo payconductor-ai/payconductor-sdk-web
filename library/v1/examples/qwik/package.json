@@ -19,7 +19,7 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@payconductor-sdk-web/library-qwik": "*",
+    "@payconductor/qwik": "*",
     "payconductor-sdk": "*",
     "@builder.io/qwik": "^1.2.18",
     "@builder.io/qwik-city": "^1.2.18",

@@ -10,7 +10,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@payconductor-sdk-web/library-react': resolve(__dirname, '../../packages/react/dist/index.es.js'),
+      '@payconductor/react': resolve(__dirname, '../../packages/react/dist/index.es.js'),
     },
   },
 });

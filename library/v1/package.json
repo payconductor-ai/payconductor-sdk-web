@@ -1,5 +1,5 @@
 {
-  "name": "@payconductor-sdk-web/library",
+  "name": "@payconductor/sdk-web-v1",
   "scripts": {
     "start": "watch \"npm run build\" ./src",
     "clean:src": "node scripts/clean-src.js",

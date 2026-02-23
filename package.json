@@ -1,5 +1,5 @@
 {
-  "name": "@payconductor-sdk-web/mono-repo",
+  "name": "@payconductor/sdk-web",
   "version": "1.0.5",
   "scripts": {
     "sync": "bun scripts/sdk.ts"
@@ -11,7 +11,7 @@
     "examples/*"
   ],
   "dependencies": {
-    "@payconductor-sdk-web/library-qwik": "workspace:*"
+    "@payconductor/qwik": "workspace:*"
   },
   "devDependencies": {
     "@inquirer/prompts": "^8.2.1",

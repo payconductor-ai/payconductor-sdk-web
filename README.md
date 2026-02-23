@@ -18,13 +18,13 @@ A unified payment SDK that provides seamless integration with PayConductor's pay
 ## Installation
 
 ```bash
-npm install @payconductor-sdk-web/library-react
+npm install @payconductor/react
 # or
-yarn add @payconductor-sdk-web/library-react
+yarn add @payconductor/react
 # or
-pnpm add @payconductor-sdk-web/library-react
+pnpm add @payconductor/react
 # or
-bun add @payconductor-sdk-web/library-react
+bun add @payconductor/react
 ```
 
 ## Quick Start
@@ -39,7 +39,7 @@ import {
   usePayconductorElement,
   type PaymentMethod,
   type PaymentResult,
-} from '@payconductor-sdk-web/library-react';
+} from '@payconductor/react';
 import {
   AvailablePaymentMethods,
   Configuration,
@@ -359,7 +359,7 @@ import type {
   NuPayPaymentData,
   PicPayPaymentData,
   CardPaymentData,
-} from '@payconductor-sdk-web/library-react';
+} from '@payconductor/react';
 
 // Union of all payment data types (passed via confirmPayment)
 type PaymentConfirmData =
@@ -423,15 +423,15 @@ const theme = {
 
 | Framework | Package |
 |-----------|---------|
-| React | `@payconductor-sdk-web/library-react` |
+| React | `@payconductor/react` |
 | Vue | `@payconductor-sdk-web/library-vue` |
 | Svelte | `@payconductor-sdk-web/library-svelte` |
-| Qwik | `@payconductor-sdk-web/library-qwik` |
+| Qwik | `@payconductor/qwik` |
 | Angular | `@payconductor-sdk-web/library-angular` |
 | Solid | `@payconductor-sdk-web/library-solid` |
 | Preact | `@payconductor-sdk-web/library-preact` |
 | Web Components | `@payconductor-sdk-web/library-webcomponent` |
-| React (Next.js RSC) | `@payconductor-sdk-web/library-rsc` |
+| React (Next.js RSC) | `@payconductor/rsc` |
 
 ## Development
 

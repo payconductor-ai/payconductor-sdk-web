@@ -5,7 +5,7 @@ import {
 	type PaymentResult,
 	usePayConductor,
 	usePayconductorElement,
-} from "@payconductor-sdk-web/library-react";
+} from "@payconductor/react";
 import {
 	AvailablePaymentMethods,
 	Configuration,

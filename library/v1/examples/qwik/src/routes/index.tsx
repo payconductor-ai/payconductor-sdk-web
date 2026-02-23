@@ -5,7 +5,7 @@ import {
 	PayConductorCheckoutElement,
 	usePayConductor,
 	usePayconductorElement,
-} from "@payconductor-sdk-web/library-qwik";
+} from "@payconductor/qwik";
 import {
 	AvailablePaymentMethods,
 	Configuration,

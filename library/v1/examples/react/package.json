@@ -6,7 +6,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@payconductor-sdk-web/library-react": "*",
+    "@payconductor/react": "*",
     "payconductor-sdk": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
