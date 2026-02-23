@@ -1,3 +1,3 @@
-export { usePayconductor } from './use-payconductor';
-export { useFrame } from './use-frame';
-export { usePayment } from './use-payment';
+export { usePayConductor } from './use-payconductor';
+export { usePayconductorElement } from './use-element';
+export type { UsePayconductorElementReturn } from './use-element';

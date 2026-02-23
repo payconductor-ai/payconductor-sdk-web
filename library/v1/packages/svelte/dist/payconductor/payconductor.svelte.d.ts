@@ -1,22 +1,32 @@
 import { SvelteComponent } from "svelte";
-export interface PayConductorEmbedProps extends PayConductorConfig {
-    height?: string;
+export interface PayConductorEmbedProps extends Omit<PayConductorConfig, "orderId"> {
     children?: any;
+    showActionButtons?: boolean;
+    debug?: boolean;
     onReady?: () => void;
     onError?: (error: Error) => void;
     onPaymentComplete?: (result: PaymentResult) => void;
+    onPaymentFailed?: (result: PaymentResult) => void;
+    onPaymentPending?: (result: PaymentResult) => void;
+    onPaymentMethodSelected?: (method: PaymentMethod) => void;
 }
-import { PayConductorConfig, PaymentResult } from "./types";
+import type { PayConductorConfig, PaymentMethod, PaymentResult } from "./iframe/types";
 declare const __propDef: {
     props: {
-        clientId: PayConductorEmbedProps["clientId"];
-        token: PayConductorEmbedProps["token"];
+        debug?: PayConductorEmbedProps["debug"];
+        publicKey: PayConductorEmbedProps["publicKey"];
         theme?: PayConductorEmbedProps["theme"];
         locale?: PayConductorEmbedProps["locale"];
+        paymentMethods?: PayConductorEmbedProps["paymentMethods"];
+        defaultPaymentMethod?: PayConductorEmbedProps["defaultPaymentMethod"];
+        showPaymentButtons?: PayConductorEmbedProps["showPaymentButtons"];
+        nuPayConfig?: PayConductorEmbedProps["nuPayConfig"];
         onReady?: PayConductorEmbedProps["onReady"];
         onError?: PayConductorEmbedProps["onError"];
         onPaymentComplete?: PayConductorEmbedProps["onPaymentComplete"];
-        height?: PayConductorEmbedProps["height"];
+        onPaymentFailed?: PayConductorEmbedProps["onPaymentFailed"];
+        onPaymentPending?: PayConductorEmbedProps["onPaymentPending"];
+        onPaymentMethodSelected?: PayConductorEmbedProps["onPaymentMethodSelected"];
     };
     events: {
         [evt: string]: CustomEvent<any>;

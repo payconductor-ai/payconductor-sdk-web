@@ -2,7 +2,7 @@
 Object.defineProperties(exports, { __esModule: { value: true }, [Symbol.toStringTag]: { value: "Module" } });
 const qwik = require("@builder.io/qwik");
 const IFRAME_BASE_URL_PROD = "https://iframe.payconductor.ai/v1";
-const IFRAME_BASE_URL_DEV = "http://localhost:5175";
+const IFRAME_BASE_URL_DEV = "http://localhost:5175/v1";
 const REQUEST_TIMEOUT_MS = 3e4;
 const IFRAME_DEFAULT_HEIGHT = "600px";
 let PaymentMethod;
@@ -74,7 +74,7 @@ let ErrorCode;
   ErrorCode2["ValidationError"] = "ValidationError";
   ErrorCode2["Timeout"] = "Timeout";
 })(ErrorCode || (ErrorCode = {}));
-const isDev = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+const isDev = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && !window.location.search.includes("production");
 const IFRAME_BASE_URL = isDev ? IFRAME_BASE_URL_DEV : IFRAME_BASE_URL_PROD;
 const ALLOWED_ORIGINS = [
   IFRAME_BASE_URL_DEV,
@@ -116,7 +116,13 @@ function generateRequestId() {
   return crypto.randomUUID();
 }
 function isValidOrigin(origin, allowedOrigins) {
-  return allowedOrigins.includes(origin);
+  return allowedOrigins.some((allowed) => {
+    try {
+      return new URL(allowed).origin === origin;
+    } catch {
+      return allowed === origin;
+    }
+  });
 }
 function createPendingRequestsMap() {
   return /* @__PURE__ */ new Map();
@@ -171,22 +177,29 @@ function sendInit(iframe, pendingMap, config) {
   return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.INIT, config);
 }
 function handleMessageEvent(event, pendingMap, setIsReady, setError, onReady, onError, onPaymentComplete, onPaymentFailed, onPaymentPending, onPaymentMethodSelected) {
-  if (!isValidOrigin(event.origin, ALLOWED_ORIGINS))
-    return;
   const payload = event.data;
   const { requestId, type, data, error } = payload;
-  if (requestId && pendingMap?.has(requestId)) {
+  if (type === POST_MESSAGES.READY) {
+    setIsReady(true);
+    if (window.PayConductor && window.PayConductor.frame)
+      window.PayConductor.frame.isReady = true;
+    onReady?.();
+    if (requestId && pendingMap?.has(requestId)) {
+      const { resolve } = pendingMap.get(requestId);
+      pendingMap.delete(requestId);
+      resolve(data);
+    }
+    return;
+  }
+  if (!isValidOrigin(event.origin, ALLOWED_ORIGINS))
+    return;
+  if (requestId && pendingMap && pendingMap.has(requestId)) {
     const { resolve, reject } = pendingMap.get(requestId);
     pendingMap.delete(requestId);
     if (error)
       reject(new Error(String(error.message)));
     else
       resolve(data);
-    return;
-  }
-  if (type === POST_MESSAGES.READY) {
-    setIsReady(true);
-    onReady?.();
     return;
   }
   if (type === POST_MESSAGES.ERROR) {
@@ -217,12 +230,10 @@ function handleMessageEvent(event, pendingMap, setIsReady, setError, onReady, on
 }
 const PayConductor = /* @__PURE__ */ qwik.componentQrl(/* @__PURE__ */ qwik.inlinedQrl((props) => {
   const state = qwik.useStore({
-    configSent: false,
     error: null,
     iframeUrl: "",
     isLoaded: false,
     isReady: false,
-    pendingMap: null,
     selectedPaymentMethod: null
   });
   qwik.useVisibleTaskQrl(/* @__PURE__ */ qwik.inlinedQrl(() => {
@@ -231,40 +242,40 @@ const PayConductor = /* @__PURE__ */ qwik.componentQrl(/* @__PURE__ */ qwik.inli
       if (props2.debug)
         console.log("[PayConductor]", ...args);
     };
-    log("SDK initializing", {
-      publicKey: props2.publicKey
-    });
     const iframeUrl = buildIframeUrl({
       publicKey: props2.publicKey
     });
     state2.iframeUrl = iframeUrl;
     state2.isLoaded = true;
-    state2.pendingMap = createPendingRequestsMap();
-    log("iframeUrl built:", iframeUrl);
-    log("pendingMap created");
+    const pendingMap = createPendingRequestsMap();
+    let configSent = false;
+    log("init", props2.publicKey);
+    log("iframeUrl", iframeUrl);
     const getIframe = () => {
       const ref = window.PayConductor?.frame?.iframe;
-      if (!ref)
-        return void 0;
-      if (ref instanceof HTMLIFrameElement)
+      if (ref) {
+        if (ref instanceof HTMLIFrameElement)
+          return ref;
+        if (typeof ref === "object" && ref !== null) {
+          const obj = ref;
+          if ("current" in obj && obj.current instanceof HTMLIFrameElement)
+            return obj.current;
+          if ("value" in obj && obj.value instanceof HTMLIFrameElement)
+            return obj.value;
+        }
         return ref;
-      if (typeof ref === "object" && ref !== null) {
-        if ("current" in ref)
-          return ref.current ?? void 0;
-        if ("value" in ref)
-          return ref.value ?? void 0;
       }
-      return ref;
+      return document.querySelector(".payconductor-element iframe") ?? void 0;
     };
     const frame = {
-      iframe: null,
-      iframeUrl,
-      get isReady() {
-        return state2.isReady;
+      get iframe() {
+        return document.querySelector(".payconductor-element iframe") ?? null;
       },
-      get error() {
-        return state2.error;
-      }
+      set iframe(_) {
+      },
+      iframeUrl,
+      isReady: window.PayConductor && window.PayConductor.frame ? window.PayConductor.frame.isReady : false,
+      error: null
     };
     const config = {
       publicKey: props2.publicKey,
@@ -275,18 +286,18 @@ const PayConductor = /* @__PURE__ */ qwik.componentQrl(/* @__PURE__ */ qwik.inli
     };
     const api = {
       confirmPayment: (options) => {
-        log("confirmPayment called", {
+        log("→ CONFIRM_PAYMENT", {
           orderId: options.orderId
         });
-        return confirmPayment(getIframe(), state2.pendingMap, options);
+        return confirmPayment(getIframe(), pendingMap, options);
       },
       validate: (data) => {
-        log("validate called", data);
-        return validatePayment(getIframe(), state2.pendingMap, data);
+        log("→ VALIDATE", data);
+        return validatePayment(getIframe(), pendingMap, data);
       },
       reset: () => {
-        log("reset called");
-        return resetPayment(getIframe(), state2.pendingMap);
+        log("→ RESET");
+        return resetPayment(getIframe(), pendingMap);
       },
       getSelectedPaymentMethod: () => state2.selectedPaymentMethod
     };
@@ -296,23 +307,26 @@ const PayConductor = /* @__PURE__ */ qwik.componentQrl(/* @__PURE__ */ qwik.inli
       api,
       selectedPaymentMethod: state2.selectedPaymentMethod
     };
-    log("window.PayConductor registered");
+    log("registered");
+    window.dispatchEvent(new CustomEvent("payconductor:registered", {
+      detail: window.PayConductor
+    }));
     const sendConfigToIframe = async () => {
-      if (!state2.configSent) {
+      if (!configSent) {
         const iframe = getIframe();
         if (!iframe) {
-          log("sendConfigToIframe: iframe not found, skipping");
+          log("→ CONFIG skipped: iframe not found");
           return;
         }
-        state2.configSent = true;
-        log("sendConfig →", {
+        configSent = true;
+        log("→ CONFIG", {
           theme: props2.theme,
           locale: props2.locale,
           paymentMethods: props2.paymentMethods,
           defaultPaymentMethod: props2.defaultPaymentMethod,
           showPaymentButtons: props2.showPaymentButtons
         });
-        sendConfig(iframe, state2.pendingMap, {
+        sendConfig(iframe, pendingMap, {
           theme: props2.theme,
           locale: props2.locale,
           paymentMethods: props2.paymentMethods,
@@ -323,32 +337,31 @@ const PayConductor = /* @__PURE__ */ qwik.componentQrl(/* @__PURE__ */ qwik.inli
       }
     };
     const eventHandler = (event) => {
-      handleMessageEvent(event, state2.pendingMap, (val) => {
+      if (event.data?.type)
+        log("←", event.data.type, event.data.data ?? "");
+      handleMessageEvent(event, pendingMap, (val) => {
         state2.isReady = val;
-        if (val) {
-          log("iframe Ready — sending config");
+        frame.isReady = val;
+        if (window.PayConductor?.frame)
+          window.PayConductor.frame.isReady = val;
+        if (val)
           sendConfigToIframe();
-        }
       }, (val) => {
         state2.error = val;
-        log("iframe Error:", val);
+        frame.error = val;
+        if (window.PayConductor?.frame)
+          window.PayConductor.frame.error = val;
       }, () => {
-        log("onReady fired");
         props2.onReady?.();
       }, (err) => {
-        log("onError fired:", err);
         props2.onError?.(err);
       }, (data) => {
-        log("PaymentComplete:", data);
         props2.onPaymentComplete?.(data);
       }, (data) => {
-        log("PaymentFailed:", data);
         props2.onPaymentFailed?.(data);
       }, (data) => {
-        log("PaymentPending:", data);
         props2.onPaymentPending?.(data);
       }, (method) => {
-        log("PaymentMethodSelected:", method);
         state2.selectedPaymentMethod = method;
         if (window.PayConductor)
           window.PayConductor.selectedPaymentMethod = method;
@@ -356,8 +369,34 @@ const PayConductor = /* @__PURE__ */ qwik.componentQrl(/* @__PURE__ */ qwik.inli
       });
     };
     window.addEventListener("message", eventHandler);
-    log("SDK initialized — waiting for PayConductorCheckoutElement");
-  }, "PayConductor_component_useVisibleTask_qyZq2iJOwH0", [
+    const trySendConfig = () => {
+      const el = getIframe();
+      if (!el)
+        return false;
+      try {
+        const readyState = el.contentDocument?.readyState ?? el.contentWindow?.document?.readyState;
+        if (readyState === "complete") {
+          sendConfigToIframe();
+          return true;
+        }
+      } catch {
+      }
+      return false;
+    };
+    const pollForIframe = () => {
+      if (trySendConfig())
+        return;
+      const el = getIframe();
+      if (el) {
+        el.addEventListener("load", () => sendConfigToIframe(), {
+          once: true
+        });
+        return;
+      }
+      setTimeout(pollForIframe, 50);
+    };
+    pollForIframe();
+  }, "PayConductor_component_useVisibleTask_OFsGj002hjE", [
     props,
     state
   ]));
@@ -367,8 +406,8 @@ const PayConductor = /* @__PURE__ */ qwik.componentQrl(/* @__PURE__ */ qwik.inli
     style: {
       display: "contents"
     }
-  }, /* @__PURE__ */ qwik._jsxC(qwik.Slot, null, 3, "Qx_0"), 1, "Qx_1");
-}, "PayConductor_component_3FCCzbyilZQ"));
+  }, /* @__PURE__ */ qwik._jsxC(qwik.Slot, null, 3, "Xn_0"), 1, "Xn_1");
+}, "PayConductor_component_xB0V0hXWu0M"));
 const PayConductorCheckoutElement = /* @__PURE__ */ qwik.componentQrl(/* @__PURE__ */ qwik.inlinedQrl((props) => {
   const iframeRef = qwik.useSignal();
   const state = qwik.useStore({
@@ -376,18 +415,29 @@ const PayConductorCheckoutElement = /* @__PURE__ */ qwik.componentQrl(/* @__PURE
     isLoaded: false
   });
   qwik.useVisibleTaskQrl(/* @__PURE__ */ qwik.inlinedQrl(() => {
-    const [iframeRef2, state2] = qwik.useLexicalScope();
+    const [state2] = qwik.useLexicalScope();
+    const init = (ctx2) => {
+      if (!ctx2?.frame)
+        return;
+      state2.iframeUrl = ctx2.frame.iframeUrl || "";
+      state2.isLoaded = true;
+      if (window.PayConductor && window.PayConductor.frame)
+        window.PayConductor.frame.isReady = true;
+      console.log("init", {
+        PayConductor: window.PayConductor
+      });
+    };
     const ctx = typeof window !== "undefined" ? window.PayConductor : null;
-    if (!ctx)
-      console.warn("[PayConductorCheckoutElement] window.PayConductor not found — ensure <PayConductor> is mounted before <PayConductorCheckoutElement>");
-    if (ctx?.frame) {
-      state2.iframeUrl = ctx.frame.iframeUrl || "";
-      ctx.frame.iframe = iframeRef2.value;
-      console.log("[PayConductorCheckoutElement] iframe registered, src:", state2.iframeUrl);
+    if (ctx)
+      init(ctx);
+    else {
+      const handler = (e) => {
+        init(e.detail);
+        window.removeEventListener("payconductor:registered", handler);
+      };
+      window.addEventListener("payconductor:registered", handler);
     }
-    state2.isLoaded = true;
-  }, "PayConductorCheckoutElement_component_useVisibleTask_oDLKK0NDziI", [
-    iframeRef,
+  }, "PayConductorCheckoutElement_component_useVisibleTask_dU8c2Ex0fjc", [
     state
   ]));
   return /* @__PURE__ */ qwik._jsxQ("div", null, {
@@ -408,8 +458,8 @@ const PayConductorCheckoutElement = /* @__PURE__ */ qwik.componentQrl(/* @__PURE
       state
     ], "p0.iframeUrl"),
     title: "PayConductor"
-  }, null, 3, "oe_0") : null, 1, "oe_1");
-}, "PayConductorCheckoutElement_component_GfpFgBlahhU"));
+  }, null, 3, "CI_0") : null, 1, "CI_1");
+}, "PayConductorCheckoutElement_component_6AazrlyWV70"));
 function usePayConductor() {
   const ctx = typeof window !== "undefined" ? window.PayConductor : null;
   const config = ctx?.config ? {
@@ -433,21 +483,29 @@ function usePayConductor() {
   };
 }
 function getIframeFromContext(ctx) {
-  if (!ctx?.frame?.iframe)
-    return null;
-  const iframeRef = ctx.frame.iframe;
-  if (iframeRef instanceof HTMLIFrameElement)
-    return iframeRef;
-  if (iframeRef && typeof iframeRef === "object" && "value" in iframeRef) {
-    const value = iframeRef.value;
-    if (value instanceof HTMLIFrameElement)
-      return value;
+  if (ctx?.frame?.iframe) {
+    const iframeRef = ctx.frame.iframe;
+    if (iframeRef instanceof HTMLIFrameElement)
+      return iframeRef;
+    if (iframeRef && typeof iframeRef === "object") {
+      if ("current" in iframeRef) {
+        const el = iframeRef.current;
+        if (el instanceof HTMLIFrameElement)
+          return el;
+      }
+      if ("value" in iframeRef) {
+        const el = iframeRef.value;
+        if (el instanceof HTMLIFrameElement)
+          return el;
+      }
+    }
   }
-  return null;
+  return document.querySelector(".payconductor-element iframe") ?? null;
 }
 function usePayconductorElement() {
-  const ctx = typeof window !== "undefined" ? window.PayConductor : null;
+  const getCtx = () => typeof window !== "undefined" ? window.PayConductor : null;
   const sendToIframe = (type, data) => {
+    const ctx = getCtx();
     if (!ctx)
       return;
     const iframe = getIframeFromContext(ctx);
@@ -457,54 +515,36 @@ function usePayconductorElement() {
         data
       }, "*");
   };
-  if (!ctx)
-    return {
-      init: async () => {
-        throw new Error("PayConductor not initialized");
-      },
-      confirmPayment: async () => {
-        throw new Error("PayConductor not initialized");
-      },
-      validate: async () => {
-        throw new Error("PayConductor not initialized");
-      },
-      reset: async () => {
-        throw new Error("PayConductor not initialized");
-      },
-      getSelectedPaymentMethod: () => null,
-      updateConfig: () => {
-        throw new Error("PayConductor not initialized");
-      },
-      updateorderId: () => {
-        throw new Error("PayConductor not initialized");
-      },
-      update: () => {
-        throw new Error("PayConductor not initialized");
-      },
-      submit: async () => {
-        throw new Error("PayConductor not initialized");
-      }
-    };
   return {
     init: async (config) => {
-      const iframe = getIframeFromContext(ctx);
+      const iframe = getIframeFromContext(getCtx());
       const pendingMap = createPendingRequestsMap();
       return sendInit(iframe || void 0, pendingMap, config);
     },
     confirmPayment: async (options) => {
-      const iframe = getIframeFromContext(ctx);
+      const iframe = getIframeFromContext(getCtx());
       const pendingMap = createPendingRequestsMap();
       if (!options.orderId)
         throw new Error("Order ID is required");
       return confirmPayment(iframe || void 0, pendingMap, options);
     },
-    validate: ctx.api.validate,
-    reset: ctx.api.reset,
+    validate: (data) => {
+      const ctx = getCtx();
+      if (!ctx)
+        return Promise.resolve(false);
+      return ctx.api.validate(data);
+    },
+    reset: () => {
+      const ctx = getCtx();
+      if (!ctx)
+        return Promise.resolve();
+      return ctx.api.reset();
+    },
     getSelectedPaymentMethod: () => {
-      return ctx?.selectedPaymentMethod ?? null;
+      return getCtx()?.selectedPaymentMethod ?? null;
     },
     updateConfig: (config) => {
-      const currentConfig = ctx.config;
+      const currentConfig = getCtx()?.config;
       sendToIframe(POST_MESSAGES.CONFIG, {
         publicKey: currentConfig?.publicKey,
         orderId: currentConfig?.orderId,
@@ -514,7 +554,7 @@ function usePayconductorElement() {
       });
     },
     updateorderId: (orderId) => {
-      const currentConfig = ctx.config;
+      const currentConfig = getCtx()?.config;
       sendToIframe(POST_MESSAGES.CONFIG, {
         publicKey: currentConfig?.publicKey,
         orderId,
@@ -527,7 +567,7 @@ function usePayconductorElement() {
       sendToIframe(POST_MESSAGES.UPDATE, options);
     },
     submit: async () => {
-      const iframe = getIframeFromContext(ctx);
+      const iframe = getIframeFromContext(getCtx());
       const pendingMap = createPendingRequestsMap();
       try {
         await sendMessageToIframe(iframe || void 0, pendingMap, POST_MESSAGES.CONFIRM_PAYMENT, {});

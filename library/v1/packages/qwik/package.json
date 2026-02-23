@@ -1,6 +1,6 @@
 {
   "name": "@payconductor/qwik",
-  "version": "1.0.5",
+  "version": "1.0.0",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
   "types": "./lib-types/index.d.ts",
@@ -26,6 +26,9 @@
     "build:watch": "npm run build.types && npm run build.lib -- --watch",
     "release": "np",
     "qwik": "qwik"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@builder.io/qwik": "1.2.18",

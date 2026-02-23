@@ -1,20 +1,20 @@
-import { ALLOWED_ORIGINS, MESSAGE_TYPES, REQUEST_TIMEOUT } from './constants';
-import { generateRequestId, isValidOrigin } from './utils';
+import { ALLOWED_ORIGINS, POST_MESSAGES, REQUEST_TIMEOUT } from "./constants";
+import { generateRequestId, isValidOrigin } from "./utils";
 export function createPendingRequestsMap() {
     return new Map();
 }
 export function sendMessageToIframe(iframe, pendingMap, type, data) {
     return new Promise((resolve, reject) => {
         if (!iframe || !("contentWindow" in iframe)) {
-            reject(new Error('Iframe not defined'));
+            reject(new Error("Iframe not defined"));
             return;
         }
         if (!iframe?.contentWindow) {
-            reject(new Error('Iframe not ready'));
+            reject(new Error("Iframe not ready"));
             return;
         }
         if (!pendingMap) {
-            reject(new Error('Pending requests not initialized'));
+            reject(new Error("Pending requests not initialized"));
             return;
         }
         const requestId = generateRequestId();
@@ -26,57 +26,88 @@ export function sendMessageToIframe(iframe, pendingMap, type, data) {
             type,
             data,
             requestId
-        }, '*');
+        }, "*");
         setTimeout(() => {
             if (pendingMap?.has(requestId)) {
                 pendingMap.delete(requestId);
-                reject(new Error('Request timeout'));
+                reject(new Error("Request timeout"));
             }
         }, REQUEST_TIMEOUT);
     });
 }
-export function createPaymentMethod(iframe, pendingMap, options) {
-    return sendMessageToIframe(iframe, pendingMap, MESSAGE_TYPES.CREATE_PAYMENT_METHOD, options);
-}
-export function confirmPayment(iframe, pendingMap, paymentMethodId) {
-    return sendMessageToIframe(iframe, pendingMap, MESSAGE_TYPES.CONFIRM_PAYMENT, {
-        paymentMethodId
+export function confirmPayment(iframe, pendingMap, options) {
+    return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.CONFIRM_PAYMENT, {
+        orderId: options.orderId
     });
 }
 export function validatePayment(iframe, pendingMap, data) {
-    return sendMessageToIframe(iframe, pendingMap, MESSAGE_TYPES.VALIDATE, data);
+    return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.VALIDATE, data);
 }
 export function resetPayment(iframe, pendingMap) {
-    return sendMessageToIframe(iframe, pendingMap, MESSAGE_TYPES.RESET);
+    return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.RESET);
 }
-export function handleMessageEvent(event, pendingMap, setIsReady, setError, onReady, onError, onPaymentComplete) {
+export function sendConfig(iframe, pendingMap, config) {
+    return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.CONFIG, config);
+}
+export function sendInit(iframe, pendingMap, config) {
+    return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.INIT, config);
+}
+export function handleMessageEvent(event, pendingMap, setIsReady, setError, onReady, onError, onPaymentComplete, onPaymentFailed, onPaymentPending, onPaymentMethodSelected) {
+    const payload = event.data;
+    const { requestId, type, data, error } = payload;
+    if (type === POST_MESSAGES.READY) {
+        setIsReady(true);
+        if (window.PayConductor && window.PayConductor.frame)
+            window.PayConductor.frame.isReady = true;
+        onReady?.();
+        if (requestId && pendingMap?.has(requestId)) {
+            const { resolve } = pendingMap.get(requestId);
+            pendingMap.delete(requestId);
+            resolve(data);
+        }
+        return;
+    }
     if (!isValidOrigin(event.origin, ALLOWED_ORIGINS)) {
         return;
     }
-    const payload = event.data;
-    const { requestId, type, data, error } = payload;
-    if (requestId && pendingMap?.has(requestId)) {
+    if (requestId && pendingMap && pendingMap.has(requestId)) {
         const { resolve, reject } = pendingMap.get(requestId);
         pendingMap.delete(requestId);
         if (error) {
-            reject(new Error(error.message));
+            reject(new Error(String(error.message)));
         }
         else {
             resolve(data);
         }
         return;
     }
-    switch (type) {
-        case MESSAGE_TYPES.READY:
-            setIsReady(true);
-            onReady?.();
-            break;
-        case MESSAGE_TYPES.ERROR:
-            setError(error?.message || 'Unknown error');
-            onError?.(new Error(error?.message));
-            break;
-        case MESSAGE_TYPES.PAYMENT_COMPLETE:
+    if (type === POST_MESSAGES.ERROR) {
+        setError(error?.message || "Unknown error");
+        onError?.(new Error(String(error?.message)));
+        return;
+    }
+    if (type === POST_MESSAGES.PAYMENT_COMPLETE) {
+        if (data && typeof data === "object" && "status" in data) {
             onPaymentComplete?.(data);
-            break;
+        }
+        return;
+    }
+    if (type === POST_MESSAGES.PAYMENT_FAILED) {
+        if (data && typeof data === "object" && "status" in data) {
+            onPaymentFailed?.(data);
+        }
+        return;
+    }
+    if (type === POST_MESSAGES.PAYMENT_PENDING) {
+        if (data && typeof data === "object" && "status" in data) {
+            onPaymentPending?.(data);
+        }
+        return;
+    }
+    if (type === POST_MESSAGES.PAYMENT_METHOD_SELECTED) {
+        if (data && typeof data === "object" && "paymentMethod" in data) {
+            onPaymentMethodSelected?.(data.paymentMethod);
+        }
+        return;
     }
 }
