@@ -3,6 +3,8 @@ import {
 	PayConductorCheckoutElement,
 	usePayConductor,
 	usePayconductorElement,
+	PaymentResult,
+	PaymentMethod
 } from "@payconductor/react";
 import {
 	AvailablePaymentMethods,
