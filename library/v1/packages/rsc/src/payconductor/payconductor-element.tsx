@@ -7,6 +7,7 @@ export interface PayConductorCheckoutElementProps {
 }
 
 import { IFRAME_DEFAULT_HEIGHT_VALUE } from "./constants";
+import { PayConductorContextValue } from "./types";
 
 function PayConductorCheckoutElement(props: PayConductorCheckoutElementProps) {
   const iframeRef = useRef<any>(null);
@@ -15,12 +16,10 @@ function PayConductorCheckoutElement(props: PayConductorCheckoutElementProps) {
   const [isLoaded, setIsLoaded] = useState(() => false);
 
   useEffect(() => {
-    const init = (ctx: typeof window.PayConductor) => {
+    const init = (ctx: PayConductorContextValue) => {
       if (!ctx?.frame) return;
       setIframeUrl(ctx.frame.iframeUrl || "");
       setIsLoaded(true);
-      if (window.PayConductor && window.PayConductor.frame)
-        window.PayConductor.frame.isReady = true;
       console.log("init", {
         PayConductor: window.PayConductor,
       });
@@ -30,7 +29,7 @@ function PayConductorCheckoutElement(props: PayConductorCheckoutElementProps) {
       init(ctx);
     } else {
       const handler = (e: Event) => {
-        init((e as CustomEvent).detail);
+        init((e as CustomEvent).detail as PayConductorContextValue);
         window.removeEventListener("payconductor:registered", handler);
       };
       window.addEventListener("payconductor:registered", handler);

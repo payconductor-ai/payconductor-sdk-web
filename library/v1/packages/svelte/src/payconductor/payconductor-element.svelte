@@ -8,6 +8,7 @@
   import { onMount } from "svelte";
 
   import { IFRAME_DEFAULT_HEIGHT_VALUE } from "./constants";
+  import { PayConductorContextValue } from "./types";
 
   export let height: PayConductorCheckoutElementProps["height"] = undefined;
   function stringifyStyles(stylesObj) {
@@ -27,12 +28,10 @@
   let isLoaded = false;
 
   onMount(() => {
-    const init = (ctx: typeof window.PayConductor) => {
+    const init = (ctx: PayConductorContextValue) => {
       if (!ctx?.frame) return;
       iframeUrl = ctx.frame.iframeUrl || "";
       isLoaded = true;
-      if (window.PayConductor && window.PayConductor.frame)
-        window.PayConductor.frame.isReady = true;
       console.log("init", {
         PayConductor: window.PayConductor,
       });
@@ -42,7 +41,7 @@
       init(ctx);
     } else {
       const handler = (e: Event) => {
-        init((e as CustomEvent).detail);
+        init((e as CustomEvent).detail as PayConductorContextValue);
         window.removeEventListener("payconductor:registered", handler);
       };
       window.addEventListener("payconductor:registered", handler);

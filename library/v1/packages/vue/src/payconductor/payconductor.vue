@@ -32,6 +32,7 @@ import type {
   PayConductorState,
   PendingRequest,
 } from "./types";
+import { POST_MESSAGES } from "./constants";
 import { buildIframeUrl } from "./utils";
 
 export interface PayConductorEmbedProps
@@ -70,7 +71,6 @@ export default defineComponent({
   data() {
     return {
       isLoaded: false,
-      isReady: false,
       error: null,
       iframeUrl: "",
       selectedPaymentMethod: null,
@@ -119,10 +119,6 @@ export default defineComponent({
       },
       set iframe(_: HTMLIFrameElement | Element | unknown | null) {},
       iframeUrl,
-      isReady:
-        window.PayConductor && window.PayConductor.frame
-          ? window.PayConductor.frame.isReady
-          : false,
       error: null,
     };
     const config: PayConductorConfig = {
@@ -137,7 +133,30 @@ export default defineComponent({
         log("→ CONFIRM_PAYMENT", {
           orderId: options.orderId,
         });
-        return confirmPayment(getIframe(), pendingMap, options);
+        const iframe = getIframe();
+        if (iframe?.contentWindow) {
+          iframe.contentWindow.postMessage(
+            {
+              type: POST_MESSAGES.CONFIG,
+              data: {
+                publicKey: this.publicKey,
+                orderId: options.orderId,
+                theme: this.theme,
+                locale: this.locale,
+                paymentMethods: this.paymentMethods,
+                defaultPaymentMethod: this.defaultPaymentMethod,
+                showPaymentButtons: this.showPaymentButtons,
+                nuPayConfig: this.nuPayConfig,
+              },
+            },
+            "*"
+          );
+        }
+        config.orderId = options.orderId;
+        if (window.PayConductor?.config) {
+          window.PayConductor.config.orderId = options.orderId;
+        }
+        return confirmPayment(iframe, pendingMap, options);
       },
       validate: (data: unknown) => {
         log("→ VALIDATE", data);
@@ -194,19 +213,15 @@ export default defineComponent({
         event,
         pendingMap,
         (val) => {
-          this.isReady = val;
-          frame.isReady = val;
-          if (window.PayConductor?.frame)
-            window.PayConductor.frame.isReady = val;
-          if (val) sendConfigToIframe();
-        },
-        (val) => {
           this.error = val;
           frame.error = val;
-          if (window.PayConductor?.frame) window.PayConductor.frame.error = val;
+          if (window.PayConductor?.frame) {
+            window.PayConductor.frame.error = val;
+          }
         },
         () => {
           this.onReady?.();
+          sendConfigToIframe();
         },
         (err) => {
           this.onError?.(err);
@@ -222,8 +237,9 @@ export default defineComponent({
         },
         (method) => {
           this.selectedPaymentMethod = method;
-          if (window.PayConductor)
+          if (window.PayConductor) {
             window.PayConductor.selectedPaymentMethod = method;
+          }
           this.onPaymentMethodSelected?.(method);
         }
       );

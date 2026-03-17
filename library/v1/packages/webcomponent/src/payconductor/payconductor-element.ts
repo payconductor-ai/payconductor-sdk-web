@@ -3,6 +3,7 @@ export interface PayConductorCheckoutElementProps {
 }
 
 import { IFRAME_DEFAULT_HEIGHT_VALUE } from "./constants";
+import { PayConductorContextValue } from "./types";
 
 /**
  * Usage:
@@ -106,14 +107,12 @@ class PayConductorCheckoutElement extends HTMLElement {
 
   onMount() {
     // onMount
-    const init = (ctx: typeof window.PayConductor) => {
+    const init = (ctx: PayConductorContextValue) => {
       if (!ctx?.frame) return;
       this.state.iframeUrl = ctx.frame.iframeUrl || "";
       this.update();
       this.state.isLoaded = true;
       this.update();
-      if (window.PayConductor && window.PayConductor.frame)
-        window.PayConductor.frame.isReady = true;
       console.log("init", {
         PayConductor: window.PayConductor,
       });
@@ -123,7 +122,7 @@ class PayConductorCheckoutElement extends HTMLElement {
       init(ctx);
     } else {
       const handler = (e: Event) => {
-        init((e as CustomEvent).detail);
+        init((e as CustomEvent).detail as PayConductorContextValue);
         window.removeEventListener("payconductor:registered", handler);
       };
       window.addEventListener("payconductor:registered", handler);

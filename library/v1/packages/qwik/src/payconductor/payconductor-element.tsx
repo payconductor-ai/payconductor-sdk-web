@@ -1,5 +1,7 @@
 import { IFRAME_DEFAULT_HEIGHT_VALUE } from "./constants";
 
+import { PayConductorContextValue } from "./types";
+
 import {
   Fragment,
   component$,
@@ -17,12 +19,10 @@ export const PayConductorCheckoutElement = component$(
     const iframeRef = useSignal<Element>();
     const state = useStore<any>({ iframeUrl: "", isLoaded: false });
     useVisibleTask$(() => {
-      const init = (ctx: typeof window.PayConductor) => {
+      const init = (ctx: PayConductorContextValue) => {
         if (!ctx?.frame) return;
         state.iframeUrl = ctx.frame.iframeUrl || "";
         state.isLoaded = true;
-        if (window.PayConductor && window.PayConductor.frame)
-          window.PayConductor.frame.isReady = true;
         console.log("init", {
           PayConductor: window.PayConductor,
         });
@@ -32,7 +32,7 @@ export const PayConductorCheckoutElement = component$(
         init(ctx);
       } else {
         const handler = (e: Event) => {
-          init((e as CustomEvent).detail);
+          init((e as CustomEvent).detail as PayConductorContextValue);
           window.removeEventListener("payconductor:registered", handler);
         };
         window.addEventListener("payconductor:registered", handler);

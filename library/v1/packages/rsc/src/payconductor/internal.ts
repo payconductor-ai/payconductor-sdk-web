@@ -64,7 +64,7 @@ type MessagePayload = {
     message?: string;
   };
 };
-export function handleMessageEvent(event: MessageEvent, pendingMap: Map<string, PendingRequest> | null, setIsReady: (value: boolean) => void, setError: (value: string | null) => void, onReady?: () => void, onError?: (error: Error) => void, onPaymentComplete?: (data: PaymentResult) => void, onPaymentFailed?: (data: PaymentResult) => void, onPaymentPending?: (data: PaymentResult) => void, onPaymentMethodSelected?: (method: PaymentMethod) => void) {
+export function handleMessageEvent(event: MessageEvent, pendingMap: Map<string, PendingRequest> | null, setError: (value: string | null) => void, onReady?: () => void, onError?: (error: Error) => void, onPaymentComplete?: (data: PaymentResult) => void, onPaymentFailed?: (data: PaymentResult) => void, onPaymentPending?: (data: PaymentResult) => void, onPaymentMethodSelected?: (method: PaymentMethod) => void) {
   const payload: MessagePayload = event.data;
   const {
     requestId,
@@ -73,8 +73,6 @@ export function handleMessageEvent(event: MessageEvent, pendingMap: Map<string, 
     error
   } = payload;
   if (type === POST_MESSAGES.READY) {
-    setIsReady(true);
-    if (window.PayConductor && window.PayConductor.frame) window.PayConductor.frame.isReady = true;
     onReady?.();
     if (requestId && pendingMap?.has(requestId)) {
       const {

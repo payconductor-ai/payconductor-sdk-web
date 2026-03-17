@@ -23,7 +23,7 @@ export interface UsePayconductorElementReturn {
     reset: () => Promise<void>;
     getSelectedPaymentMethod: () => PaymentMethod | null;
     updateConfig: (config: Partial<Pick<PayConductorConfig, "theme" | "locale" | "paymentMethods">>) => void;
-    updateorderId: (orderId: string) => void;
+    updateOrderId: (orderId: string) => void;
     update: (options: UpdateOptions) => void;
     submit: () => Promise<SubmitResult>;
 }

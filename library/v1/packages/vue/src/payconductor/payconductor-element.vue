@@ -25,6 +25,7 @@
 import { defineComponent } from "vue";
 
 import { IFRAME_DEFAULT_HEIGHT_VALUE } from "./constants";
+import { PayConductorContextValue } from "./types";
 
 export interface PayConductorCheckoutElementProps {
   height?: string;
@@ -40,12 +41,10 @@ export default defineComponent({
   },
 
   mounted() {
-    const init = (ctx: typeof window.PayConductor) => {
+    const init = (ctx: PayConductorContextValue) => {
       if (!ctx?.frame) return;
       this.iframeUrl = ctx.frame.iframeUrl || "";
       this.isLoaded = true;
-      if (window.PayConductor && window.PayConductor.frame)
-        window.PayConductor.frame.isReady = true;
       console.log("init", {
         PayConductor: window.PayConductor,
       });
@@ -55,7 +54,7 @@ export default defineComponent({
       init(ctx);
     } else {
       const handler = (e: Event) => {
-        init((e as CustomEvent).detail);
+        init((e as CustomEvent).detail as PayConductorContextValue);
         window.removeEventListener("payconductor:registered", handler);
       };
       window.addEventListener("payconductor:registered", handler);

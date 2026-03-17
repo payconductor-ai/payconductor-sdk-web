@@ -35,6 +35,7 @@ import type {
   PayConductorState,
   PendingRequest,
 } from "./types";
+import { POST_MESSAGES } from "./constants";
 import { buildIframeUrl } from "./utils";
 
 @Component({
@@ -77,7 +78,6 @@ export default class PayConductor {
   onPaymentMethodSelected!: PayConductorEmbedProps["onPaymentMethodSelected"];
 
   isLoaded: PayConductorState["isLoaded"] = false;
-  isReady: PayConductorState["isReady"] = false;
   error: PayConductorState["error"] = null;
   iframeUrl: PayConductorState["iframeUrl"] = "";
   selectedPaymentMethod: PayConductorState["selectedPaymentMethod"] = null;
@@ -126,10 +126,6 @@ export default class PayConductor {
         },
         set iframe(_: HTMLIFrameElement | Element | unknown | null) {},
         iframeUrl,
-        isReady:
-          window.PayConductor && window.PayConductor.frame
-            ? window.PayConductor.frame.isReady
-            : false,
         error: null,
       };
       const config: PayConductorConfig = {
@@ -144,7 +140,30 @@ export default class PayConductor {
           log("→ CONFIRM_PAYMENT", {
             orderId: options.orderId,
           });
-          return confirmPayment(getIframe(), pendingMap, options);
+          const iframe = getIframe();
+          if (iframe?.contentWindow) {
+            iframe.contentWindow.postMessage(
+              {
+                type: POST_MESSAGES.CONFIG,
+                data: {
+                  publicKey: this.publicKey,
+                  orderId: options.orderId,
+                  theme: this.theme,
+                  locale: this.locale,
+                  paymentMethods: this.paymentMethods,
+                  defaultPaymentMethod: this.defaultPaymentMethod,
+                  showPaymentButtons: this.showPaymentButtons,
+                  nuPayConfig: this.nuPayConfig,
+                },
+              },
+              "*"
+            );
+          }
+          config.orderId = options.orderId;
+          if (window.PayConductor?.config) {
+            window.PayConductor.config.orderId = options.orderId;
+          }
+          return confirmPayment(iframe, pendingMap, options);
         },
         validate: (data: unknown) => {
           log("→ VALIDATE", data);
@@ -201,20 +220,15 @@ export default class PayConductor {
           event,
           pendingMap,
           (val) => {
-            this.isReady = val;
-            frame.isReady = val;
-            if (window.PayConductor?.frame)
-              window.PayConductor.frame.isReady = val;
-            if (val) sendConfigToIframe();
-          },
-          (val) => {
             this.error = val;
             frame.error = val;
-            if (window.PayConductor?.frame)
+            if (window.PayConductor?.frame) {
               window.PayConductor.frame.error = val;
+            }
           },
           () => {
             this.onReady?.();
+            sendConfigToIframe();
           },
           (err) => {
             this.onError?.(err);
@@ -230,8 +244,9 @@ export default class PayConductor {
           },
           (method) => {
             this.selectedPaymentMethod = method;
-            if (window.PayConductor)
+            if (window.PayConductor) {
               window.PayConductor.selectedPaymentMethod = method;
+            }
             this.onPaymentMethodSelected?.(method);
           }
         );

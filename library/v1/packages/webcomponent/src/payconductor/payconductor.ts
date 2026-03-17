@@ -30,6 +30,7 @@ import type {
   PayConductorState,
   PendingRequest,
 } from "./types";
+import { POST_MESSAGES } from "./constants";
 import { buildIframeUrl } from "./utils";
 
 /**
@@ -49,7 +50,6 @@ class PayConductor extends HTMLElement {
 
     this.state = {
       isLoaded: false,
-      isReady: false,
       error: null,
       iframeUrl: "",
       selectedPaymentMethod: null,
@@ -163,10 +163,6 @@ class PayConductor extends HTMLElement {
       },
       set iframe(_: HTMLIFrameElement | Element | unknown | null) {},
       iframeUrl,
-      isReady:
-        window.PayConductor && window.PayConductor.frame
-          ? window.PayConductor.frame.isReady
-          : false,
       error: null,
     };
     const config: PayConductorConfig = {
@@ -181,7 +177,30 @@ class PayConductor extends HTMLElement {
         log("→ CONFIRM_PAYMENT", {
           orderId: options.orderId,
         });
-        return confirmPayment(getIframe(), pendingMap, options);
+        const iframe = getIframe();
+        if (iframe?.contentWindow) {
+          iframe.contentWindow.postMessage(
+            {
+              type: POST_MESSAGES.CONFIG,
+              data: {
+                publicKey: this.props.publicKey,
+                orderId: options.orderId,
+                theme: this.props.theme,
+                locale: this.props.locale,
+                paymentMethods: this.props.paymentMethods,
+                defaultPaymentMethod: this.props.defaultPaymentMethod,
+                showPaymentButtons: this.props.showPaymentButtons,
+                nuPayConfig: this.props.nuPayConfig,
+              },
+            },
+            "*"
+          );
+        }
+        config.orderId = options.orderId;
+        if (window.PayConductor?.config) {
+          window.PayConductor.config.orderId = options.orderId;
+        }
+        return confirmPayment(iframe, pendingMap, options);
       },
       validate: (data: unknown) => {
         log("→ VALIDATE", data);
@@ -238,21 +257,16 @@ class PayConductor extends HTMLElement {
         event,
         pendingMap,
         (val) => {
-          this.state.isReady = val;
-          this.update();
-          frame.isReady = val;
-          if (window.PayConductor?.frame)
-            window.PayConductor.frame.isReady = val;
-          if (val) sendConfigToIframe();
-        },
-        (val) => {
           this.state.error = val;
           this.update();
           frame.error = val;
-          if (window.PayConductor?.frame) window.PayConductor.frame.error = val;
+          if (window.PayConductor?.frame) {
+            window.PayConductor.frame.error = val;
+          }
         },
         () => {
           this.props.onReady?.();
+          sendConfigToIframe();
         },
         (err) => {
           this.props.onError?.(err);
@@ -269,8 +283,9 @@ class PayConductor extends HTMLElement {
         (method) => {
           this.state.selectedPaymentMethod = method;
           this.update();
-          if (window.PayConductor)
+          if (window.PayConductor) {
             window.PayConductor.selectedPaymentMethod = method;
+          }
           this.props.onPaymentMethodSelected?.(method);
         }
       );

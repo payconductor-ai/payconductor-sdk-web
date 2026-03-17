@@ -1,6 +1,7 @@
 import { POST_MESSAGES } from "../constants";
 import type { BillingDetails, PayConductorConfig, PaymentMethod, PaymentResult } from "../iframe/types";
-import { confirmPayment, createPendingRequestsMap, sendInit, sendMessageToIframe } from "../internal";
+import { createPendingRequestsMap, sendInit, sendMessageToIframe } from "../internal";
+import { PayConductorContextValue } from "../types";
 export type SubmitResult = {
   error?: {
     message: string;
@@ -24,11 +25,11 @@ export interface UsePayconductorElementReturn {
   reset: () => Promise<void>;
   getSelectedPaymentMethod: () => PaymentMethod | null;
   updateConfig: (config: Partial<Pick<PayConductorConfig, "theme" | "locale" | "paymentMethods">>) => void;
-  updateorderId: (orderId: string) => void;
+  updateOrderId: (orderId: string) => void;
   update: (options: UpdateOptions) => void;
   submit: () => Promise<SubmitResult>;
 }
-function getIframeFromContext(ctx: typeof window.PayConductor): HTMLIFrameElement | null {
+function getIframeFromContext(ctx: PayConductorContextValue | null): HTMLIFrameElement | null {
   if (ctx?.frame?.iframe) {
     const iframeRef = ctx.frame.iframe;
     if (iframeRef instanceof HTMLIFrameElement) return iframeRef;
@@ -65,12 +66,12 @@ export function usePayconductorElement(): UsePayconductorElementReturn {
       return sendInit(iframe || undefined, pendingMap, config);
     },
     confirmPayment: async (options: ConfirmPaymentOptions): Promise<PaymentResult> => {
-      const iframe = getIframeFromContext(getCtx());
-      const pendingMap = createPendingRequestsMap();
       if (!options.orderId) {
         throw new Error("Order ID is required");
       }
-      return confirmPayment(iframe || undefined, pendingMap, options);
+      const ctx = getCtx();
+      if (!ctx?.api) throw new Error("PayConductor not initialized");
+      return ctx.api.confirmPayment(options);
     },
     validate: (data: unknown) => {
       const ctx = getCtx();
@@ -95,7 +96,7 @@ export function usePayconductorElement(): UsePayconductorElementReturn {
         paymentMethods: config.paymentMethods ?? currentConfig?.paymentMethods
       });
     },
-    updateorderId: (orderId: string) => {
+    updateOrderId: (orderId: string) => {
       const currentConfig = getCtx()?.config;
       sendToIframe(POST_MESSAGES.CONFIG, {
         publicKey: currentConfig?.publicKey,

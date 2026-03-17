@@ -176,11 +176,6 @@ export default function PayConductor(props: PayConductorEmbedProps) {
                 event,
                 pendingMap,
                 (val) => {
-                    if (val) {
-                        sendConfigToIframe();
-                    }
-                },
-                (val) => {
                     state.error = val;
                     frame.error = val;
 
@@ -189,7 +184,8 @@ export default function PayConductor(props: PayConductorEmbedProps) {
                     }
                 },
                 () => {
-                    setTimeout(() => props.onReady?.(), 0);
+                    props.onReady?.();
+                    sendConfigToIframe();
                 },
                 (err) => {
                     props.onError?.(err);

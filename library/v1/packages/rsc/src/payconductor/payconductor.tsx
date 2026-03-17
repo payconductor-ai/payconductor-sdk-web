@@ -34,14 +34,11 @@ import type {
   PayConductorState,
   PendingRequest,
 } from "./types";
+import { POST_MESSAGES } from "./constants";
 import { buildIframeUrl } from "./utils";
 
 function PayConductor(props: PayConductorEmbedProps) {
   const [isLoaded, setIsLoaded] = useState<PayConductorState["isLoaded"]>(
-    () => false
-  );
-
-  const [isReady, setIsReady] = useState<PayConductorState["isReady"]>(
     () => false
   );
 
@@ -97,10 +94,6 @@ function PayConductor(props: PayConductorEmbedProps) {
       },
       set iframe(_: HTMLIFrameElement | Element | unknown | null) {},
       iframeUrl,
-      isReady:
-        window.PayConductor && window.PayConductor.frame
-          ? window.PayConductor.frame.isReady
-          : false,
       error: null,
     };
     const config: PayConductorConfig = {
@@ -115,7 +108,30 @@ function PayConductor(props: PayConductorEmbedProps) {
         log("→ CONFIRM_PAYMENT", {
           orderId: options.orderId,
         });
-        return confirmPayment(getIframe(), pendingMap, options);
+        const iframe = getIframe();
+        if (iframe?.contentWindow) {
+          iframe.contentWindow.postMessage(
+            {
+              type: POST_MESSAGES.CONFIG,
+              data: {
+                publicKey: props.publicKey,
+                orderId: options.orderId,
+                theme: props.theme,
+                locale: props.locale,
+                paymentMethods: props.paymentMethods,
+                defaultPaymentMethod: props.defaultPaymentMethod,
+                showPaymentButtons: props.showPaymentButtons,
+                nuPayConfig: props.nuPayConfig,
+              },
+            },
+            "*"
+          );
+        }
+        config.orderId = options.orderId;
+        if (window.PayConductor?.config) {
+          window.PayConductor.config.orderId = options.orderId;
+        }
+        return confirmPayment(iframe, pendingMap, options);
       },
       validate: (data: unknown) => {
         log("→ VALIDATE", data);
@@ -172,19 +188,15 @@ function PayConductor(props: PayConductorEmbedProps) {
         event,
         pendingMap,
         (val) => {
-          setIsReady(val);
-          frame.isReady = val;
-          if (window.PayConductor?.frame)
-            window.PayConductor.frame.isReady = val;
-          if (val) sendConfigToIframe();
-        },
-        (val) => {
           setError(val);
           frame.error = val;
-          if (window.PayConductor?.frame) window.PayConductor.frame.error = val;
+          if (window.PayConductor?.frame) {
+            window.PayConductor.frame.error = val;
+          }
         },
         () => {
           props.onReady?.();
+          sendConfigToIframe();
         },
         (err) => {
           props.onError?.(err);
@@ -200,8 +212,9 @@ function PayConductor(props: PayConductorEmbedProps) {
         },
         (method) => {
           setSelectedPaymentMethod(method);
-          if (window.PayConductor)
+          if (window.PayConductor) {
             window.PayConductor.selectedPaymentMethod = method;
+          }
           props.onPaymentMethodSelected?.(method);
         }
       );

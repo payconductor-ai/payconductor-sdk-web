@@ -35,6 +35,7 @@
     PayConductorState,
     PendingRequest,
   } from "./types";
+  import { POST_MESSAGES } from "./constants";
   import { buildIframeUrl } from "./utils";
 
   export let debug: PayConductorEmbedProps["debug"] = undefined;
@@ -71,7 +72,6 @@
   }
 
   let isLoaded = false;
-  let isReady = false;
   let error = null;
   let iframeUrl = "";
   let selectedPaymentMethod = null;
@@ -118,10 +118,6 @@
       },
       set iframe(_: HTMLIFrameElement | Element | unknown | null) {},
       iframeUrl,
-      isReady:
-        window.PayConductor && window.PayConductor.frame
-          ? window.PayConductor.frame.isReady
-          : false,
       error: null,
     };
     const config: PayConductorConfig = {
@@ -136,7 +132,30 @@
         log("→ CONFIRM_PAYMENT", {
           orderId: options.orderId,
         });
-        return confirmPayment(getIframe(), pendingMap, options);
+        const iframe = getIframe();
+        if (iframe?.contentWindow) {
+          iframe.contentWindow.postMessage(
+            {
+              type: POST_MESSAGES.CONFIG,
+              data: {
+                publicKey: publicKey,
+                orderId: options.orderId,
+                theme: theme,
+                locale: locale,
+                paymentMethods: paymentMethods,
+                defaultPaymentMethod: defaultPaymentMethod,
+                showPaymentButtons: showPaymentButtons,
+                nuPayConfig: nuPayConfig,
+              },
+            },
+            "*"
+          );
+        }
+        config.orderId = options.orderId;
+        if (window.PayConductor?.config) {
+          window.PayConductor.config.orderId = options.orderId;
+        }
+        return confirmPayment(iframe, pendingMap, options);
       },
       validate: (data: unknown) => {
         log("→ VALIDATE", data);
@@ -193,19 +212,15 @@
         event,
         pendingMap,
         (val) => {
-          isReady = val;
-          frame.isReady = val;
-          if (window.PayConductor?.frame)
-            window.PayConductor.frame.isReady = val;
-          if (val) sendConfigToIframe();
-        },
-        (val) => {
           error = val;
           frame.error = val;
-          if (window.PayConductor?.frame) window.PayConductor.frame.error = val;
+          if (window.PayConductor?.frame) {
+            window.PayConductor.frame.error = val;
+          }
         },
         () => {
           onReady?.();
+          sendConfigToIframe();
         },
         (err) => {
           onError?.(err);
@@ -221,8 +236,9 @@
         },
         (method) => {
           selectedPaymentMethod = method;
-          if (window.PayConductor)
+          if (window.PayConductor) {
             window.PayConductor.selectedPaymentMethod = method;
+          }
           onPaymentMethodSelected?.(method);
         }
       );
