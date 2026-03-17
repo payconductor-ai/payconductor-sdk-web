@@ -18,12 +18,10 @@ export function usePayConductor(): UsePayConductorReturn {
 	const frame = ctx?.frame
 		? {
 				iframe: ctx.frame.iframe,
-				isReady: ctx.frame.isReady,
 				error: ctx.frame.error,
 			}
 		: {
 				iframe: null,
-				isReady: false,
 				error: null,
 			};
 

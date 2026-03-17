@@ -81,6 +81,8 @@ function CheckoutForm() {
 
 	return (
 		<div>
+			{!isReady && (<div>Loading iframe...</div>)}
+
 			<PayConductorCheckoutElement height="500px" />
 
 			{selectedMethod && (
