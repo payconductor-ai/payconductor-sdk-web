@@ -1,8 +1,6 @@
 import {
 	PayConductor,
 	PayConductorCheckoutElement,
-	type PaymentMethod,
-	type PaymentResult,
 	usePayConductor,
 	usePayconductorElement,
 } from "@payconductor/react";
@@ -23,15 +21,13 @@ const sdkConfig = new Configuration({
 const orderApi = new OrderApi(sdkConfig);
 
 function CheckoutForm() {
-	const { isReady, error } = usePayConductor();
+	const { error } = usePayConductor();
 	const { confirmPayment, getSelectedPaymentMethod } = usePayconductorElement();
 
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isProcessing, setIsProcessing] = useState(false);
 
 	const handleFinalize = async () => {
-		if (!isReady) return;
-
 		setIsProcessing(true);
 		setErrorMessage(null);
 
@@ -81,8 +77,6 @@ function CheckoutForm() {
 
 	return (
 		<div>
-			{!isReady && (<div>Loading iframe...</div>)}
-
 			<PayConductorCheckoutElement height="500px" />
 
 			{selectedMethod && (
@@ -92,16 +86,16 @@ function CheckoutForm() {
 			)}
 
 			<button
-				disabled={!isReady || isProcessing}
+				disabled={isProcessing}
 				onClick={handleFinalize}
 				style={{
 					width: "100%",
 					padding: "16px",
-					backgroundColor: isReady ? "#0066ff" : "#cfd7df",
+					backgroundColor: "#0066ff",
 					color: "#ffffff",
 					border: "none",
 					borderRadius: "8px",
-					cursor: isReady ? "pointer" : "not-allowed",
+					cursor:"pointer",
 					fontSize: "16px",
 					fontWeight: 600,
 					marginTop: "16px",
