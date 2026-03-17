@@ -1,5 +1,6 @@
 import { PayConductorConfig, PaymentMethod, PaymentResult } from './iframe/types';
 
+export * from './iframe/types';
 export type ConfirmPaymentOptions = {
     orderId: string;
     returnUrl?: string;
