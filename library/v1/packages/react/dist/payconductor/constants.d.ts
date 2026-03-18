@@ -18,6 +18,7 @@ export declare const POST_MESSAGES: {
     readonly PAYMENT_PENDING: IncomingMessage.PaymentPending;
     readonly VALIDATION_ERROR: IncomingMessage.ValidationError;
     readonly PAYMENT_METHOD_SELECTED: IncomingMessage.PaymentMethodSelected;
+    readonly RESIZE: IncomingMessage.Resize;
 };
 export declare const ERROR_CODES: {
     readonly INVALID_CLIENT: "InvalidClient";

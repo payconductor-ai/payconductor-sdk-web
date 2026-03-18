@@ -48,7 +48,8 @@ export declare enum IncomingMessage {
     PaymentFailed = "PaymentFailed",
     PaymentPending = "PaymentPending",
     ValidationError = "ValidationError",
-    PaymentMethodSelected = "PaymentMethodSelected"
+    PaymentMethodSelected = "PaymentMethodSelected",
+    Resize = "Resize"
 }
 export declare enum ErrorCode {
     InvalidClient = "InvalidClient",
@@ -143,6 +144,7 @@ export type PayConductorConfig = {
     paymentMethodsConfig?: PaymentMethodConfig[];
     methodsDirection?: "vertical" | "horizontal";
     showPaymentButtons?: boolean;
+    height?: string;
     /** Required when NuPay is an available payment method */
     nuPayConfig?: NuPayData;
 };
