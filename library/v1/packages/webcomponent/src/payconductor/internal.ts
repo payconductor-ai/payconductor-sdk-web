@@ -128,4 +128,7 @@ export function handleMessageEvent(event: MessageEvent, pendingMap: Map<string, 
     }
     return;
   }
+  if (type === POST_MESSAGES.RESIZE) {
+    return;
+  }
 }

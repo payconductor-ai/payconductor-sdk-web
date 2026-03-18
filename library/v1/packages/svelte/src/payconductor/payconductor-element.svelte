@@ -7,8 +7,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { IFRAME_DEFAULT_HEIGHT_VALUE } from "./constants";
+  import { IFRAME_DEFAULT_HEIGHT_VALUE, POST_MESSAGES } from "./constants";
   import { PayConductorContextValue } from "./types";
+  import { SKELETON_CSS, SKELETON_STYLE_ID } from "./utils";
 
   export let height: PayConductorCheckoutElementProps["height"] = undefined;
   function stringifyStyles(stylesObj) {
@@ -26,8 +27,18 @@
 
   let iframeUrl = "";
   let isLoaded = false;
+  let iframeHeight = "";
 
   onMount(() => {
+    if (
+      typeof document !== "undefined" &&
+      !document.getElementById(SKELETON_STYLE_ID)
+    ) {
+      const styleEl = document.createElement("style");
+      styleEl.id = SKELETON_STYLE_ID;
+      styleEl.textContent = SKELETON_CSS;
+      document.head.appendChild(styleEl);
+    }
     const init = (ctx: PayConductorContextValue) => {
       if (!ctx?.frame) return;
       iframeUrl = ctx.frame.iframeUrl || "";
@@ -46,6 +57,35 @@
       };
       window.addEventListener("payconductor:registered", handler);
     }
+    let heightSent = false;
+    const handleMessages = (event: MessageEvent) => {
+      if (
+        event.data?.type === POST_MESSAGES.RESIZE &&
+        event.data?.data?.height
+      ) {
+        iframeHeight = event.data.data.height + "px";
+      }
+      if (event.data?.type === POST_MESSAGES.READY && height && !heightSent) {
+        heightSent = true;
+        const iframe = document.querySelector(
+          ".payconductor-element iframe"
+        ) as HTMLIFrameElement;
+        if (iframe?.contentWindow) {
+          iframe.contentWindow.postMessage(
+            {
+              type: POST_MESSAGES.CONFIG,
+              data: {
+                height: height,
+              },
+              requestId: "element-height",
+            },
+            "*"
+          );
+        }
+      }
+    };
+    window.addEventListener("message", handleMessages);
+    return () => window.removeEventListener("message", handleMessages);
   });
 </script>
 
@@ -55,11 +95,19 @@
   })}
   class="payconductor-element"
 >
+  {#if !isLoaded}
+    <div
+      style={stringifyStyles({
+        height: height || IFRAME_DEFAULT_HEIGHT_VALUE,
+      })}
+      class="payconductor-skeleton"
+    />
+  {/if}
   {#if isLoaded && iframeUrl}
     <iframe
       style={stringifyStyles({
         width: "100%",
-        height: height || IFRAME_DEFAULT_HEIGHT_VALUE,
+        height: height || iframeHeight || IFRAME_DEFAULT_HEIGHT_VALUE,
         border: "none",
       })}
       allow="payment"

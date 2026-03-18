@@ -18,7 +18,8 @@ export const POST_MESSAGES = {
   PAYMENT_FAILED: IncomingMessage.PaymentFailed,
   PAYMENT_PENDING: IncomingMessage.PaymentPending,
   VALIDATION_ERROR: IncomingMessage.ValidationError,
-  PAYMENT_METHOD_SELECTED: IncomingMessage.PaymentMethodSelected
+  PAYMENT_METHOD_SELECTED: IncomingMessage.PaymentMethodSelected,
+  RESIZE: IncomingMessage.Resize
 } as const;
 export const ERROR_CODES = {
   INVALID_CLIENT: "InvalidClient",

@@ -2,8 +2,9 @@ export interface PayConductorCheckoutElementProps {
   height?: string;
 }
 
-import { IFRAME_DEFAULT_HEIGHT_VALUE } from "./constants";
+import { IFRAME_DEFAULT_HEIGHT_VALUE, POST_MESSAGES } from "./constants";
 import { PayConductorContextValue } from "./types";
+import { SKELETON_CSS, SKELETON_STYLE_ID } from "./utils";
 
 /**
  * Usage:
@@ -26,7 +27,7 @@ class PayConductorCheckoutElement extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { iframeUrl: "", isLoaded: false };
+    this.state = { iframeUrl: "", isLoaded: false, iframeHeight: "" };
     if (!this.props) {
       this.props = {};
     }
@@ -69,6 +70,12 @@ class PayConductorCheckoutElement extends HTMLElement {
         data-el="div-pay-conductor-checkout-element-1"
       >
         <template data-el="show-pay-conductor-checkout-element">
+          <div
+            class="payconductor-skeleton"
+            data-el="div-pay-conductor-checkout-element-2"
+          ></div>
+        </template>
+        <template data-el="show-pay-conductor-checkout-element-2">
           <iframe
             allow="payment"
             title="PayConductor"
@@ -107,6 +114,15 @@ class PayConductorCheckoutElement extends HTMLElement {
 
   onMount() {
     // onMount
+    if (
+      typeof document !== "undefined" &&
+      !document.getElementById(SKELETON_STYLE_ID)
+    ) {
+      const styleEl = document.createElement("style");
+      styleEl.id = SKELETON_STYLE_ID;
+      styleEl.textContent = SKELETON_CSS;
+      document.head.appendChild(styleEl);
+    }
     const init = (ctx: PayConductorContextValue) => {
       if (!ctx?.frame) return;
       this.state.iframeUrl = ctx.frame.iframeUrl || "";
@@ -127,6 +143,40 @@ class PayConductorCheckoutElement extends HTMLElement {
       };
       window.addEventListener("payconductor:registered", handler);
     }
+    let heightSent = false;
+    const handleMessages = (event: MessageEvent) => {
+      if (
+        event.data?.type === POST_MESSAGES.RESIZE &&
+        event.data?.data?.height
+      ) {
+        this.state.iframeHeight = event.data.data.height + "px";
+        this.update();
+      }
+      if (
+        event.data?.type === POST_MESSAGES.READY &&
+        this.props.height &&
+        !heightSent
+      ) {
+        heightSent = true;
+        const iframe = document.querySelector(
+          ".payconductor-element iframe"
+        ) as HTMLIFrameElement;
+        if (iframe?.contentWindow) {
+          iframe.contentWindow.postMessage(
+            {
+              type: POST_MESSAGES.CONFIG,
+              data: {
+                height: this.props.height,
+              },
+              requestId: "element-height",
+            },
+            "*"
+          );
+        }
+      }
+    };
+    window.addEventListener("message", handleMessages);
+    return () => window.removeEventListener("message", handleMessages);
   }
 
   onUpdate() {}
@@ -159,6 +209,23 @@ class PayConductorCheckoutElement extends HTMLElement {
     this._root
       .querySelectorAll("[data-el='show-pay-conductor-checkout-element']")
       .forEach((el) => {
+        const whenCondition = !this.state.isLoaded;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll("[data-el='div-pay-conductor-checkout-element-2']")
+      .forEach((el) => {
+        Object.assign(el.style, {
+          height: this.props.height || IFRAME_DEFAULT_HEIGHT_VALUE,
+        });
+      });
+
+    this._root
+      .querySelectorAll("[data-el='show-pay-conductor-checkout-element-2']")
+      .forEach((el) => {
         const whenCondition = this.state.isLoaded && this.state.iframeUrl;
         if (whenCondition) {
           this.showContent(el);
@@ -171,7 +238,10 @@ class PayConductorCheckoutElement extends HTMLElement {
         el.setAttribute("src", this.state.iframeUrl);
         Object.assign(el.style, {
           width: "100%",
-          height: this.props.height || IFRAME_DEFAULT_HEIGHT_VALUE,
+          height:
+            this.props.height ||
+            this.state.iframeHeight ||
+            IFRAME_DEFAULT_HEIGHT_VALUE,
           border: "none",
         });
       });
