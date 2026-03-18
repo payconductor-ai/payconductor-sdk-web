@@ -109,7 +109,7 @@ bun dev
 </script>
 
 <PayConductor
-  publicKey="pk_test_123"
+  publicKey={import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || "your_client_id"}
   locale="pt-BR"
   debug={true}
   theme={{ primaryColor: '#0066ff', borderRadius: '8px' }}

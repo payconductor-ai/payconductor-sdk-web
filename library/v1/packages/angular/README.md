@@ -44,7 +44,7 @@ import {
   imports: [PayConductorModule],
   template: `
     <pay-conductor
-      publicKey="pk_test_123"
+      publicKey={import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || "your_client_id"}
       locale="pt-BR"
       [debug]="true"
       [theme]="theme"
@@ -78,8 +78,8 @@ export class CheckoutComponent {
 
   private readonly orderApi = new OrderApi(
     new Configuration({
-      username: import.meta.env['PAYCONDUCTOR_CLIENT_ID'] || 'your_client_id',
-      password: import.meta.env['PAYCONDUCTOR_CLIENT_SECRET'] || 'your_client_secret',
+      username: import.meta.env['VITE_PAYCONDUCTOR_CLIENT_ID'] || 'your_client_id',
+      password: import.meta.env['VITE_PAYCONDUCTOR_CLIENT_SECRET'] || 'your_client_secret',
     }),
   );
 

@@ -18,7 +18,7 @@ import { useState } from "react";
 const sdkConfig = new Configuration({
 	username: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || "your_client_id",
 	password: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_SECRET || "your_client_secret",
-	basePath: import.meta.env.DEV ? "http://localhost:1111/api/v1" : "https://api.payconductor.ai/api/v1",
+	basePath: import.meta.env.DEV ? "http://localhost:5174/api/v1" : "https://api.payconductor.ai/api/v1",
 });
 
 const orderApi = new OrderApi(sdkConfig);
@@ -139,7 +139,7 @@ export default function App() {
 				onPaymentComplete={handlePaymentComplete}
 				onPaymentMethodSelected={handlePaymentMethodSelected}
 				onReady={() => console.log("PayConductor ready")}
-				publicKey="pk_test_123"
+				publicKey={import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || "your_client_id"}
 				showPaymentButtons={false}
 				theme={{
 					primaryColor: "#0066ff",

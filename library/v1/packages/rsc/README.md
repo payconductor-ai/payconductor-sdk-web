@@ -38,8 +38,8 @@ import {
 } from '@payconductor/sdk';
 
 const config = new Configuration({
-  username: process.env.PAYCONDUCTOR_CLIENT_ID!,
-  password: process.env.PAYCONDUCTOR_CLIENT_SECRET!,
+  username: process.env.VITE_PAYCONDUCTOR_CLIENT_ID!,
+  password: process.env.VITE_PAYCONDUCTOR_CLIENT_SECRET!,
 });
 const orderApi = new OrderApi(config);
 

@@ -105,7 +105,7 @@ export default component$(() => {
 				onPaymentComplete={handlePaymentComplete}
 				onPaymentMethodSelected={handlePaymentMethodSelected}
 				onReady={handleReady}
-				publicKey="pk_test_123"
+				publicKey={import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || "your_client_id"}
 				theme={{
 					primaryColor: "#0066ff",
 					fontFamily: "Roboto, sans-serif",
