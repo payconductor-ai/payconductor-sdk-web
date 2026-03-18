@@ -139,6 +139,7 @@ export default function App() {
 				onPaymentMethodSelected={handlePaymentMethodSelected}
 				onReady={() => console.log("PayConductor ready")}
 				publicKey="pk_test_123"
+				showPaymentButtons={false}
 				theme={{
 					primaryColor: "#0066ff",
 					fontFamily: "Roboto, sans-serif",

@@ -59,6 +59,7 @@ export enum IncomingMessage {
 	PaymentPending = "PaymentPending",
 	ValidationError = "ValidationError",
 	PaymentMethodSelected = "PaymentMethodSelected",
+	Resize = "Resize",
 }
 
 export enum ErrorCode {
@@ -205,6 +206,7 @@ export type PayConductorConfig = {
 	paymentMethodsConfig?: PaymentMethodConfig[];
 	methodsDirection?: "vertical" | "horizontal";
 	showPaymentButtons?: boolean;
+	height?: string;
 	/** Required when NuPay is an available payment method */
 	nuPayConfig?: NuPayData;
 };

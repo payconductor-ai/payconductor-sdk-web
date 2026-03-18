@@ -191,4 +191,8 @@ export function handleMessageEvent(
         }
         return;
     }
+
+    if (type === POST_MESSAGES.RESIZE) {
+        return;
+    }
 }
