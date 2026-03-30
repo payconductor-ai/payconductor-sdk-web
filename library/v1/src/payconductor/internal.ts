@@ -1,5 +1,8 @@
 import { ALLOWED_ORIGINS, POST_MESSAGES, REQUEST_TIMEOUT } from "./constants";
-import { IncomingMessage, OutgoingMessage, PayConductorConfig, PaymentMethod, PaymentResult } from "./iframe/types";
+import { IncomingMessage, OutgoingMessage, PayConductorConfig, PaymentMethod, PaymentResult, PaymentStatus } from "./iframe/types";
+import { collectBrowserData } from "./three-ds/browser";
+import { PayConductor3DSSDK } from "./three-ds/handler";
+import { ThreeDSecureResultStatus } from "./three-ds/types";
 import type { ConfirmPaymentOptions, PendingRequest } from "./types";
 import { generateRequestId, isValidOrigin } from "./utils";
 
@@ -43,14 +46,77 @@ export function sendMessageToIframe(
     });
 }
 
-export function confirmPayment(
+function sendConfirmPayment(
+    iframe: HTMLIFrameElement | Element | undefined,
+    pendingMap: Map<string, PendingRequest> | null,
+    data: Record<string, unknown>,
+): Promise<PaymentResult> {
+    return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.CONFIRM_PAYMENT, data) as Promise<PaymentResult>;
+}
+
+function toggle3DSVisibility(show: boolean) {
+    const registered = window.PayConductor3DS;
+    if (show) registered?.show?.(); else registered?.hide?.();
+    const checkout = document.querySelector(".payconductor-element") as HTMLElement | null;
+    if (checkout) checkout.style.display = show ? "none" : "";
+}
+
+function resolve3DSContainer(options: ConfirmPaymentOptions): HTMLElement | undefined {
+    const registered = window.PayConductor3DS;
+    return (
+        registered?.container?.() ??
+        options.threeDsContainer ??
+        (options.threeDsContainerId ? document.getElementById(options.threeDsContainerId) : undefined) ??
+        undefined
+    );
+}
+
+export async function confirmPayment(
     iframe: HTMLIFrameElement | Element | undefined,
     pendingMap: Map<string, PendingRequest> | null,
     options: ConfirmPaymentOptions,
 ): Promise<PaymentResult> {
-    return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.CONFIRM_PAYMENT, {
+    const result = await sendConfirmPayment(iframe, pendingMap, { orderId: options.orderId });
+
+    const needs3DS =
+        result.statusDetail === "ThreeDsAwaitingChallenge" &&
+        result.threeDSecure?.status === "NeedChallenge";
+
+    if (!needs3DS || !result.threeDSecure) return result;
+
+    toggle3DSVisibility(true);
+    options.onThreeDSChallenge?.();
+
+    const handler = new PayConductor3DSSDK(result.threeDSecure);
+    const challengeResult = await handler.authenticate({
+        container: resolve3DSContainer(options),
+        onComplete: options.onThreeDSComplete,
+        onError: options.onThreeDSError,
+    });
+    handler.destroy();
+
+    toggle3DSVisibility(false);
+
+    if (challengeResult.status !== ThreeDSecureResultStatus.Success) {
+        return {
+            ...result,
+            status: PaymentStatus.Failed,
+            message: challengeResult.status === ThreeDSecureResultStatus.Timeout
+                ? "3DS challenge timed out"
+                : challengeResult.error?.message || "3DS challenge failed",
+        };
+    }
+
+    return await sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.CONFIRM_PAYMENT, {
         orderId: options.orderId,
-    }) as Promise<PaymentResult>;
+        confirmThreeDS: true,
+        threeDSecure: {
+            type: "internal",
+            authToken: result.threeDSecure?.authToken,
+            dsTransactionId: challengeResult.dsTransactionId ?? result.threeDSecure?.dsTransactionId,
+            browser: collectBrowserData(),
+        },
+    }) as PaymentResult;
 }
 
 export function validatePayment(
