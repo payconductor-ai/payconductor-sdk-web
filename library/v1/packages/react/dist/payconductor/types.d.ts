@@ -4,6 +4,9 @@ export * from './iframe/types';
 export type ConfirmPaymentOptions = {
     orderId: string;
     returnUrl?: string;
+    onThreeDSChallenge?: () => void;
+    onThreeDSComplete?: () => void;
+    onThreeDSError?: (error: Error) => void;
 };
 export type SubmitResult = {
     error?: {
