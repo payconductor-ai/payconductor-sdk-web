@@ -54,6 +54,9 @@ export enum IncomingMessage {
   ValidationError = "ValidationError",
   PaymentMethodSelected = "PaymentMethodSelected",
   Resize = "Resize",
+  ThreeDSChallenge = "ThreeDSChallenge",
+  ThreeDSComplete = "ThreeDSComplete",
+  ThreeDSFailed = "ThreeDSFailed",
 }
 export enum ErrorCode {
   InvalidClient = "InvalidClient",
@@ -236,9 +239,24 @@ export type PaymentMethodResult = {
 export type PaymentResult = {
   orderId: string;
   status: PaymentStatus;
+  statusDetail?: string;
   amount: number;
   currency: string;
   message?: string;
+  errorCode?: string;
+  errorMessage?: string;
+  threeDSecure?: {
+    status: string;
+    acquirer?: string;
+    environment?: "Sandbox" | "Production";
+    authToken?: string;
+    threeDsUrl?: string;
+    creq?: string;
+    operationUrl?: string;
+    publicKey?: string;
+    dsTransactionId?: string;
+    version?: string;
+  };
 };
 export interface MessagePayload {
   type: OutgoingMessage | IncomingMessage;
@@ -250,6 +268,36 @@ export interface MessagePayload {
     field?: string;
   };
 }
+export type ThreeDSecureBrowserData = {
+  ip?: string;
+  userAgent?: string;
+  acceptHeader?: string;
+  language?: string;
+  colorDepth?: string;
+  screenHeight?: string;
+  screenWidth?: string;
+  timeZoneOffset?: string;
+  javaEnabled: boolean;
+  javaScriptEnabled: boolean;
+};
+export type ThreeDSecureInternalInput = {
+  type: "internal";
+  authToken?: string;
+  dsTransactionId?: string;
+  providerTransactionId?: string;
+  browser?: ThreeDSecureBrowserData;
+};
+export type ThreeDSecureExternalInput = {
+  type: "external";
+  status: string;
+  eci: string;
+  version: string;
+  cavv: string;
+  providerTransactionId: string;
+  directoryTransactionId: string;
+  browser?: ThreeDSecureBrowserData;
+};
+export type ThreeDSecureInput = ThreeDSecureInternalInput | ThreeDSecureExternalInput;
 export type CardTokenData = {
   token: string;
   firstSixCardNumber?: string;
