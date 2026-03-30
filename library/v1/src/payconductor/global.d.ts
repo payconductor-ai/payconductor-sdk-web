@@ -1,4 +1,6 @@
 import { PayConductorContextValue } from "./types";
+import { PayConductor3DSSDK } from "./three-ds";
+import { PayConductorTokenizeSDK } from "./tokenize";
 
 export interface PayConductor3DSElement {
 	container: () => HTMLElement | null;
@@ -121,5 +123,7 @@ declare global {
 		PagSeguro?: PagSeguroSDK;
 		TDS?: TDSSDK;
 		KrAuthenticate?: KrAuthenticateConstructor;
+		PayConductor3DSSDK?: typeof PayConductor3DSSDK;
+		PayConductorTokenizeSDK?: typeof PayConductorTokenizeSDK;
 	}
 }
