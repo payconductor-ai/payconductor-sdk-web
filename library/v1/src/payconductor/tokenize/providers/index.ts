@@ -1,14 +1,6 @@
-import { IntegrationProvider, type TokenizeProviderInput } from "../types";
-import { MercadoPagoProvider } from "./mercado-pago";
+import { IntegrationProvider, type TokenizeProviderFn } from "../types";
+import { tokenizeMercadoPago } from "./mercado-pago";
 
-export function instanceProvider(
-	provider: IntegrationProvider,
-	data: TokenizeProviderInput,
-) {
-	switch (provider) {
-		case IntegrationProvider.MercadoPago:
-			return new MercadoPagoProvider(data);
-		default:
-			return null;
-	}
-}
+export const tokenizeProviders: Partial<Record<IntegrationProvider, TokenizeProviderFn>> = {
+	[IntegrationProvider.MercadoPago]: tokenizeMercadoPago,
+};

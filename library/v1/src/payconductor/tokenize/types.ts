@@ -45,19 +45,13 @@ export type CreateCardInput = {
 export type TokenizeProviderInput = {
 	customer: CreateCustomerInput;
 	card: CreateCardInput;
-	setting: Record<string, any>;
+	setting: Record<string, string | number | boolean>;
 	saveCard?: boolean;
 };
 
 export type CardTokenizeRequest = Omit<TokenizeProviderInput, "setting">;
 
-export abstract class AbstractCardTokenizeProvider {
-	abstract scriptUrl: string;
-
-	constructor(protected readonly input: TokenizeProviderInput) {}
-
-	abstract tokenize(): Promise<string>;
-}
+export type TokenizeProviderFn = (input: TokenizeProviderInput) => Promise<string>;
 
 export type SaveTokensBody = {
 	integrationId: string;
