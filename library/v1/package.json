@@ -15,6 +15,7 @@
     "@builder.io/eslint-plugin-mitosis": "^0.0.15",
     "@builder.io/mitosis": "latest",
     "@builder.io/mitosis-cli": "latest",
+    "@mercadopago/sdk-js": "^0.0.3",
     "eslint": "^8.51.0"
   },
   "devDependencies": {
