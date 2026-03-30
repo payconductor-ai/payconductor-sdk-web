@@ -1,3 +1,4 @@
+import { loadScript } from "../loader";
 import { PayConductorApi } from "./api";
 import { tokenizeProviders } from "./providers";
 import type { CardTokenizeRequest, SaveTokensBody } from "./types";
@@ -22,13 +23,12 @@ export class PayConductorTokenizeSDK {
 
 		const results = await Promise.all(
 			settings.map(async (setting) => {
-				const provider = tokenizeProviders[setting.key];
-				if (!provider) return null;
+				const ProviderClass = tokenizeProviders[setting.key];
+				if (!ProviderClass) return null;
 
-				const token = await provider({
-					...input,
-					setting: setting.settings,
-				});
+				const provider = new ProviderClass({ ...input, setting: setting.settings });
+				await loadScript(provider.scriptUrl);
+				const token = await provider.tokenize();
 
 				return {
 					token,

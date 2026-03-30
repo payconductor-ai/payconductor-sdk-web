@@ -34,3 +34,25 @@ export type ThreeDSecureResult = {
 	authToken?: string;
 	dsTransactionId?: string;
 };
+
+export abstract class AbstractThreeDSProvider {
+	constructor(
+		protected readonly data: ThreeDSecureData,
+		protected readonly options: ThreeDSecureOptions,
+	) {}
+
+	abstract authenticate(): Promise<ThreeDSecureResult>;
+	abstract cleanup(): void;
+
+	protected fail(message: string): ThreeDSecureResult {
+		const error = new Error(message);
+		this.options.onError?.(error);
+		return { status: ThreeDSecureResultStatus.Failed, error };
+	}
+
+	protected resolveContainer(): HTMLElement | null {
+		if (this.options.container) return this.options.container;
+		if (this.options.containerId) return document.getElementById(this.options.containerId);
+		return document.body;
+	}
+}

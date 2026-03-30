@@ -1,6 +1,9 @@
-import { IntegrationProvider, type TokenizeProviderFn } from "../types";
-import { tokenizeMercadoPago } from "./mercado-pago";
+import type { AbstractTokenizeProvider, TokenizeProviderInput } from "../types";
+import { IntegrationProvider } from "../types";
+import { MercadoPagoTokenizeProvider } from "./mercado-pago";
 
-export const tokenizeProviders: Partial<Record<IntegrationProvider, TokenizeProviderFn>> = {
-	[IntegrationProvider.MercadoPago]: tokenizeMercadoPago,
+type TokenizeProviderConstructor = new (input: TokenizeProviderInput) => AbstractTokenizeProvider;
+
+export const tokenizeProviders: Partial<Record<IntegrationProvider, TokenizeProviderConstructor>> = {
+	[IntegrationProvider.MercadoPago]: MercadoPagoTokenizeProvider,
 };

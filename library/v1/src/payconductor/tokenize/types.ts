@@ -51,7 +51,12 @@ export type TokenizeProviderInput = {
 
 export type CardTokenizeRequest = Omit<TokenizeProviderInput, "setting">;
 
-export type TokenizeProviderFn = (input: TokenizeProviderInput) => Promise<string>;
+export abstract class AbstractTokenizeProvider {
+	constructor(protected readonly input: TokenizeProviderInput) {}
+
+	abstract scriptUrl: string;
+	abstract tokenize(): Promise<string>;
+}
 
 export type SaveTokensBody = {
 	integrationId: string;
