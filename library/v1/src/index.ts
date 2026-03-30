@@ -1,7 +1,11 @@
 export { default } from './payconductor/payconductor.lite';
 export { default as PayConductor } from './payconductor/payconductor.lite';
 export { default as PayConductorCheckoutElement } from './payconductor/payconductor-element.lite';
+export { default as PayConductorThreeDSElement } from './payconductor/payconductor-three-ds.lite';
 export * from './payconductor/types';
 export * from './payconductor/constants';
 export * from './payconductor/utils';
 export * from './payconductor/hooks';
+export { PayConductor3DSSDK } from './payconductor/three-ds';
+export { PayConductorTokenizeSDK } from './payconductor/tokenize';
+export { loadScript } from './payconductor/loader';
