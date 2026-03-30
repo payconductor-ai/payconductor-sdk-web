@@ -5,11 +5,15 @@
     "start": "watch \"npm run build\" ./src",
     "clean:src": "node scripts/clean-src.js",
     "build": "npm run clean:src && mitosis build --c mitosis.config.cjs",
+    "build:sdk": "bun run scripts/build-esm.ts",
+    "build:all": "npm run build && npm run build:sdk",
     "lint": "eslint"
   },
   "type": "module",
   "exports": {
-    "./*": "./output/*/src/index.js"
+    "./*": "./output/*/src/index.js",
+    "./sdk/three-ds": "./dist/payconductor-3ds.js",
+    "./sdk/tokenize": "./dist/payconductor-tokenize.js"
   },
   "dependencies": {
     "@builder.io/eslint-plugin-mitosis": "^0.0.15",
@@ -19,6 +23,7 @@
     "eslint": "^8.51.0"
   },
   "devDependencies": {
+    "esbuild": "^0.25.0",
     "watch": "^1.0.2"
   }
 }

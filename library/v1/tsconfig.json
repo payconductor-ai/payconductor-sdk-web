@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "module": "ESNext",
     "strict": true,
     "jsx": "preserve",
     "noImplicitAny": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "jsxImportSource": "@builder.io/mitosis"
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["./scripts", "./dist"]
 }
