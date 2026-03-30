@@ -5,15 +5,8 @@ export * from "./iframe/types"
 export type ConfirmPaymentOptions = {
 	orderId: string;
 	returnUrl?: string;
-	/** Container element ID for 3DS challenge iframe */
-	threeDsContainerId?: string;
-	/** Container element for 3DS challenge iframe */
-	threeDsContainer?: HTMLElement;
-	/** Callback when 3DS challenge starts */
 	onThreeDSChallenge?: () => void;
-	/** Callback when 3DS challenge completes */
 	onThreeDSComplete?: () => void;
-	/** Callback when 3DS challenge fails */
 	onThreeDSError?: (error: Error) => void;
 };
 

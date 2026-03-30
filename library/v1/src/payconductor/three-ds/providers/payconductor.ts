@@ -21,6 +21,8 @@ export class PayConductorThreeDSProvider extends AbstractThreeDSProvider {
 		const KrAuthenticate = window.KrAuthenticate;
 		if (!KrAuthenticate) return this.fail("KrAuthenticate not available");
 
+		const container = this.resolveContainer();
+
 		return new Promise<ThreeDSecureResult>((resolve) => {
 			this.timeoutId = setTimeout(() => {
 				this.cleanup();
@@ -28,9 +30,7 @@ export class PayConductorThreeDSProvider extends AbstractThreeDSProvider {
 				resolve({ status: ThreeDSecureResultStatus.Timeout });
 			}, this.options.timeoutMs ?? TIMEOUT_MS);
 
-			const container = this.resolveContainer();
-			const krOptions = container && container !== document.body ? { element: container } : undefined;
-			const sdk = new KrAuthenticate(publicKey, krOptions);
+			const sdk = new KrAuthenticate(publicKey, { element: container });
 
 			sdk.authenticate(operationUrl, () => {
 				this.cleanup();
@@ -42,5 +42,6 @@ export class PayConductorThreeDSProvider extends AbstractThreeDSProvider {
 
 	cleanup(): void {
 		if (this.timeoutId) { clearTimeout(this.timeoutId); this.timeoutId = null; }
+		this.closeModal();
 	}
 }

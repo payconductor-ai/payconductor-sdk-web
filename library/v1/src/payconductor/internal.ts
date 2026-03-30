@@ -54,23 +54,6 @@ function sendConfirmPayment(
     return sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.CONFIRM_PAYMENT, data) as Promise<PaymentResult>;
 }
 
-function toggle3DSVisibility(show: boolean) {
-    const registered = window.PayConductor3DS;
-    if (show) registered?.show?.(); else registered?.hide?.();
-    const checkout = document.querySelector(".payconductor-element") as HTMLElement | null;
-    if (checkout) checkout.style.display = show ? "none" : "";
-}
-
-function resolve3DSContainer(options: ConfirmPaymentOptions): HTMLElement | undefined {
-    const registered = window.PayConductor3DS;
-    return (
-        registered?.container?.() ??
-        options.threeDsContainer ??
-        (options.threeDsContainerId ? document.getElementById(options.threeDsContainerId) : undefined) ??
-        undefined
-    );
-}
-
 export async function confirmPayment(
     iframe: HTMLIFrameElement | Element | undefined,
     pendingMap: Map<string, PendingRequest> | null,
@@ -84,18 +67,14 @@ export async function confirmPayment(
 
     if (!needs3DS || !result.threeDSecure) return result;
 
-    toggle3DSVisibility(true);
     options.onThreeDSChallenge?.();
 
     const handler = new PayConductor3DSSDK(result.threeDSecure);
     const challengeResult = await handler.authenticate({
-        container: resolve3DSContainer(options),
         onComplete: options.onThreeDSComplete,
         onError: options.onThreeDSError,
     });
     handler.destroy();
-
-    toggle3DSVisibility(false);
 
     if (challengeResult.status !== ThreeDSecureResultStatus.Success) {
         return {

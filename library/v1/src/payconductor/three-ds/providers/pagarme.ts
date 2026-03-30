@@ -34,7 +34,8 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 		const tds = window.TDS;
 		if (!tds) return this.fail("Stone TDS SDK not available");
 
-		const container = this.resolveContainer() || document.body;
+		const container = this.resolveContainer();
+
 		this.methodContainer = document.createElement("div");
 		this.methodContainer.style.display = "none";
 		document.body.appendChild(this.methodContainer);
@@ -84,5 +85,6 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 	cleanup(): void {
 		if (this.timeoutId) { clearTimeout(this.timeoutId); this.timeoutId = null; }
 		if (this.methodContainer) { this.methodContainer.remove(); this.methodContainer = null; }
+		this.closeModal();
 	}
 }

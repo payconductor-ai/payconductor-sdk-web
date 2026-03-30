@@ -13,8 +13,6 @@ export type ThreeDSecureData = {
 
 export type ThreeDSecureOptions = {
 	threeDSecure: ThreeDSecureData;
-	container?: HTMLElement;
-	containerId?: string;
 	onComplete?: () => void;
 	onError?: (error: Error) => void;
 	onTimeout?: () => void;
@@ -36,6 +34,9 @@ export type ThreeDSecureResult = {
 };
 
 export abstract class AbstractThreeDSProvider {
+	private overlay: HTMLElement | null = null;
+	private modalContent: HTMLElement | null = null;
+
 	constructor(
 		protected readonly data: ThreeDSecureData,
 		protected readonly options: ThreeDSecureOptions,
@@ -50,9 +51,77 @@ export abstract class AbstractThreeDSProvider {
 		return { status: ThreeDSecureResultStatus.Failed, error };
 	}
 
-	protected resolveContainer(): HTMLElement | null {
-		if (this.options.container) return this.options.container;
-		if (this.options.containerId) return document.getElementById(this.options.containerId);
-		return document.body;
+	//#region Modal
+
+	protected showModal(): HTMLElement {
+		this.injectStyles();
+
+		this.overlay = document.createElement("div");
+		this.overlay.id = "payconductor-3ds-overlay";
+
+		this.modalContent = document.createElement("div");
+		this.modalContent.id = "payconductor-3ds-modal";
+
+		this.overlay.appendChild(this.modalContent);
+		document.body.appendChild(this.overlay);
+
+		return this.modalContent;
 	}
+
+	protected closeModal(): void {
+		if (this.overlay) {
+			this.overlay.remove();
+			this.overlay = null;
+			this.modalContent = null;
+		}
+	}
+
+	protected resolveContainer(): HTMLElement {
+		return this.modalContent ?? this.showModal();
+	}
+
+	private injectStyles(): void {
+		if (document.getElementById("payconductor-3ds-styles")) return;
+		const style = document.createElement("style");
+		style.id = "payconductor-3ds-styles";
+		style.textContent = `
+			#payconductor-3ds-overlay {
+				position: fixed;
+				inset: 0;
+				z-index: 99999;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: rgba(0, 0, 0, 0.6);
+			}
+			#payconductor-3ds-modal {
+				width: 500px;
+				max-width: 95vw;
+				min-height: 600px;
+				border-radius: 8px;
+				overflow: hidden;
+				background: #fff;
+			}
+			#payconductor-3ds-modal iframe {
+				width: 100%;
+				height: 600px;
+				border: none;
+				display: block;
+			}
+			@media only screen and (max-width: 600px) {
+				#payconductor-3ds-modal {
+					width: 100vw;
+					max-width: 100vw;
+					min-height: 440px;
+					border-radius: 0;
+				}
+				#payconductor-3ds-modal iframe {
+					height: 440px;
+				}
+			}
+		`;
+		document.head.appendChild(style);
+	}
+
+	//#endregion
 }

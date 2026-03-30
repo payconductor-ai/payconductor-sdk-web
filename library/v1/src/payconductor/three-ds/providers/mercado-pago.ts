@@ -16,11 +16,8 @@ export class MercadoPagoThreeDSProvider extends AbstractThreeDSProvider {
 		}
 
 		const container = this.resolveContainer();
-		if (!container) return this.fail("Container not found");
 
 		return new Promise<ThreeDSecureResult>((resolve) => {
-			this.injectStyles();
-
 			this.iframe = document.createElement("iframe");
 			this.iframe.name = "payconductor-3ds-challenge";
 			this.iframe.id = "payconductor-3ds-challenge";
@@ -69,16 +66,6 @@ export class MercadoPagoThreeDSProvider extends AbstractThreeDSProvider {
 		if (this.timeoutId) { clearTimeout(this.timeoutId); this.timeoutId = null; }
 		if (this.messageListener) { window.removeEventListener("message", this.messageListener); this.messageListener = null; }
 		if (this.iframe) { this.iframe.remove(); this.iframe = null; }
-	}
-
-	private injectStyles(): void {
-		if (document.getElementById("payconductor-3ds-styles")) return;
-		const style = document.createElement("style");
-		style.id = "payconductor-3ds-styles";
-		style.textContent = `
-			#payconductor-3ds-challenge { width: 500px; height: 600px; border: none; }
-			@media only screen and (max-width: 980px) { #payconductor-3ds-challenge { width: 100%; height: 440px; } }
-		`;
-		document.head.appendChild(style);
+		this.closeModal();
 	}
 }
