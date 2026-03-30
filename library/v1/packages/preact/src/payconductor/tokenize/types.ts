@@ -15,7 +15,7 @@ export enum IntegrationProvider {
 }
 export type CreateCustomerInput = {
   documentNumber: string;
-  documentType: DocumentType;
+  documentType: `${DocumentType}`;
   email: string;
   name: string;
   phoneNumber: string;
