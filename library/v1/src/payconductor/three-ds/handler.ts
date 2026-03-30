@@ -24,7 +24,8 @@ export class PayConductor3DSSDK {
 		}
 
 		const opts: ThreeDSecureOptions = { ...options, threeDSecure: this.data };
-		const ProviderClass = threeDSProviders[this.data.acquirer ?? ""];
+		const acquirer = (this.data.acquirer ?? "") as keyof typeof threeDSProviders;
+		const ProviderClass = threeDSProviders[acquirer];
 
 		if (ProviderClass) {
 			this.provider = new ProviderClass(this.data, opts);
