@@ -14,7 +14,7 @@ const SDK_URLS = {
 const DEFAULT_TIMEOUT_MS = 5 * 60 * 1000;
 const LYRA_TIMEOUT_MS = 10 * 60 * 1000;
 
-type ProviderFn = (options: ThreeDSecureOptions) => Promise<ThreeDSecureResult>;
+type ThreeDSProviderFn = (options: ThreeDSecureOptions) => Promise<ThreeDSecureResult>;
 
 function detectWindowSize(): "01" | "02" | "03" | "04" | "05" {
 	const w = window.innerWidth;
@@ -32,7 +32,7 @@ export class PayConductor3DSSDK {
 
 	private readonly data: ThreeDSecureData;
 
-	private readonly providers: Record<string, ProviderFn> = {
+	private readonly providers: Record<string, ThreeDSProviderFn> = {
 		MercadoPago: (o) => this.mercadoPago(o),
 		PayConductor: (o) => this.payConductor(o),
 		PagarMe: (o) => this.pagarMe(o),
