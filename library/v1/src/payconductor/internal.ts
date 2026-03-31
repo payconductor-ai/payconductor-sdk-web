@@ -1,8 +1,5 @@
 import { ALLOWED_ORIGINS, POST_MESSAGES, REQUEST_TIMEOUT } from "./constants";
 import { IncomingMessage, OutgoingMessage, PayConductorConfig, PaymentMethod, PaymentResult, PaymentStatus } from "./iframe/types";
-import { collectBrowserData } from "./three-ds/browser";
-import { PayConductor3DSSDK } from "./three-ds/handler";
-import { ThreeDSecureResultStatus } from "./three-ds/types";
 import type { ConfirmPaymentOptions, PendingRequest } from "./types";
 import { generateRequestId, isValidOrigin } from "./utils";
 
@@ -59,46 +56,7 @@ export async function confirmPayment(
     pendingMap: Map<string, PendingRequest> | null,
     options: ConfirmPaymentOptions,
 ): Promise<PaymentResult> {
-    const result = await sendConfirmPayment(iframe, pendingMap, { orderId: options.orderId });
-
-    const needs3DS =
-        result.statusDetail === "ThreeDsAwaitingChallenge" ||
-        result.threeDSecure?.status === "NeedChallenge";
-
-    if (!needs3DS || !result.threeDSecure) return result;
-
-    options.onThreeDSChallenge?.();
-
-    const handler = new PayConductor3DSSDK({
-        ...result.threeDSecure,
-        statusDetail: result.statusDetail,
-    });
-    const challengeResult = await handler.authenticate({
-        onComplete: options.onThreeDSComplete,
-        onError: options.onThreeDSError,
-    });
-    handler.destroy();
-
-    if (challengeResult.status !== ThreeDSecureResultStatus.Success) {
-        return {
-            ...result,
-            status: PaymentStatus.Failed,
-            message: challengeResult.status === ThreeDSecureResultStatus.Timeout
-                ? "3DS challenge timed out"
-                : challengeResult.error?.message || "3DS challenge failed",
-        };
-    }
-
-    return await sendMessageToIframe(iframe, pendingMap, POST_MESSAGES.CONFIRM_PAYMENT, {
-        orderId: options.orderId,
-        confirmThreeDS: true,
-        threeDSecure: {
-            type: "internal",
-            authToken: result.threeDSecure?.authToken,
-            dsTransactionId: challengeResult.dsTransactionId ?? result.threeDSecure?.dsTransactionId,
-            browser: collectBrowserData(),
-        },
-    }) as PaymentResult;
+    return await sendConfirmPayment(iframe, pendingMap, { orderId: options.orderId });
 }
 
 export function validatePayment(
@@ -172,6 +130,9 @@ export function handleMessageEvent(
     onPaymentFailed?: (data: PaymentResult) => void,
     onPaymentPending?: (data: PaymentResult) => void,
     onPaymentMethodSelected?: (method: PaymentMethod) => void,
+    onThreeDSChallenge?: () => void,
+    onThreeDSComplete?: () => void,
+    onThreeDSFailed?: () => void,
 ) {
     const payload: MessagePayload = event.data;
     const { requestId, type, data, error } = payload;
@@ -241,6 +202,21 @@ export function handleMessageEvent(
     }
 
     if (type === POST_MESSAGES.RESIZE) {
+        return;
+    }
+
+    if (type === IncomingMessage.ThreeDSChallenge) {
+        onThreeDSChallenge?.();
+        return;
+    }
+
+    if (type === IncomingMessage.ThreeDSComplete) {
+        onThreeDSComplete?.();
+        return;
+    }
+
+    if (type === IncomingMessage.ThreeDSFailed) {
+        onThreeDSFailed?.();
         return;
     }
 }
