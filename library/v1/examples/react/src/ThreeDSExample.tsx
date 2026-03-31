@@ -164,8 +164,6 @@ export function ThreeDSExample() {
 			log(`3DS result: ${result.status}`);
 			setChallengeResult(result.status);
 
-			// Apos 3DS bem-sucedido, o servidor processa automaticamente via webhook.
-			// Nao e necessario confirmar novamente.
 			if (result.status === "Success") {
 				log("3DS concluido. Servidor esta processando o pagamento automaticamente.");
 			}
