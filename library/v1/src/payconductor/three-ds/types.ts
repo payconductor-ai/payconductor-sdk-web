@@ -19,18 +19,21 @@ export type ThreeDSecureData = {
 	customer?: {
 		name: string;
 		email: string;
-		phones?: Array<{ country: string; area: string; number: string; type: string }>;
+		document?: string;
+		phones?: Array<{ countryCode: string; areaCode: string; number: string; type?: string }>;
 	};
-	amount?: { value: number; currency: string };
+	amount?: number;
+	currency?: string;
 	installments?: number;
 	billingAddress?: {
 		street: string;
 		number: string;
 		complement?: string;
-		regionCode: string;
+		district?: string;
+		state: string;
 		country: string;
 		city: string;
-		postalCode: string;
+		zipCode: string;
 	};
 };
 

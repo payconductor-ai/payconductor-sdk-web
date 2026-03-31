@@ -22,7 +22,7 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 	private methodContainer: HTMLElement | null = null;
 
 	async authenticate(): Promise<ThreeDSecureResult> {
-		const { authToken, card, customer, amount, billingAddress } = this.data;
+		const { authToken, card } = this.data;
 
 		if (!authToken) return this.fail("Missing authToken for PagarMe 3DS");
 		if (!card) return this.fail("Missing card data for PagarMe 3DS");
@@ -41,8 +41,6 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 		this.methodContainer.style.display = "none";
 		document.body.appendChild(this.methodContainer);
 
-		const orderData = this.buildOrderData();
-
 		return new Promise<ThreeDSecureResult>((resolve) => {
 			this.timeoutId = setTimeout(() => {
 				this.cleanup();
@@ -58,7 +56,7 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 					use_default_challenge_iframe_style: true,
 					challenge_window_size: detectWindowSize(),
 				},
-				orderData,
+				this.buildOrderData(),
 			).then((responses) => {
 				this.cleanup();
 				if (!responses?.length) {
@@ -101,32 +99,32 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 					card: {
 						number: card?.number,
 						holder_name: card?.holderName,
-						exp_month: card?.expMonth,
-						exp_year: card?.expYear,
+						exp_month: Number(card?.expMonth),
+						exp_year: Number(card?.expYear),
 						billing_address: billingAddress ? {
 							country: billingAddress.country,
-							state: billingAddress.regionCode,
+							state: billingAddress.state,
 							city: billingAddress.city,
-							zip_code: billingAddress.postalCode,
-							line_1: `${billingAddress.number}, ${billingAddress.street}`,
-							line_2: billingAddress.complement,
+							zip_code: billingAddress.zipCode,
+							line_1: `${billingAddress.number}, ${billingAddress.street}${billingAddress.district ? `, ${billingAddress.district}` : ""}`,
+							line_2: billingAddress.complement ?? "",
 						} : undefined,
 					},
 				},
-				amount: amount?.value,
+				amount: amount,
 			}],
 			...(customer ? {
 				customer: {
 					name: customer.name,
 					email: customer.email,
+					...(customer.document ? { document: customer.document } : {}),
 					...(customer.phones?.length ? {
-						phones: {
-							mobile_phone: {
-								country_code: customer.phones[0].country,
-								area_code: customer.phones[0].area,
-								number: customer.phones[0].number,
-							},
-						},
+						phones: Object.fromEntries(
+							customer.phones.map((p) => [
+								p.type === "HOME" ? "home_phone" : "mobile_phone",
+								{ country_code: p.countryCode, area_code: p.areaCode, number: p.number },
+							]),
+						),
 					} : {}),
 				},
 			} : {}),
