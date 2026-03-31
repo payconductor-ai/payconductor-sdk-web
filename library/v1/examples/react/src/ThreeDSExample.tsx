@@ -191,7 +191,7 @@ export function ThreeDSExample() {
 		<div style={{ maxWidth: "700px", margin: "0 auto", padding: "24px" }}>
 			<h1>PayConductor - 3DS Test</h1>
 			<p style={{ color: "#64748b", fontSize: "14px" }}>
-				Uses useThreeDS hook with @payconductor/sdk. No iframe, no checkout element.
+				Uses useThreeDS hook with @payconductor/sdk, without checkout element.
 			</p>
 
 			<div style={{ marginTop: "24px", padding: "24px", border: "1px solid #e2e8f0", borderRadius: "8px" }}>

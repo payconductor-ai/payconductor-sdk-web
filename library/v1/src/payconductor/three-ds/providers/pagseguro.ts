@@ -42,7 +42,5 @@ export class PagSeguroThreeDSProvider extends AbstractThreeDSProvider {
 		}
 	}
 
-	cleanup(): void {
-		this.closeModal();
-	}
+	cleanup(): void {}
 }
