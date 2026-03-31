@@ -22,9 +22,10 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 	private methodContainer: HTMLElement | null = null;
 
 	async authenticate(): Promise<ThreeDSecureResult> {
-		const { authToken } = this.data;
+		const { authToken, card, customer, amount, billingAddress } = this.data;
 
 		if (!authToken) return this.fail("Missing authToken for PagarMe 3DS");
+		if (!card) return this.fail("Missing card data for PagarMe 3DS");
 
 		const env = this.data.environment ?? "Production";
 
@@ -39,6 +40,8 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 		this.methodContainer = document.createElement("div");
 		this.methodContainer.style.display = "none";
 		document.body.appendChild(this.methodContainer);
+
+		const orderData = this.buildOrderData();
 
 		return new Promise<ThreeDSecureResult>((resolve) => {
 			this.timeoutId = setTimeout(() => {
@@ -55,7 +58,7 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 					use_default_challenge_iframe_style: true,
 					challenge_window_size: detectWindowSize(),
 				},
-				this.options.providerData ?? {},
+				orderData,
 			).then((responses) => {
 				this.cleanup();
 				if (!responses?.length) {
@@ -86,5 +89,47 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 		if (this.timeoutId) { clearTimeout(this.timeoutId); this.timeoutId = null; }
 		if (this.methodContainer) { this.methodContainer.remove(); this.methodContainer = null; }
 		this.closeModal();
+	}
+
+	private buildOrderData(): Record<string, unknown> {
+		const { card, customer, amount, billingAddress } = this.data;
+
+		return {
+			payments: [{
+				payment_method: "credit_card",
+				credit_card: {
+					card: {
+						number: card?.number,
+						holder_name: card?.holderName,
+						exp_month: card?.expMonth,
+						exp_year: card?.expYear,
+						billing_address: billingAddress ? {
+							country: billingAddress.country,
+							state: billingAddress.regionCode,
+							city: billingAddress.city,
+							zip_code: billingAddress.postalCode,
+							line_1: `${billingAddress.number}, ${billingAddress.street}`,
+							line_2: billingAddress.complement,
+						} : undefined,
+					},
+				},
+				amount: amount?.value,
+			}],
+			...(customer ? {
+				customer: {
+					name: customer.name,
+					email: customer.email,
+					...(customer.phones?.length ? {
+						phones: {
+							mobile_phone: {
+								country_code: customer.phones[0].country,
+								area_code: customer.phones[0].area,
+								number: customer.phones[0].number,
+							},
+						},
+					} : {}),
+				},
+			} : {}),
+		};
 	}
 }

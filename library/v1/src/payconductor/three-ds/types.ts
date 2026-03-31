@@ -10,6 +10,28 @@ export type ThreeDSecureData = {
 	publicKey?: string;
 	dsTransactionId?: string;
 	version?: string;
+	card?: {
+		number: string;
+		expMonth: string;
+		expYear: string;
+		holderName: string;
+	};
+	customer?: {
+		name: string;
+		email: string;
+		phones?: Array<{ country: string; area: string; number: string; type: string }>;
+	};
+	amount?: { value: number; currency: string };
+	installments?: number;
+	billingAddress?: {
+		street: string;
+		number: string;
+		complement?: string;
+		regionCode: string;
+		country: string;
+		city: string;
+		postalCode: string;
+	};
 };
 
 export type ThreeDSecureOptions = {
@@ -18,7 +40,6 @@ export type ThreeDSecureOptions = {
 	onError?: (error: Error) => void;
 	onTimeout?: () => void;
 	timeoutMs?: number;
-	providerData?: Record<string, unknown>;
 };
 
 export enum ThreeDSecureResultStatus {

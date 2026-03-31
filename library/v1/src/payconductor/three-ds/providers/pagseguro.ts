@@ -6,11 +6,11 @@ const SDK_URL = "https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser
 
 export class PagSeguroThreeDSProvider extends AbstractThreeDSProvider {
 	async authenticate(): Promise<ThreeDSecureResult> {
-		const { authToken, operationUrl } = this.data;
+		const { authToken, card, customer, amount, installments, billingAddress } = this.data;
 
-		if (!authToken || !operationUrl) {
-			return this.fail("Missing authToken or operationUrl for PagSeguro 3DS");
-		}
+		if (!authToken) return this.fail("Missing authToken (session) for PagSeguro 3DS");
+		if (!card) return this.fail("Missing card data for PagSeguro 3DS");
+		if (!amount) return this.fail("Missing amount for PagSeguro 3DS");
 
 		const env = this.data.environment === "Sandbox" ? "SANDBOX" : "PROD";
 
@@ -23,9 +23,28 @@ export class PagSeguroThreeDSProvider extends AbstractThreeDSProvider {
 		sdk.setUp({ session: authToken, env });
 
 		try {
-			const result = await sdk.authenticate3DS(
-				this.options.providerData as unknown as PagSeguroAuthRequestGlobal ?? { data: {} },
-			);
+			const result = await sdk.authenticate3DS({
+				data: {
+					customer: customer ? {
+						name: customer.name,
+						email: customer.email,
+						phones: customer.phones,
+					} : undefined,
+					paymentMethod: {
+						type: "CREDIT_CARD",
+						installments: installments ?? 1,
+						card: {
+							number: card.number,
+							expMonth: card.expMonth,
+							expYear: card.expYear,
+							holder: { name: card.holderName },
+						},
+					},
+					amount: { value: amount.value, currency: amount.currency },
+					billingAddress,
+					dataOnly: false,
+				},
+			});
 
 			if (result.status === "AUTH_FLOW_COMPLETED" || result.status === "AUTH_NOT_SUPPORTED") {
 				this.options.onComplete?.();
