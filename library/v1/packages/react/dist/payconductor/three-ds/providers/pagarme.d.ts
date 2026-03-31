@@ -5,4 +5,5 @@ export declare class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
     private methodContainer;
     authenticate(): Promise<ThreeDSecureResult>;
     cleanup(): void;
+    private buildOrderData;
 }

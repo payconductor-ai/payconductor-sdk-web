@@ -7,7 +7,7 @@ export type UseThreeDSOptions = {
     onTimeout?: () => void;
 };
 export type UseThreeDSReturn = {
-    handleChallenge: (threeDSecure: ThreeDSecureData, providerData?: Record<string, unknown>) => Promise<ThreeDSecureResult>;
+    handleChallenge: (threeDSecure: ThreeDSecureData) => Promise<ThreeDSecureResult>;
     destroy: () => void;
 };
 export declare function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn;

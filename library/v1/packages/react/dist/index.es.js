@@ -1,10 +1,10 @@
-var Y = Object.defineProperty;
-var G = (e, t, n) => t in e ? Y(e, t, { enumerable: !0, configurable: !0, writable: !0, value: n }) : e[t] = n;
-var T = (e, t, n) => G(e, typeof t != "symbol" ? t + "" : t, n);
-import { jsx as A, jsxs as $ } from "react/jsx-runtime";
-import { useState as v, useEffect as L, useRef as J } from "react";
-const K = "https://iframe.payconductor.ai/v1", z = "http://localhost:5175/v1", Z = 3e4, Q = "600px";
-var X = /* @__PURE__ */ ((e) => (e.Pix = "Pix", e.CreditCard = "CreditCard", e.DebitCard = "DebitCard", e.BankSlip = "BankSlip", e.Crypto = "Crypto", e.ApplePay = "ApplePay", e.NuPay = "NuPay", e.PicPay = "PicPay", e.AmazonPay = "AmazonPay", e.SepaDebit = "SepaDebit", e.GooglePay = "GooglePay", e))(X || {}), ee = /* @__PURE__ */ ((e) => (e.Grid = "grid", e.Vertical = "vertical", e.Horizontal = "horizontal", e))(ee || {}), B = /* @__PURE__ */ ((e) => (e.Succeeded = "succeeded", e.Pending = "pending", e.Failed = "failed", e))(B || {}), te = /* @__PURE__ */ ((e) => (e.Android = "android", e.IOS = "ios", e.Web = "web", e))(te || {}), ne = /* @__PURE__ */ ((e) => (e.Padding = "padding", e.Radius = "radius", e.Color = "color", e.Background = "background", e.Shadow = "shadow", e))(ne || {}), I = /* @__PURE__ */ ((e) => (e.Init = "Init", e.Config = "Config", e.Update = "Update", e.ConfirmPayment = "ConfirmPayment", e.Validate = "Validate", e.Reset = "Reset", e))(I || {}), C = /* @__PURE__ */ ((e) => (e.Ready = "Ready", e.Error = "Error", e.PaymentComplete = "PaymentComplete", e.PaymentFailed = "PaymentFailed", e.PaymentPending = "PaymentPending", e.ValidationError = "ValidationError", e.PaymentMethodSelected = "PaymentMethodSelected", e.Resize = "Resize", e.ThreeDSChallenge = "ThreeDSChallenge", e.ThreeDSComplete = "ThreeDSComplete", e.ThreeDSFailed = "ThreeDSFailed", e))(C || {}), re = /* @__PURE__ */ ((e) => (e.InvalidClient = "InvalidClient", e.InvalidToken = "InvalidToken", e.NetworkError = "NetworkError", e.IframeNotReady = "IframeNotReady", e.PaymentDeclined = "PaymentDeclined", e.ValidationError = "ValidationError", e.Timeout = "Timeout", e))(re || {});
+var W = Object.defineProperty;
+var G = (e, r, t) => r in e ? W(e, r, { enumerable: !0, configurable: !0, writable: !0, value: t }) : e[r] = t;
+var p = (e, r, t) => G(e, typeof r != "symbol" ? r + "" : r, t);
+import { jsx as _, jsxs as $ } from "react/jsx-runtime";
+import { useState as b, useEffect as L, useRef as J } from "react";
+const K = "https://iframe.payconductor.ai/v1", z = "http://localhost:5175/v1", Z = 3e4, X = "600px";
+var Q = /* @__PURE__ */ ((e) => (e.Pix = "Pix", e.CreditCard = "CreditCard", e.DebitCard = "DebitCard", e.BankSlip = "BankSlip", e.Crypto = "Crypto", e.ApplePay = "ApplePay", e.NuPay = "NuPay", e.PicPay = "PicPay", e.AmazonPay = "AmazonPay", e.SepaDebit = "SepaDebit", e.GooglePay = "GooglePay", e))(Q || {}), ee = /* @__PURE__ */ ((e) => (e.Grid = "grid", e.Vertical = "vertical", e.Horizontal = "horizontal", e))(ee || {}), B = /* @__PURE__ */ ((e) => (e.Succeeded = "succeeded", e.Pending = "pending", e.Failed = "failed", e))(B || {}), te = /* @__PURE__ */ ((e) => (e.Android = "android", e.IOS = "ios", e.Web = "web", e))(te || {}), ne = /* @__PURE__ */ ((e) => (e.Padding = "padding", e.Radius = "radius", e.Color = "color", e.Background = "background", e.Shadow = "shadow", e))(ne || {}), v = /* @__PURE__ */ ((e) => (e.Init = "Init", e.Config = "Config", e.Update = "Update", e.ConfirmPayment = "ConfirmPayment", e.Validate = "Validate", e.Reset = "Reset", e))(v || {}), P = /* @__PURE__ */ ((e) => (e.Ready = "Ready", e.Error = "Error", e.PaymentComplete = "PaymentComplete", e.PaymentFailed = "PaymentFailed", e.PaymentPending = "PaymentPending", e.ValidationError = "ValidationError", e.PaymentMethodSelected = "PaymentMethodSelected", e.Resize = "Resize", e.ThreeDSChallenge = "ThreeDSChallenge", e.ThreeDSComplete = "ThreeDSComplete", e.ThreeDSFailed = "ThreeDSFailed", e))(P || {}), re = /* @__PURE__ */ ((e) => (e.InvalidClient = "InvalidClient", e.InvalidToken = "InvalidToken", e.NetworkError = "NetworkError", e.IframeNotReady = "IframeNotReady", e.PaymentDeclined = "PaymentDeclined", e.ValidationError = "ValidationError", e.Timeout = "Timeout", e))(re || {});
 const He = {
   primaryColor: "#0066ff",
   secondaryColor: "#5a6b7c",
@@ -52,22 +52,22 @@ const He = {
   buttonBorderRadius: "8px",
   transitionDuration: "0.2s",
   transitionTimingFunction: "ease"
-}, ae = typeof window < "u" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && !window.location.search.includes("production"), oe = ae ? z : K, ie = [z, K], O = Q, se = Z, E = {
-  INIT: I.Init,
-  CONFIG: I.Config,
-  UPDATE: I.Update,
-  CONFIRM_PAYMENT: I.ConfirmPayment,
-  VALIDATE: I.Validate,
-  RESET: I.Reset,
-  READY: C.Ready,
-  ERROR: C.Error,
-  PAYMENT_COMPLETE: C.PaymentComplete,
-  PAYMENT_FAILED: C.PaymentFailed,
-  PAYMENT_PENDING: C.PaymentPending,
-  VALIDATION_ERROR: C.ValidationError,
-  PAYMENT_METHOD_SELECTED: C.PaymentMethodSelected,
-  RESIZE: C.Resize
-}, qe = {
+}, ae = typeof window < "u" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && !window.location.search.includes("production"), oe = ae ? z : K, ie = [z, K], U = X, se = Z, E = {
+  INIT: v.Init,
+  CONFIG: v.Config,
+  UPDATE: v.Update,
+  CONFIRM_PAYMENT: v.ConfirmPayment,
+  VALIDATE: v.Validate,
+  RESET: v.Reset,
+  READY: P.Ready,
+  ERROR: P.Error,
+  PAYMENT_COMPLETE: P.PaymentComplete,
+  PAYMENT_FAILED: P.PaymentFailed,
+  PAYMENT_PENDING: P.PaymentPending,
+  VALIDATION_ERROR: P.ValidationError,
+  PAYMENT_METHOD_SELECTED: P.PaymentMethodSelected,
+  RESIZE: P.Resize
+}, Ye = {
   INVALID_CLIENT: "InvalidClient",
   INVALID_TOKEN: "InvalidToken",
   NETWORK_ERROR: "NetworkError",
@@ -88,19 +88,19 @@ function de() {
     javaScriptEnabled: !0
   };
 }
-var g = /* @__PURE__ */ ((e) => (e.Success = "Success", e.Failed = "Failed", e.Timeout = "Timeout", e))(g || {});
-class M {
-  constructor(t, n) {
-    T(this, "overlay", null);
-    T(this, "modalContent", null);
-    this.data = t, this.options = n;
+var C = /* @__PURE__ */ ((e) => (e.Success = "Success", e.Failed = "Failed", e.Timeout = "Timeout", e))(C || {});
+class A {
+  constructor(r, t) {
+    p(this, "overlay", null);
+    p(this, "modalContent", null);
+    this.data = r, this.options = t;
   }
-  fail(t) {
-    var r, a;
-    const n = new Error(t);
-    return (a = (r = this.options).onError) == null || a.call(r, n), {
+  fail(r) {
+    var n, a;
+    const t = new Error(r);
+    return (a = (n = this.options).onError) == null || a.call(n, t), {
       status: "Failed",
-      error: n
+      error: t
     };
   }
   //#region Modal
@@ -115,8 +115,8 @@ class M {
   }
   injectStyles() {
     if (document.getElementById("payconductor-3ds-styles")) return;
-    const t = document.createElement("style");
-    t.id = "payconductor-3ds-styles", t.textContent = `
+    const r = document.createElement("style");
+    r.id = "payconductor-3ds-styles", r.textContent = `
 			#payconductor-3ds-overlay {
 				position: fixed;
 				inset: 0;
@@ -151,109 +151,105 @@ class M {
 					height: 440px;
 				}
 			}
-		`, document.head.appendChild(t);
+		`, document.head.appendChild(r);
   }
   //#endregion
 }
 const ce = 5 * 60 * 1e3;
-class le extends M {
+class ue extends A {
   constructor() {
     super(...arguments);
-    T(this, "iframe", null);
-    T(this, "messageListener", null);
-    T(this, "timeoutId", null);
+    p(this, "iframe", null);
+    p(this, "messageListener", null);
+    p(this, "timeoutId", null);
   }
   async authenticate() {
     const {
-      threeDsUrl: n,
-      creq: r
+      threeDsUrl: t,
+      creq: n
     } = this.data;
-    if (!n || !r)
+    if (!t || !n)
       return this.fail("Missing threeDsUrl or creq");
     const a = this.resolveContainer();
-    return new Promise((s) => {
+    return new Promise((o) => {
       var u;
-      this.iframe = document.createElement("iframe"), this.iframe.name = "payconductor-3ds-challenge", this.iframe.id = "payconductor-3ds-challenge", a.appendChild(this.iframe), this.messageListener = (h) => {
-        var y, c, w;
-        ((y = h.data) == null ? void 0 : y.status) === "COMPLETE" && (this.cleanup(), (w = (c = this.options).onComplete) == null || w.call(c), s({
-          status: g.Success
+      this.iframe = document.createElement("iframe"), this.iframe.name = "payconductor-3ds-challenge", this.iframe.id = "payconductor-3ds-challenge", a.appendChild(this.iframe), this.messageListener = (m) => {
+        var h, c, w;
+        ((h = m.data) == null ? void 0 : h.status) === "COMPLETE" && (this.cleanup(), (w = (c = this.options).onComplete) == null || w.call(c), o({
+          status: C.Success
         }));
       }, window.addEventListener("message", this.messageListener), this.timeoutId = setTimeout(() => {
-        var h, y;
-        this.cleanup(), (y = (h = this.options).onTimeout) == null || y.call(h), s({
-          status: g.Timeout
+        var m, h;
+        this.cleanup(), (h = (m = this.options).onTimeout) == null || h.call(m), o({
+          status: C.Timeout
         });
       }, this.options.timeoutMs ?? ce);
       const d = (u = this.iframe.contentWindow) == null ? void 0 : u.document;
       if (!d) {
-        this.cleanup(), s(this.fail("Cannot access iframe document"));
+        this.cleanup(), o(this.fail("Cannot access iframe document"));
         return;
       }
-      const o = d.createElement("form");
-      o.name = "threeDsChallengeForm", o.setAttribute("target", "payconductor-3ds-challenge"), o.setAttribute("method", "post"), o.setAttribute("action", n);
+      const s = d.createElement("form");
+      s.name = "threeDsChallengeForm", s.setAttribute("target", "payconductor-3ds-challenge"), s.setAttribute("method", "post"), s.setAttribute("action", t);
       const i = d.createElement("input");
-      i.setAttribute("type", "hidden"), i.setAttribute("name", "creq"), i.setAttribute("value", r), o.appendChild(i), this.iframe.appendChild(o), o.submit();
+      i.setAttribute("type", "hidden"), i.setAttribute("name", "creq"), i.setAttribute("value", n), s.appendChild(i), this.iframe.appendChild(s), s.submit();
     });
   }
   cleanup() {
     this.timeoutId && (clearTimeout(this.timeoutId), this.timeoutId = null), this.messageListener && (window.removeEventListener("message", this.messageListener), this.messageListener = null), this.iframe && (this.iframe.remove(), this.iframe = null), this.closeModal();
   }
 }
-const N = /* @__PURE__ */ new Map();
-function _(e) {
-  const t = N.get(e);
-  if (t) return t;
-  const n = new Promise((r, a) => {
+const k = /* @__PURE__ */ new Map();
+function R(e) {
+  const r = k.get(e);
+  if (r) return r;
+  const t = new Promise((n, a) => {
     if (document.querySelector(`script[src="${e}"]`)) {
-      r();
+      n();
       return;
     }
-    const s = document.createElement("script");
-    s.src = e, s.async = !0, s.onload = () => r(), s.onerror = () => {
-      N.delete(e), a(new Error(`Failed to load script: ${e}`));
-    }, (document.head || document.body).appendChild(s);
+    const o = document.createElement("script");
+    o.src = e, o.async = !0, o.onload = () => n(), o.onerror = () => {
+      k.delete(e), a(new Error(`Failed to load script: ${e}`));
+    }, (document.head || document.body).appendChild(o);
   });
-  return N.set(e, n), n;
+  return k.set(e, t), t;
 }
-const ue = "https://static.payzen.lat/static/js/authenticate-client/V1.0/kr-authenticate.umd", he = 10 * 60 * 1e3;
-class me extends M {
+const le = "https://static.payzen.lat/static/js/authenticate-client/V1.0/kr-authenticate.umd", he = 10 * 60 * 1e3;
+class me extends A {
   constructor() {
     super(...arguments);
-    T(this, "timeoutId", null);
+    p(this, "timeoutId", null);
   }
   async authenticate() {
     const {
-      operationUrl: n,
-      publicKey: r
+      operationUrl: t,
+      publicKey: n
     } = this.data;
-    if (!n || !r)
+    if (!t || !n)
       return this.fail("Missing operationUrl or publicKey");
     try {
-      await _(ue);
+      await R(le);
     } catch {
       return this.fail("Failed to load 3DS SDK");
     }
     const a = window.KrAuthenticate;
-    if (!a) return this.fail("KrAuthenticate not available");
-    const s = this.resolveContainer();
-    return new Promise((d) => {
+    return a ? new Promise((o) => {
       this.timeoutId = setTimeout(() => {
-        var i, u;
-        this.cleanup(), (u = (i = this.options).onTimeout) == null || u.call(i), d({
-          status: g.Timeout
+        var s, i;
+        this.cleanup(), (i = (s = this.options).onTimeout) == null || i.call(s), o({
+          status: C.Timeout
         });
-      }, this.options.timeoutMs ?? he), new a(r, {
-        element: s
-      }).authenticate(n, () => {
-        var i, u;
-        this.cleanup(), (u = (i = this.options).onComplete) == null || u.call(i), d({
-          status: g.Success
+      }, this.options.timeoutMs ?? he), new a(n).authenticate(t, () => {
+        var s, i;
+        this.cleanup(), (i = (s = this.options).onComplete) == null || i.call(s), o({
+          status: C.Success
         });
       });
-    });
+    }) : this.fail("KrAuthenticate not available");
   }
   cleanup() {
-    this.timeoutId && (clearTimeout(this.timeoutId), this.timeoutId = null), this.closeModal();
+    this.timeoutId && (clearTimeout(this.timeoutId), this.timeoutId = null);
   }
 }
 const fe = {
@@ -264,114 +260,225 @@ function we() {
   const e = window.innerWidth;
   return e <= 480 ? "01" : e <= 768 ? "02" : e <= 1024 ? "03" : "04";
 }
-class Ee extends M {
+class ge extends A {
   constructor() {
     super(...arguments);
-    T(this, "timeoutId", null);
-    T(this, "methodContainer", null);
+    p(this, "timeoutId", null);
+    p(this, "methodContainer", null);
   }
   async authenticate() {
     const {
-      authToken: n
+      authToken: t,
+      card: n
     } = this.data;
-    if (!n) return this.fail("Missing authToken for PagarMe 3DS");
-    const r = this.data.environment ?? "Production";
+    if (!t) return this.fail("Missing authToken for PagarMe 3DS");
+    if (!n) return this.fail("Missing card data for PagarMe 3DS");
+    const a = this.data.environment ?? "Production";
     try {
-      await _(fe[r]);
+      await R(fe[a]);
     } catch {
       return this.fail("Failed to load Stone 3DS SDK");
     }
-    const a = window.TDS;
-    if (!a) return this.fail("Stone TDS SDK not available");
-    const s = this.resolveContainer();
-    return this.methodContainer = document.createElement("div"), this.methodContainer.style.display = "none", document.body.appendChild(this.methodContainer), new Promise((d) => {
+    const o = window.TDS;
+    if (!o) return this.fail("Stone TDS SDK not available");
+    const d = this.resolveContainer();
+    return this.methodContainer = document.createElement("div"), this.methodContainer.style.display = "none", document.body.appendChild(this.methodContainer), new Promise((s) => {
       this.timeoutId = setTimeout(() => {
-        var o, i;
-        this.cleanup(), (i = (o = this.options).onTimeout) == null || i.call(o), d({
-          status: g.Timeout
+        var i, u;
+        this.cleanup(), (u = (i = this.options).onTimeout) == null || u.call(i), s({
+          status: C.Timeout
         });
-      }, this.options.timeoutMs ?? ye), a.init({
-        token: n,
+      }, this.options.timeoutMs ?? ye), o.init({
+        token: t,
         tds_method_container_element: this.methodContainer,
-        challenge_container_element: s,
+        challenge_container_element: d,
         use_default_challenge_iframe_style: !0,
         challenge_window_size: we()
-      }, this.options.providerData ?? {}).then((o) => {
-        var u, h;
-        if (this.cleanup(), !(o != null && o.length)) {
-          d(this.fail("PagarMe 3DS returned no response"));
+      }, this.buildOrderData()).then((i) => {
+        var m, h;
+        if (this.cleanup(), !(i != null && i.length)) {
+          s(this.fail("PagarMe 3DS returned no response"));
           return;
         }
-        const i = o[0];
-        if (i.challenge_canceled) {
-          d(this.fail("3DS challenge canceled by user"));
+        const u = i[0];
+        if (u.challenge_canceled) {
+          s(this.fail("3DS challenge canceled by user"));
           return;
         }
-        i.trans_status === "Y" || i.trans_status === "A" ? ((h = (u = this.options).onComplete) == null || h.call(u), d({
-          status: g.Success,
-          dsTransactionId: i.tds_server_trans_id
-        })) : d(this.fail(`3DS failed with status: ${i.trans_status}`));
-      }).catch((o) => {
-        this.cleanup(), d(this.fail(o instanceof Error ? o.message : "PagarMe 3DS failed"));
+        u.trans_status === "Y" || u.trans_status === "A" ? ((h = (m = this.options).onComplete) == null || h.call(m), s({
+          status: C.Success,
+          dsTransactionId: u.tds_server_trans_id
+        })) : s(this.fail(`3DS failed with status: ${u.trans_status}`));
+      }).catch((i) => {
+        this.cleanup(), s(this.fail(i instanceof Error ? i.message : "PagarMe 3DS failed"));
       });
     });
   }
   cleanup() {
     this.timeoutId && (clearTimeout(this.timeoutId), this.timeoutId = null), this.methodContainer && (this.methodContainer.remove(), this.methodContainer = null), this.closeModal();
   }
-}
-const ge = "https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min";
-class Pe extends M {
-  async authenticate() {
-    var s, d;
+  buildOrderData() {
+    var d;
     const {
-      authToken: t,
-      operationUrl: n
+      card: t,
+      customer: n,
+      amount: a,
+      billingAddress: o
     } = this.data;
-    if (!t || !n)
-      return this.fail("Missing authToken or operationUrl for PagSeguro 3DS");
-    const r = this.data.environment === "Sandbox" ? "SANDBOX" : "PROD";
+    return {
+      payments: [{
+        payment_method: "credit_card",
+        credit_card: {
+          card: {
+            number: t == null ? void 0 : t.number,
+            holder_name: t == null ? void 0 : t.holderName,
+            exp_month: Number(t == null ? void 0 : t.expMonth),
+            exp_year: Number(t == null ? void 0 : t.expYear),
+            billing_address: o ? {
+              country: o.country,
+              state: o.state,
+              city: o.city,
+              zip_code: o.zipCode,
+              line_1: `${o.number}, ${o.street}${o.district ? `, ${o.district}` : ""}`,
+              line_2: o.complement ?? ""
+            } : void 0
+          }
+        },
+        amount: a
+      }],
+      ...n ? {
+        customer: {
+          name: n.name,
+          email: n.email,
+          ...n.document ? {
+            document: n.document
+          } : {},
+          ...(d = n.phones) != null && d.length ? {
+            phones: Object.fromEntries(n.phones.map((s) => [s.type === "HOME" ? "home_phone" : "mobile_phone", {
+              country_code: s.countryCode,
+              area_code: s.areaCode,
+              number: s.number
+            }]))
+          } : {}
+        }
+      } : {}
+    };
+  }
+}
+const Ee = "https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min";
+class Ce extends A {
+  async authenticate() {
+    var h, c, w;
+    const {
+      authToken: r,
+      card: t,
+      customer: n,
+      amount: a,
+      currency: o,
+      billingAddress: d
+    } = this.data;
+    if (!r) return this.fail("Missing authToken (session) for PagSeguro 3DS");
+    if (!t) return this.fail("Missing card data for PagSeguro 3DS");
+    if (!n) return this.fail("Missing customer data for PagSeguro 3DS");
+    if (!a) return this.fail("Missing amount for PagSeguro 3DS");
+    if (!d) return this.fail("Missing billingAddress for PagSeguro 3DS");
+    const s = this.data.environment === "Sandbox" ? "SANDBOX" : "PROD";
     try {
-      await _(ge);
+      await R(Ee);
     } catch {
       return this.fail("Failed to load PagSeguro SDK");
     }
-    const a = window.PagSeguro;
-    if (!a) return this.fail("PagSeguro SDK not available");
-    a.setUp({
-      session: t,
-      env: r
+    const i = window.PagSeguro;
+    if (!i) return this.fail("PagSeguro SDK not available");
+    i.setUp({
+      session: r,
+      env: s
     });
+    const u = ((h = n.phones) == null ? void 0 : h.map((g) => ({
+      country: g.countryCode,
+      area: g.areaCode,
+      number: g.number,
+      type: g.type ?? "MOBILE"
+    }))) ?? [{
+      country: "55",
+      area: "11",
+      number: "999999999",
+      type: "MOBILE"
+    }];
+    u.some((g) => g.type === "MOBILE") || (u[0].type = "MOBILE");
     try {
-      const o = await a.authenticate3DS(this.options.providerData ?? {
-        data: {}
+      const g = await i.authenticate3DS({
+        data: {
+          customer: {
+            name: n.name,
+            email: n.email,
+            phones: u
+          },
+          paymentMethod: {
+            type: this.data.installments === 0 ? "DEBIT_CARD" : "CREDIT_CARD",
+            installments: this.data.installments ?? 1,
+            card: {
+              number: t.number,
+              expMonth: t.expMonth,
+              expYear: t.expYear,
+              holder: {
+                name: t.holderName
+              }
+            }
+          },
+          amount: {
+            value: a,
+            currency: o ?? "BRL"
+          },
+          billingAddress: {
+            street: d.street,
+            number: d.number,
+            complement: d.complement,
+            regionCode: d.state,
+            country: d.country.length === 2 ? this.toAlpha3(d.country) : d.country,
+            city: d.city,
+            postalCode: d.zipCode.replace(/\D/g, "")
+          },
+          dataOnly: !1
+        }
       });
-      return o.status === "AUTH_FLOW_COMPLETED" || o.status === "AUTH_NOT_SUPPORTED" ? ((d = (s = this.options).onComplete) == null || d.call(s), {
-        status: g.Success,
-        dsTransactionId: o.id
-      }) : o.status === "CHANGE_PAYMENT_METHOD" ? this.fail("PagSeguro requires a different payment method") : {
-        status: g.Success,
-        dsTransactionId: o.id
+      return g.status === "AUTH_FLOW_COMPLETED" || g.status === "AUTH_NOT_SUPPORTED" ? ((w = (c = this.options).onComplete) == null || w.call(c), {
+        status: C.Success,
+        dsTransactionId: g.id
+      }) : g.status === "CHANGE_PAYMENT_METHOD" ? this.fail("PagSeguro requires a different payment method") : {
+        status: C.Success,
+        dsTransactionId: g.id
       };
-    } catch (o) {
-      return this.fail(o instanceof Error ? o.message : "PagSeguro 3DS failed");
+    } catch (g) {
+      return this.fail(g instanceof Error ? g.message : "PagSeguro 3DS failed");
     }
   }
   cleanup() {
-    this.closeModal();
+  }
+  toAlpha3(r) {
+    return {
+      BR: "BRA",
+      US: "USA",
+      AR: "ARG",
+      CL: "CHL",
+      CO: "COL",
+      MX: "MEX",
+      PE: "PER",
+      UY: "URY"
+    }[r.toUpperCase()] ?? r;
   }
 }
-const Te = {
-  MercadoPago: le,
+const Se = {
+  MercadoPago: ue,
   PayConductor: me,
-  PagarMe: Ee,
-  PagSeguro: Pe
+  PagarMe: ge,
+  PagSeguro: Ce
 };
 class H {
-  constructor(t) {
-    T(this, "data");
-    T(this, "provider", null);
-    this.data = t;
+  constructor(r) {
+    p(this, "data");
+    p(this, "provider", null);
+    this.data = r;
   }
   get needsChallenge() {
     return this.data.status === "NeedChallenge" || this.data.statusDetail === "ThreeDsAwaitingChallenge";
@@ -379,34 +486,36 @@ class H {
   get acquirer() {
     return this.data.acquirer;
   }
-  async authenticate(t) {
+  async authenticate(r) {
     if (!this.needsChallenge)
       return {
-        status: g.Success
+        status: C.Success
       };
-    const n = {
-      ...t,
+    const {
+      acquirer: t
+    } = this.data;
+    if (!t)
+      return {
+        status: C.Failed,
+        error: new Error("Missing 3DS acquirer")
+      };
+    const n = Se[t];
+    if (!n)
+      return {
+        status: C.Failed,
+        error: new Error(`Unsupported 3DS provider: ${t}`)
+      };
+    const a = {
+      ...r,
       threeDSecure: this.data
-    }, r = this.resolveProvider(), a = r ? Te[r] : void 0;
-    return a ? (this.provider = new a(this.data, n), this.provider.authenticate()) : this.data.authToken && !this.data.operationUrl && !this.data.threeDsUrl ? {
-      status: g.Success,
-      authToken: this.data.authToken,
-      dsTransactionId: this.data.dsTransactionId
-    } : {
-      status: g.Failed,
-      error: new Error(`Unsupported 3DS provider: ${r ?? "unknown"}`)
     };
+    return this.provider = new n(this.data, a), this.provider.authenticate();
   }
   destroy() {
     this.provider && (this.provider.cleanup(), this.provider = null);
   }
-  resolveProvider() {
-    if (this.data.acquirer) return this.data.acquirer;
-    if (this.data.operationUrl && this.data.publicKey) return "PayConductor";
-    if (this.data.threeDsUrl && this.data.creq) return "MercadoPago";
-  }
 }
-const F = "payconductor-skeleton-style", Se = `
+const F = "payconductor-skeleton-style", pe = `
 	@keyframes payconductor-shimmer {
 	  0% { background-position: -200% 0; }
 	  100% { background-position: 200% 0; }
@@ -419,140 +528,140 @@ const F = "payconductor-skeleton-style", Se = `
 	  width: 100%;
 	}
 `;
-function Ce(e) {
-  const t = new URLSearchParams({
+function Pe(e) {
+  const r = new URLSearchParams({
     publicKey: e.publicKey
   });
-  return `${oe}?${t.toString()}`;
+  return `${oe}?${r.toString()}`;
 }
-function pe() {
+function Te() {
   return crypto.randomUUID();
 }
-function ve(e, t) {
-  return t.some((n) => {
+function be(e, r) {
+  return r.some((t) => {
     try {
-      return new URL(n).origin === e;
+      return new URL(t).origin === e;
     } catch {
-      return n === e;
+      return t === e;
     }
   });
 }
 function x() {
   return /* @__PURE__ */ new Map();
 }
-function D(e, t, n, r) {
-  return new Promise((a, s) => {
+function D(e, r, t, n) {
+  return new Promise((a, o) => {
     if (!e || !("contentWindow" in e)) {
-      s(new Error("Iframe not defined"));
+      o(new Error("Iframe not defined"));
       return;
     }
     if (!(e != null && e.contentWindow)) {
-      s(new Error("Iframe not ready"));
+      o(new Error("Iframe not ready"));
       return;
     }
-    if (!t) {
-      s(new Error("Pending requests not initialized"));
+    if (!r) {
+      o(new Error("Pending requests not initialized"));
       return;
     }
-    const d = pe();
-    t.set(d, {
+    const d = Te();
+    r.set(d, {
       resolve: a,
-      reject: s
+      reject: o
     }), e.contentWindow.postMessage({
-      type: n,
-      data: r,
+      type: t,
+      data: n,
       requestId: d
     }, "*"), setTimeout(() => {
-      t != null && t.has(d) && (t.delete(d), s(new Error("Request timeout")));
+      r != null && r.has(d) && (r.delete(d), o(new Error("Request timeout")));
     }, se);
   });
 }
-function be(e, t, n) {
-  return D(e, t, E.CONFIRM_PAYMENT, n);
+function Ie(e, r, t) {
+  return D(e, r, E.CONFIRM_PAYMENT, t);
 }
-async function Ie(e, t, n) {
-  var o, i, u, h, y;
-  const r = await be(e, t, {
-    orderId: n.orderId
+async function ve(e, r, t) {
+  var s, i, u, m, h;
+  const n = await Ie(e, r, {
+    orderId: t.orderId
   });
-  if (!(r.statusDetail === "ThreeDsAwaitingChallenge" || ((o = r.threeDSecure) == null ? void 0 : o.status) === "NeedChallenge") || !r.threeDSecure) return r;
-  (i = n.onThreeDSChallenge) == null || i.call(n);
-  const s = new H({
-    ...r.threeDSecure,
-    statusDetail: r.statusDetail
-  }), d = await s.authenticate({
-    onComplete: n.onThreeDSComplete,
-    onError: n.onThreeDSError
+  if (!(n.statusDetail === "ThreeDsAwaitingChallenge" || ((s = n.threeDSecure) == null ? void 0 : s.status) === "NeedChallenge") || !n.threeDSecure) return n;
+  (i = t.onThreeDSChallenge) == null || i.call(t);
+  const o = new H({
+    ...n.threeDSecure,
+    statusDetail: n.statusDetail
+  }), d = await o.authenticate({
+    onComplete: t.onThreeDSComplete,
+    onError: t.onThreeDSError
   });
-  return s.destroy(), d.status !== g.Success ? {
-    ...r,
+  return o.destroy(), d.status !== C.Success ? {
+    ...n,
     status: B.Failed,
-    message: d.status === g.Timeout ? "3DS challenge timed out" : ((u = d.error) == null ? void 0 : u.message) || "3DS challenge failed"
-  } : await D(e, t, E.CONFIRM_PAYMENT, {
-    orderId: n.orderId,
+    message: d.status === C.Timeout ? "3DS challenge timed out" : ((u = d.error) == null ? void 0 : u.message) || "3DS challenge failed"
+  } : await D(e, r, E.CONFIRM_PAYMENT, {
+    orderId: t.orderId,
     confirmThreeDS: !0,
     threeDSecure: {
       type: "internal",
-      authToken: (h = r.threeDSecure) == null ? void 0 : h.authToken,
-      dsTransactionId: d.dsTransactionId ?? ((y = r.threeDSecure) == null ? void 0 : y.dsTransactionId),
+      authToken: (m = n.threeDSecure) == null ? void 0 : m.authToken,
+      dsTransactionId: d.dsTransactionId ?? ((h = n.threeDSecure) == null ? void 0 : h.dsTransactionId),
       browser: de()
     }
   });
 }
-function De(e, t, n) {
-  return D(e, t, E.VALIDATE, n);
+function De(e, r, t) {
+  return D(e, r, E.VALIDATE, t);
 }
-function ke(e, t) {
-  return D(e, t, E.RESET);
+function Me(e, r) {
+  return D(e, r, E.RESET);
 }
-function Ae(e, t, n) {
-  return D(e, t, E.CONFIG, n);
+function _e(e, r, t) {
+  return D(e, r, E.CONFIG, t);
 }
-function Me(e, t, n) {
-  return D(e, t, E.INIT, n);
+function Ae(e, r, t) {
+  return D(e, r, E.INIT, t);
 }
-function _e(e, t, n, r, a, s, d, o, i) {
+function Re(e, r, t, n, a, o, d, s, i) {
   const u = e.data, {
-    requestId: h,
-    type: y,
+    requestId: m,
+    type: h,
     data: c,
     error: w
   } = u;
-  if (y === E.READY) {
-    if (r == null || r(), h && (t != null && t.has(h))) {
+  if (h === E.READY) {
+    if (n == null || n(), m && (r != null && r.has(m))) {
       const {
-        resolve: S
-      } = t.get(h);
-      t.delete(h), S(c);
+        resolve: g
+      } = r.get(m);
+      r.delete(m), g(c);
     }
     return;
   }
-  if (ve(e.origin, ie)) {
-    if (h && t && t.has(h)) {
+  if (be(e.origin, ie)) {
+    if (m && r && r.has(m)) {
       const {
-        resolve: S,
-        reject: b
-      } = t.get(h);
-      t.delete(h), w ? b(new Error(String(w.message))) : S(c);
+        resolve: g,
+        reject: I
+      } = r.get(m);
+      r.delete(m), w ? I(new Error(String(w.message))) : g(c);
       return;
     }
-    if (y === E.ERROR) {
-      n((w == null ? void 0 : w.message) || "Unknown error"), a == null || a(new Error(String(w == null ? void 0 : w.message)));
+    if (h === E.ERROR) {
+      t((w == null ? void 0 : w.message) || "Unknown error"), a == null || a(new Error(String(w == null ? void 0 : w.message)));
       return;
     }
-    if (y === E.PAYMENT_COMPLETE) {
-      c && typeof c == "object" && "status" in c && (s == null || s(c));
-      return;
-    }
-    if (y === E.PAYMENT_FAILED) {
-      c && typeof c == "object" && "status" in c && (d == null || d(c));
-      return;
-    }
-    if (y === E.PAYMENT_PENDING) {
+    if (h === E.PAYMENT_COMPLETE) {
       c && typeof c == "object" && "status" in c && (o == null || o(c));
       return;
     }
-    if (y === E.PAYMENT_METHOD_SELECTED) {
+    if (h === E.PAYMENT_FAILED) {
+      c && typeof c == "object" && "status" in c && (d == null || d(c));
+      return;
+    }
+    if (h === E.PAYMENT_PENDING) {
+      c && typeof c == "object" && "status" in c && (s == null || s(c));
+      return;
+    }
+    if (h === E.PAYMENT_METHOD_SELECTED) {
       c && typeof c == "object" && "paymentMethod" in c && (i == null || i(c.paymentMethod));
       return;
     }
@@ -560,39 +669,39 @@ function _e(e, t, n, r, a, s, d, o, i) {
   }
 }
 function je(e) {
-  const [t, n] = v(
+  const [r, t] = b(
     () => !1
-  ), [r, a] = v(() => null), [s, d] = v(
+  ), [n, a] = b(() => null), [o, d] = b(
     () => ""
-  ), [o, i] = v(() => null);
+  ), [s, i] = b(() => null);
   return L(() => {
     const u = (...l) => {
       e.debug && console.log("[PayConductor]", ...l);
-    }, h = Ce({
+    }, m = Pe({
       publicKey: e.publicKey
     });
-    d(h), n(!0);
-    const y = x();
+    d(m), t(!0);
+    const h = x();
     let c = !1;
-    u("init", e.publicKey), u("iframeUrl", h);
+    u("init", e.publicKey), u("iframeUrl", m);
     const w = () => {
-      var P, m;
-      const l = (m = (P = window.PayConductor) == null ? void 0 : P.frame) == null ? void 0 : m.iframe;
+      var S, f;
+      const l = (f = (S = window.PayConductor) == null ? void 0 : S.frame) == null ? void 0 : f.iframe;
       if (l) {
         if (l instanceof HTMLIFrameElement) return l;
         if (typeof l == "object" && l !== null) {
-          const f = l;
-          if ("current" in f && f.current instanceof HTMLIFrameElement)
-            return f.current;
-          if ("value" in f && f.value instanceof HTMLIFrameElement)
-            return f.value;
+          const y = l;
+          if ("current" in y && y.current instanceof HTMLIFrameElement)
+            return y.current;
+          if ("value" in y && y.value instanceof HTMLIFrameElement)
+            return y.value;
         }
         return l;
       }
       return document.querySelector(
         ".payconductor-element iframe"
       ) ?? void 0;
-    }, S = {
+    }, g = {
       get iframe() {
         return document.querySelector(
           ".payconductor-element iframe"
@@ -600,22 +709,22 @@ function je(e) {
       },
       set iframe(l) {
       },
-      iframeUrl: h,
+      iframeUrl: m,
       error: null
-    }, b = {
+    }, I = {
       publicKey: e.publicKey,
       theme: e.theme,
       locale: e.locale,
       paymentMethods: e.paymentMethods,
       defaultPaymentMethod: e.defaultPaymentMethod
-    }, k = {
+    }, M = {
       confirmPayment: (l) => {
-        var m;
+        var f;
         u("→ CONFIRM_PAYMENT", {
           orderId: l.orderId
         });
-        const P = w();
-        return P != null && P.contentWindow && P.contentWindow.postMessage(
+        const S = w();
+        return S != null && S.contentWindow && S.contentWindow.postMessage(
           {
             type: E.CONFIG,
             data: {
@@ -630,23 +739,23 @@ function je(e) {
             }
           },
           "*"
-        ), b.orderId = l.orderId, (m = window.PayConductor) != null && m.config && (window.PayConductor.config.orderId = l.orderId), Ie(P, y, l);
+        ), I.orderId = l.orderId, (f = window.PayConductor) != null && f.config && (window.PayConductor.config.orderId = l.orderId), ve(S, h, l);
       },
-      validate: (l) => (u("→ VALIDATE", l), De(w(), y, l)),
-      reset: () => (u("→ RESET"), ke(w(), y)),
-      getSelectedPaymentMethod: () => o
+      validate: (l) => (u("→ VALIDATE", l), De(w(), h, l)),
+      reset: () => (u("→ RESET"), Me(w(), h)),
+      getSelectedPaymentMethod: () => s
     };
     window.PayConductor = {
-      frame: S,
-      config: b,
-      api: k,
-      selectedPaymentMethod: o
+      frame: g,
+      config: I,
+      api: M,
+      selectedPaymentMethod: s
     }, u("registered"), window.dispatchEvent(
       new CustomEvent("payconductor:registered", {
         detail: window.PayConductor
       })
     );
-    const p = async () => {
+    const T = async () => {
       if (!c) {
         const l = w();
         if (!l) {
@@ -659,7 +768,7 @@ function je(e) {
           paymentMethods: e.paymentMethods,
           defaultPaymentMethod: e.defaultPaymentMethod,
           showPaymentButtons: e.showPaymentButtons
-        }), Ae(l, y, {
+        }), _e(l, h, {
           theme: e.theme,
           locale: e.locale,
           paymentMethods: e.paymentMethods,
@@ -668,65 +777,65 @@ function je(e) {
           nuPayConfig: e.nuPayConfig
         });
       }
-    }, V = (l) => {
-      var P;
-      (P = l.data) != null && P.type && u("←", l.data.type, l.data.data ?? ""), _e(
+    }, q = (l) => {
+      var S;
+      (S = l.data) != null && S.type && u("←", l.data.type, l.data.data ?? ""), Re(
         l,
-        y,
-        (m) => {
-          var f;
-          a(m), S.error = m, (f = window.PayConductor) != null && f.frame && (window.PayConductor.frame.error = m);
+        h,
+        (f) => {
+          var y;
+          a(f), g.error = f, (y = window.PayConductor) != null && y.frame && (window.PayConductor.frame.error = f);
         },
         () => {
-          var m;
-          (m = e.onReady) == null || m.call(e), p();
-        },
-        (m) => {
           var f;
-          (f = e.onError) == null || f.call(e, m);
+          (f = e.onReady) == null || f.call(e), T();
         },
-        (m) => {
-          var f;
-          (f = e.onPaymentComplete) == null || f.call(e, m);
+        (f) => {
+          var y;
+          (y = e.onError) == null || y.call(e, f);
         },
-        (m) => {
-          var f;
-          (f = e.onPaymentFailed) == null || f.call(e, m);
+        (f) => {
+          var y;
+          (y = e.onPaymentComplete) == null || y.call(e, f);
         },
-        (m) => {
-          var f;
-          (f = e.onPaymentPending) == null || f.call(e, m);
+        (f) => {
+          var y;
+          (y = e.onPaymentFailed) == null || y.call(e, f);
         },
-        (m) => {
-          var f;
-          i(m), window.PayConductor && (window.PayConductor.selectedPaymentMethod = m), (f = e.onPaymentMethodSelected) == null || f.call(e, m);
+        (f) => {
+          var y;
+          (y = e.onPaymentPending) == null || y.call(e, f);
+        },
+        (f) => {
+          var y;
+          i(f), window.PayConductor && (window.PayConductor.selectedPaymentMethod = f), (y = e.onPaymentMethodSelected) == null || y.call(e, f);
         }
       );
     };
-    window.addEventListener("message", V);
-    const W = () => {
-      var P, m, f;
+    window.addEventListener("message", q);
+    const V = () => {
+      var S, f, y;
       const l = w();
       if (!l) return !1;
       try {
-        if ((((P = l.contentDocument) == null ? void 0 : P.readyState) ?? ((f = (m = l.contentWindow) == null ? void 0 : m.document) == null ? void 0 : f.readyState)) === "complete")
-          return p(), !0;
+        if ((((S = l.contentDocument) == null ? void 0 : S.readyState) ?? ((y = (f = l.contentWindow) == null ? void 0 : f.document) == null ? void 0 : y.readyState)) === "complete")
+          return T(), !0;
       } catch {
       }
       return !1;
-    }, U = () => {
-      if (W()) return;
+    }, O = () => {
+      if (V()) return;
       const l = w();
       if (l) {
-        l.addEventListener("load", () => p(), {
+        l.addEventListener("load", () => T(), {
           once: !0
         });
         return;
       }
-      setTimeout(U, 50);
+      setTimeout(O, 50);
     };
-    U();
-  }, []), /* @__PURE__ */ A(
+    O();
+  }, []), /* @__PURE__ */ _(
     "div",
     {
       className: "payconductor",
@@ -738,15 +847,15 @@ function je(e) {
     }
   );
 }
-function Ve(e) {
-  const t = J(null), [n, r] = v(() => ""), [a, s] = v(() => !1), [d, o] = v(() => "");
+function qe(e) {
+  const r = J(null), [t, n] = b(() => ""), [a, o] = b(() => !1), [d, s] = b(() => "");
   return L(() => {
     if (typeof document < "u" && !document.getElementById(F)) {
       const c = document.createElement("style");
-      c.id = F, c.textContent = Se, document.head.appendChild(c);
+      c.id = F, c.textContent = pe, document.head.appendChild(c);
     }
     const i = (c) => {
-      c != null && c.frame && (r(c.frame.iframeUrl || ""), s(!0), console.log("init", {
+      c != null && c.frame && (n(c.frame.iframeUrl || ""), o(!0), console.log("init", {
         PayConductor: window.PayConductor
       }));
     }, u = typeof window < "u" ? window.PayConductor : null;
@@ -758,15 +867,15 @@ function Ve(e) {
       };
       window.addEventListener("payconductor:registered", c);
     }
-    let h = !1;
-    const y = (c) => {
-      var w, S, b, k;
-      if (((w = c.data) == null ? void 0 : w.type) === E.RESIZE && ((b = (S = c.data) == null ? void 0 : S.data) != null && b.height) && o(c.data.data.height + "px"), ((k = c.data) == null ? void 0 : k.type) === E.READY && e.height && !h) {
-        h = !0;
-        const p = document.querySelector(
+    let m = !1;
+    const h = (c) => {
+      var w, g, I, M;
+      if (((w = c.data) == null ? void 0 : w.type) === E.RESIZE && ((I = (g = c.data) == null ? void 0 : g.data) != null && I.height) && s(c.data.data.height + "px"), ((M = c.data) == null ? void 0 : M.type) === E.READY && e.height && !m) {
+        m = !0;
+        const T = document.querySelector(
           ".payconductor-element iframe"
         );
-        p != null && p.contentWindow && p.contentWindow.postMessage(
+        T != null && T.contentWindow && T.contentWindow.postMessage(
           {
             type: E.CONFIG,
             data: {
@@ -778,7 +887,7 @@ function Ve(e) {
         );
       }
     };
-    return window.addEventListener("message", y), () => window.removeEventListener("message", y);
+    return window.addEventListener("message", h), () => window.removeEventListener("message", h);
   }, []), /* @__PURE__ */ $(
     "div",
     {
@@ -787,25 +896,25 @@ function Ve(e) {
         width: "100%"
       },
       children: [
-        a ? null : /* @__PURE__ */ A(
+        a ? null : /* @__PURE__ */ _(
           "div",
           {
             className: "payconductor-skeleton",
             style: {
-              height: e.height || O
+              height: e.height || U
             }
           }
         ),
-        a && n ? /* @__PURE__ */ A(
+        a && t ? /* @__PURE__ */ _(
           "iframe",
           {
             allow: "payment",
             title: "PayConductor",
-            ref: t,
-            src: n,
+            ref: r,
+            src: t,
             style: {
               width: "100%",
-              height: e.height || d || O,
+              height: e.height || d || U,
               border: "none"
             }
           }
@@ -814,41 +923,41 @@ function Ve(e) {
     }
   );
 }
-function We(e) {
-  const [t, n] = v(() => !1);
+function Ve(e) {
+  const [r, t] = b(() => !1);
   return L(() => {
-    const r = () => {
-      n(!0);
+    const n = () => {
+      t(!0);
     }, a = () => {
-      n(!1);
+      t(!1);
     };
-    return window.addEventListener("payconductor:3ds:show", r), window.addEventListener("payconductor:3ds:hide", a), typeof window < "u" && (window.PayConductor3DS = {
+    return window.addEventListener("payconductor:3ds:show", n), window.addEventListener("payconductor:3ds:hide", a), typeof window < "u" && (window.PayConductor3DS = {
       container: () => document.getElementById("payconductor-3ds-container"),
-      show: r,
+      show: n,
       hide: a
     }, window.dispatchEvent(new CustomEvent("payconductor:3ds:registered"))), () => {
-      window.removeEventListener("payconductor:3ds:show", r), window.removeEventListener("payconductor:3ds:hide", a), window.PayConductor3DS = null;
+      window.removeEventListener("payconductor:3ds:show", n), window.removeEventListener("payconductor:3ds:hide", a), window.PayConductor3DS = null;
     };
-  }, []), /* @__PURE__ */ A(
+  }, []), /* @__PURE__ */ _(
     "div",
     {
       className: "payconductor-three-ds",
       id: "payconductor-3ds-container",
       style: {
         width: "100%",
-        display: t ? "block" : "none",
-        minHeight: t ? e.height || "600px" : "0"
+        display: r ? "block" : "none",
+        minHeight: r ? e.height || "600px" : "0"
       }
     }
   );
 }
-function Ye() {
-  const e = typeof window < "u" ? window.PayConductor : null, t = e != null && e.config ? {
+function We() {
+  const e = typeof window < "u" ? window.PayConductor : null, r = e != null && e.config ? {
     publicKey: e.config.publicKey,
     orderId: e.config.orderId,
     theme: e.config.theme,
     locale: e.config.locale
-  } : {}, n = e != null && e.frame ? {
+  } : {}, t = e != null && e.frame ? {
     iframe: e.frame.iframe,
     error: e.frame.error
   } : {
@@ -856,91 +965,91 @@ function Ye() {
     error: null
   };
   return {
-    ...t,
-    ...n
+    ...r,
+    ...t
   };
 }
-function R(e) {
-  var t;
-  if ((t = e == null ? void 0 : e.frame) != null && t.iframe) {
-    const n = e.frame.iframe;
-    if (n instanceof HTMLIFrameElement) return n;
-    if (n && typeof n == "object") {
-      if ("current" in n) {
-        const r = n.current;
-        if (r instanceof HTMLIFrameElement) return r;
+function N(e) {
+  var r;
+  if ((r = e == null ? void 0 : e.frame) != null && r.iframe) {
+    const t = e.frame.iframe;
+    if (t instanceof HTMLIFrameElement) return t;
+    if (t && typeof t == "object") {
+      if ("current" in t) {
+        const n = t.current;
+        if (n instanceof HTMLIFrameElement) return n;
       }
-      if ("value" in n) {
-        const r = n.value;
-        if (r instanceof HTMLIFrameElement) return r;
+      if ("value" in t) {
+        const n = t.value;
+        if (n instanceof HTMLIFrameElement) return n;
       }
     }
   }
   return document.querySelector(".payconductor-element iframe") ?? null;
 }
 function Ge() {
-  const e = () => typeof window < "u" ? window.PayConductor : null, t = (n, r) => {
+  const e = () => typeof window < "u" ? window.PayConductor : null, r = (t, n) => {
     const a = e();
     if (!a) return;
-    const s = R(a);
-    s != null && s.contentWindow && s.contentWindow.postMessage({
-      type: n,
-      data: r
+    const o = N(a);
+    o != null && o.contentWindow && o.contentWindow.postMessage({
+      type: t,
+      data: n
     }, "*");
   };
   return {
-    init: async (n) => {
-      const r = R(e()), a = x();
-      return Me(r || void 0, a, n);
+    init: async (t) => {
+      const n = N(e()), a = x();
+      return Ae(n || void 0, a, t);
     },
-    confirmPayment: async (n) => {
-      if (!n.orderId)
+    confirmPayment: async (t) => {
+      if (!t.orderId)
         throw new Error("Order ID is required");
-      const r = e();
-      if (!(r != null && r.api)) throw new Error("PayConductor not initialized");
-      return r.api.confirmPayment(n);
+      const n = e();
+      if (!(n != null && n.api)) throw new Error("PayConductor not initialized");
+      return n.api.confirmPayment(t);
     },
-    validate: (n) => {
-      const r = e();
-      return r ? r.api.validate(n) : Promise.resolve(!1);
+    validate: (t) => {
+      const n = e();
+      return n ? n.api.validate(t) : Promise.resolve(!1);
     },
     reset: () => {
-      const n = e();
-      return n ? n.api.reset() : Promise.resolve();
+      const t = e();
+      return t ? t.api.reset() : Promise.resolve();
     },
     getSelectedPaymentMethod: () => {
-      var n;
-      return ((n = e()) == null ? void 0 : n.selectedPaymentMethod) ?? null;
+      var t;
+      return ((t = e()) == null ? void 0 : t.selectedPaymentMethod) ?? null;
     },
-    updateConfig: (n) => {
+    updateConfig: (t) => {
       var a;
-      const r = (a = e()) == null ? void 0 : a.config;
-      t(E.CONFIG, {
-        publicKey: r == null ? void 0 : r.publicKey,
-        orderId: r == null ? void 0 : r.orderId,
-        theme: n.theme ?? (r == null ? void 0 : r.theme),
-        locale: n.locale ?? (r == null ? void 0 : r.locale),
-        paymentMethods: n.paymentMethods ?? (r == null ? void 0 : r.paymentMethods)
+      const n = (a = e()) == null ? void 0 : a.config;
+      r(E.CONFIG, {
+        publicKey: n == null ? void 0 : n.publicKey,
+        orderId: n == null ? void 0 : n.orderId,
+        theme: t.theme ?? (n == null ? void 0 : n.theme),
+        locale: t.locale ?? (n == null ? void 0 : n.locale),
+        paymentMethods: t.paymentMethods ?? (n == null ? void 0 : n.paymentMethods)
       });
     },
-    updateOrderId: (n) => {
+    updateOrderId: (t) => {
       var a;
-      const r = (a = e()) == null ? void 0 : a.config;
-      t(E.CONFIG, {
-        publicKey: r == null ? void 0 : r.publicKey,
-        orderId: n,
-        theme: r == null ? void 0 : r.theme,
-        locale: r == null ? void 0 : r.locale,
-        paymentMethods: r == null ? void 0 : r.paymentMethods
+      const n = (a = e()) == null ? void 0 : a.config;
+      r(E.CONFIG, {
+        publicKey: n == null ? void 0 : n.publicKey,
+        orderId: t,
+        theme: n == null ? void 0 : n.theme,
+        locale: n == null ? void 0 : n.locale,
+        paymentMethods: n == null ? void 0 : n.paymentMethods
       });
     },
-    update: (n) => {
-      t(E.UPDATE, n);
+    update: (t) => {
+      r(E.UPDATE, t);
     },
     submit: async () => {
-      const n = R(e()), r = x();
+      const t = N(e()), n = x();
       try {
-        return await D(n || void 0, r, E.CONFIRM_PAYMENT, {}), {
+        return await D(t || void 0, n, E.CONFIRM_PAYMENT, {}), {
           paymentMethod: void 0
         };
       } catch (a) {
@@ -956,69 +1065,68 @@ function Ge() {
   };
 }
 function $e(e) {
-  let t = null;
+  let r = null;
   return {
-    handleChallenge: async (a, s) => {
-      var i;
+    handleChallenge: async (a) => {
+      var s;
       if (!(a.status === "NeedChallenge" || a.statusDetail === "ThreeDsAwaitingChallenge"))
         return {
-          status: g.Success
+          status: C.Success
         };
-      (i = e == null ? void 0 : e.onChallenge) == null || i.call(e), t = new H(a);
-      const o = await t.authenticate({
-        providerData: s,
+      (s = e == null ? void 0 : e.onChallenge) == null || s.call(e), r = new H(a);
+      const d = await r.authenticate({
         onComplete: e == null ? void 0 : e.onComplete,
         onError: e == null ? void 0 : e.onError,
         onTimeout: e == null ? void 0 : e.onTimeout
       });
-      return t.destroy(), t = null, o;
+      return r.destroy(), r = null, d;
     },
     destroy: () => {
-      t == null || t.destroy(), t = null;
+      r == null || r.destroy(), r = null;
     }
   };
 }
-class Ne extends Error {
-  constructor(t, n) {
-    super(t), this.title = n, this.name = "PayConductorApiError";
+class ke extends Error {
+  constructor(r, t) {
+    super(r), this.title = t, this.name = "PayConductorApiError";
   }
 }
-class Re {
-  constructor(t) {
-    this.publicKey = t;
+class Ne {
+  constructor(r) {
+    this.publicKey = r;
   }
   async getSettings() {
-    const t = await fetch(`${this.baseUrl}/card-tokenization/settings`, {
+    const r = await fetch(`${this.baseUrl}/card-tokenization/settings`, {
       method: "GET",
       headers: this.headers
     });
-    return t.ok || await this.parseResponseError("Failed to fetch settings", t), t.json();
+    return r.ok || await this.parseResponseError("Failed to fetch settings", r), r.json();
   }
-  async createToken(t) {
-    const n = await fetch(`${this.baseUrl}/card-tokenization/tokenize`, {
+  async createToken(r) {
+    const t = await fetch(`${this.baseUrl}/card-tokenization/tokenize`, {
       method: "POST",
       headers: this.headers,
-      body: JSON.stringify(t)
+      body: JSON.stringify(r)
     });
-    return n.ok || await this.parseResponseError("Failed to generate token", n), n.json();
+    return t.ok || await this.parseResponseError("Failed to generate token", t), t.json();
   }
-  async saveTokens(t, n, r) {
-    const a = await fetch(`${this.baseUrl}/card-tokenization/save-tokens/${n}/${r}`, {
+  async saveTokens(r, t, n) {
+    const a = await fetch(`${this.baseUrl}/card-tokenization/save-tokens/${t}/${n}`, {
       method: "POST",
       headers: this.headers,
-      body: JSON.stringify(t)
+      body: JSON.stringify(r)
     });
     a.ok || await this.parseResponseError("Failed to save tokens", a);
   }
-  async parseResponseError(t, n) {
-    var a, s, d, o;
-    let r = "";
+  async parseResponseError(r, t) {
+    var a, o, d, s;
+    let n = "";
     try {
-      const i = await n.json();
-      i != null && i.message ? r = i.message : (a = i == null ? void 0 : i.error) != null && a.message ? r = i.error : (d = (s = i == null ? void 0 : i.error) == null ? void 0 : s.value) != null && d.message ? r = i.error.value.message : (o = i == null ? void 0 : i.value) != null && o.message ? r = i.value.message : r = JSON.stringify(i);
+      const i = await t.json();
+      i != null && i.message ? n = i.message : (a = i == null ? void 0 : i.error) != null && a.message ? n = i.error : (d = (o = i == null ? void 0 : i.error) == null ? void 0 : o.value) != null && d.message ? n = i.error.value.message : (s = i == null ? void 0 : i.value) != null && s.message ? n = i.value.message : n = JSON.stringify(i);
     } catch {
     }
-    throw new Ne(r, t);
+    throw new ke(n, r);
   }
   get baseUrl() {
     return typeof window < "u" && window.location.href.includes("localhost") ? "http://localhost:3000/api/v1/sdk" : "https://payconductor.ai/api/v1/sdk";
@@ -1030,97 +1138,97 @@ class Re {
     };
   }
 }
-var q = /* @__PURE__ */ ((e) => (e.Cpf = "Cpf", e.Cnpj = "Cnpj", e))(q || {}), j = /* @__PURE__ */ ((e) => (e.Asaas = "Asaas", e.Sandbox = "Sandbox", e.MercadoPago = "MercadoPago", e.NuPay = "NuPay", e.PicPay = "PicPay", e.Woovi = "Woovi", e.PagarMe = "PagarMe", e.PagSeguro = "PagSeguro", e.BancoDoBrasil = "BancoDoBrasil", e))(j || {});
+var Y = /* @__PURE__ */ ((e) => (e.Cpf = "Cpf", e.Cnpj = "Cnpj", e))(Y || {}), j = /* @__PURE__ */ ((e) => (e.Asaas = "Asaas", e.Sandbox = "Sandbox", e.MercadoPago = "MercadoPago", e.NuPay = "NuPay", e.PicPay = "PicPay", e.Woovi = "Woovi", e.PagarMe = "PagarMe", e.PagSeguro = "PagSeguro", e.BancoDoBrasil = "BancoDoBrasil", e))(j || {});
 class xe {
-  constructor(t) {
-    this.input = t;
+  constructor(r) {
+    this.input = r;
   }
 }
 class Le extends xe {
   constructor() {
     super(...arguments);
-    T(this, "scriptUrl", "https://sdk.mercadopago.com/js/v2");
+    p(this, "scriptUrl", "https://sdk.mercadopago.com/js/v2");
   }
   async tokenize() {
     if (!("publicKey" in this.input.setting))
       throw new Error("MercadoPago public key is missing in settings");
     if (!this.input.customer.documentNumber)
       throw new Error("Customer document number is required for tokenization");
-    const n = window.MercadoPago;
-    if (!n) throw new Error("MercadoPago SDK not available");
-    const r = new n(this.input.setting.publicKey), {
+    const t = window.MercadoPago;
+    if (!t) throw new Error("MercadoPago SDK not available");
+    const n = new t(this.input.setting.publicKey), {
       expiration: a,
-      cvv: s,
+      cvv: o,
       number: d,
-      holderName: o
+      holderName: s
     } = this.input.card;
-    return (await r.createCardToken({
+    return (await n.createCardToken({
       cardExpirationMonth: String(a.month),
       cardExpirationYear: String(a.year),
-      cardholderName: o,
+      cardholderName: s,
       cardNumber: d,
-      securityCode: s,
-      identificationType: this.input.customer.documentType === q.Cpf ? "CPF" : "CNPJ",
+      securityCode: o,
+      identificationType: this.input.customer.documentType === Y.Cpf ? "CPF" : "CNPJ",
       identificationNumber: this.input.customer.documentNumber
     })).id;
   }
 }
-const Ue = {
+const Oe = {
   [j.MercadoPago]: Le
 };
-class Oe {
-  constructor(t) {
-    T(this, "api");
-    this.publicKey = t, this.api = new Re(this.publicKey);
+class Ue {
+  constructor(r) {
+    p(this, "api");
+    this.publicKey = r, this.api = new Ne(this.publicKey);
   }
-  async tokenizeCard(t) {
-    this.validateCard(t);
+  async tokenizeCard(r) {
+    this.validateCard(r);
     const {
-      customerId: n,
-      token: r
+      customerId: t,
+      token: n
     } = await this.api.createToken({
-      card: t.card,
-      customer: t.customer,
+      card: r.card,
+      customer: r.customer,
       saveCard: !1
     }), {
       settings: a
-    } = await this.api.getSettings(), d = (await Promise.all(a.map(async (o) => {
-      const i = Ue[o.key];
+    } = await this.api.getSettings(), d = (await Promise.all(a.map(async (s) => {
+      const i = Oe[s.key];
       if (!i) return null;
       const u = new i({
-        ...t,
-        setting: o.settings
+        ...r,
+        setting: s.settings
       });
-      return await _(u.scriptUrl), {
+      return await R(u.scriptUrl), {
         token: await u.tokenize(),
-        integrationId: o.integrationId,
-        providerKey: o.key
+        integrationId: s.integrationId,
+        providerKey: s.key
       };
-    }))).filter((o) => o !== null);
-    return d.length > 0 && await this.api.saveTokens(d, n, r), r;
+    }))).filter((s) => s !== null);
+    return d.length > 0 && await this.api.saveTokens(d, t, n), n;
   }
-  validateCard(t) {
+  validateCard(r) {
     const {
-      number: n,
-      cvv: r,
+      number: t,
+      cvv: n,
       expiration: a,
-      holderName: s
-    } = t.card;
-    if (!n || !r || !(a != null && a.month) || !(a != null && a.year) || !s)
+      holderName: o
+    } = r.card;
+    if (!t || !n || !(a != null && a.month) || !(a != null && a.year) || !o)
       throw new Error("Invalid card data");
   }
 }
 function Je(e) {
-  const t = new Oe(e.publicKey);
+  const r = new Ue(e.publicKey);
   return {
-    tokenizeCard: async (r) => {
-      var a, s;
+    tokenizeCard: async (n) => {
+      var a, o;
       try {
-        const d = await t.tokenizeCard(r);
+        const d = await r.tokenizeCard(n);
         return (a = e.onSuccess) == null || a.call(e, d), d;
       } catch (d) {
-        const o = d instanceof Error ? d : new Error("Tokenization failed");
-        return (s = e.onError) == null || s.call(e, o), null;
+        const s = d instanceof Error ? d : new Error("Tokenization failed");
+        return (o = e.onError) == null || o.call(e, s), null;
       }
     }
   };
@@ -1128,32 +1236,32 @@ function Je(e) {
 export {
   ie as ALLOWED_ORIGINS,
   te as DeviceType,
-  qe as ERROR_CODES,
+  Ye as ERROR_CODES,
   re as ErrorCode,
   oe as IFRAME_BASE_URL,
-  O as IFRAME_DEFAULT_HEIGHT_VALUE,
-  C as IncomingMessage,
+  U as IFRAME_DEFAULT_HEIGHT_VALUE,
+  P as IncomingMessage,
   ne as InputStyleKey,
-  I as OutgoingMessage,
+  v as OutgoingMessage,
   E as POST_MESSAGES,
   je as PayConductor,
   H as PayConductor3DSSDK,
-  Ve as PayConductorCheckoutElement,
-  We as PayConductorThreeDSElement,
-  Oe as PayConductorTokenizeSDK,
-  X as PaymentMethod,
+  qe as PayConductorCheckoutElement,
+  Ve as PayConductorThreeDSElement,
+  Ue as PayConductorTokenizeSDK,
+  Q as PaymentMethod,
   ee as PaymentMethodLayout,
   B as PaymentStatus,
   se as REQUEST_TIMEOUT,
-  Se as SKELETON_CSS,
+  pe as SKELETON_CSS,
   F as SKELETON_STYLE_ID,
-  Ce as buildIframeUrl,
+  Pe as buildIframeUrl,
   je as default,
   He as defaultTheme,
-  pe as generateRequestId,
-  ve as isValidOrigin,
-  _ as loadScript,
-  Ye as usePayConductor,
+  Te as generateRequestId,
+  be as isValidOrigin,
+  R as loadScript,
+  We as usePayConductor,
   Ge as usePayconductorElement,
   $e as useThreeDS,
   Je as useTokenize
