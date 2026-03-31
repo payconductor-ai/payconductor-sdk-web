@@ -27,6 +27,9 @@ export interface PayConductorEmbedProps extends Omit<PayConductorConfig, "orderI
     onPaymentFailed?: (result: PaymentResult) => void;
     onPaymentPending?: (result: PaymentResult) => void;
     onPaymentMethodSelected?: (method: PaymentMethod) => void;
+    onThreeDSChallenge?: () => void;
+    onThreeDSComplete?: () => void;
+    onThreeDSFailed?: () => void;
 }
 
 export default function PayConductor(props: PayConductorEmbedProps) {
@@ -207,6 +210,15 @@ export default function PayConductor(props: PayConductorEmbedProps) {
                     }
 
                     props.onPaymentMethodSelected?.(method);
+                },
+                () => {
+                    props.onThreeDSChallenge?.();
+                },
+                () => {
+                    props.onThreeDSComplete?.();
+                },
+                () => {
+                    props.onThreeDSFailed?.();
                 },
             );
         };
