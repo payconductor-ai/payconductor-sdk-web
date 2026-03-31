@@ -72,6 +72,28 @@ export enum OrganizationEnvironment {
 	Sandbox = "Sandbox",
 }
 
+export enum CurrencyType {
+	USD = "USD",
+	EUR = "EUR",
+	BRL = "BRL",
+	ARS = "ARS",
+	CAD = "CAD",
+	COP = "COP",
+	GBP = "GBP",
+	JPY = "JPY",
+	MXN = "MXN",
+	MZN = "MZN",
+	CNY = "CNY",
+	SAR = "SAR",
+	ETH = "ETH",
+	BNB = "BNB",
+	BTC = "BTC",
+	USDT = "USDT",
+	USDC = "USDC",
+	DOGE = "DOGE",
+	SOL = "SOL",
+}
+
 export enum DeviceType {
 	Android = "android",
 	IOS = "ios",
@@ -301,7 +323,7 @@ export type PaymentResult = {
 	status: PaymentStatus;
 	statusDetail?: StatusDetail | string;
 	amount: number;
-	currency: string;
+	currency: CurrencyType | string;
 	message?: string;
 	errorCode?: string;
 	errorMessage?: string;
