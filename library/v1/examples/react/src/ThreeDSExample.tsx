@@ -72,7 +72,7 @@ const TEST_CARDS: Record<string, TestCard[]> = {
 	],
 };
 
-type Step = "idle" | "creating" | "challenging" | "confirming" | "done";
+type Step = "idle" | "creating" | "challenging" | "done";
 
 export function ThreeDSExample() {
 	const [selectedCard, setSelectedCard] = useState<TestCard>(TEST_CARDS["Visa"][1]);
@@ -129,9 +129,9 @@ export function ThreeDSExample() {
 
 			const { data } = await orderApi.orderCreate(orderRequest);
 			setOrder(data);
-			log(`Order created: ${data.id} | status: ${data.status} | statusDetail: ${(data as any).statusDetail ?? "-"}`);
+			log(`Order created: ${data.id} | status: ${data.status} | statusDetail: ${data.statusDetail ?? "-"}`);
 
-			const statusDetail = (data as any).statusDetail as string | undefined;
+			const statusDetail = data.statusDetail;
 			const threeDSecure = data.threeDSecure;
 
 			const needs3DS =
@@ -164,18 +164,10 @@ export function ThreeDSExample() {
 			log(`3DS result: ${result.status}`);
 			setChallengeResult(result.status);
 
+			// Apos 3DS bem-sucedido, o servidor processa automaticamente via webhook.
+			// Nao e necessario confirmar novamente.
 			if (result.status === "Success") {
-				setStep("confirming");
-				log("Confirming order after 3DS...");
-
-				try {
-					const { data: confirmed } = await orderApi.orderConfirm(data.id);
-					setOrder(confirmed);
-					log(`Order confirmed: ${confirmed.status}`);
-				} catch (confirmErr) {
-					const msg = confirmErr instanceof Error ? confirmErr.message : "Confirm failed";
-					log(`Confirm error: ${msg}`);
-				}
+				log("3DS concluido. Servidor esta processando o pagamento automaticamente.");
 			}
 
 			setStep("done");
@@ -254,7 +246,7 @@ export function ThreeDSExample() {
 				</div>
 
 				<button
-					disabled={step === "creating" || step === "challenging" || step === "confirming"}
+					disabled={step === "creating" || step === "challenging"}
 					onClick={handlePay}
 					type="button"
 					style={{
@@ -272,7 +264,6 @@ export function ThreeDSExample() {
 					{step === "idle" || step === "done" ? "Pay with 3DS" : null}
 					{step === "creating" ? "Creating order..." : null}
 					{step === "challenging" ? "Waiting 3DS challenge..." : null}
-					{step === "confirming" ? "Confirming order..." : null}
 				</button>
 
 				{order && (
@@ -284,7 +275,7 @@ export function ThreeDSExample() {
 						lines={[
 							["ID", order.id],
 							["Status", order.status],
-							["Status Detail", (order as any).statusDetail ?? "-"],
+							["Status Detail", order.statusDetail ?? "-"],
 							["Provider", order.externalIntegrationKey || "-"],
 							["3DS Acquirer", order.threeDSecure?.acquirer ?? "PayConductor"],
 						]}
