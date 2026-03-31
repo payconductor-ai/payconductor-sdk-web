@@ -8,13 +8,12 @@ export type UseThreeDSOptions = {
   onTimeout?: () => void;
 };
 export type UseThreeDSReturn = {
-  handleChallenge: (threeDSecure: ThreeDSecureData, providerData?: Record<string, unknown>) => Promise<ThreeDSecureResult>;
+  handleChallenge: (threeDSecure: ThreeDSecureData) => Promise<ThreeDSecureResult>;
   destroy: () => void;
 };
 export function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn {
   let handler: PayConductor3DSSDK | null = null;
-  const handleChallenge = async (threeDSecure: ThreeDSecureData, providerData?: Record<string, unknown>): Promise<ThreeDSecureResult> => {
-    // TODO: Definir tipagem do enum
+  const handleChallenge = async (threeDSecure: ThreeDSecureData): Promise<ThreeDSecureResult> => {
     const needs = threeDSecure.status === "NeedChallenge" || threeDSecure.statusDetail === "ThreeDsAwaitingChallenge";
     if (!needs) {
       return {
@@ -24,7 +23,6 @@ export function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn {
     options?.onChallenge?.();
     handler = new PayConductor3DSSDK(threeDSecure);
     const result = await handler.authenticate({
-      providerData,
       onComplete: options?.onComplete,
       onError: options?.onError,
       onTimeout: options?.onTimeout

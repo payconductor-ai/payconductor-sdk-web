@@ -18,9 +18,11 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
   private methodContainer: HTMLElement | null = null;
   async authenticate(): Promise<ThreeDSecureResult> {
     const {
-      authToken
+      authToken,
+      card
     } = this.data;
     if (!authToken) return this.fail("Missing authToken for PagarMe 3DS");
+    if (!card) return this.fail("Missing card data for PagarMe 3DS");
     const env = this.data.environment ?? "Production";
     try {
       await loadScript(SDK_URLS[env]);
@@ -47,7 +49,7 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
         challenge_container_element: container,
         use_default_challenge_iframe_style: true,
         challenge_window_size: detectWindowSize()
-      }, this.options.providerData ?? {}).then(responses => {
+      }, this.buildOrderData()).then(responses => {
         this.cleanup();
         if (!responses?.length) {
           resolve(this.fail("PagarMe 3DS returned no response"));
@@ -83,5 +85,51 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
       this.methodContainer = null;
     }
     this.closeModal();
+  }
+  private buildOrderData(): Record<string, unknown> {
+    const {
+      card,
+      customer,
+      amount,
+      billingAddress
+    } = this.data;
+    return {
+      payments: [{
+        payment_method: "credit_card",
+        credit_card: {
+          card: {
+            number: card?.number,
+            holder_name: card?.holderName,
+            exp_month: Number(card?.expMonth),
+            exp_year: Number(card?.expYear),
+            billing_address: billingAddress ? {
+              country: billingAddress.country,
+              state: billingAddress.state,
+              city: billingAddress.city,
+              zip_code: billingAddress.zipCode,
+              line_1: `${billingAddress.number}, ${billingAddress.street}${billingAddress.district ? `, ${billingAddress.district}` : ""}`,
+              line_2: billingAddress.complement ?? ""
+            } : undefined
+          }
+        },
+        amount: amount
+      }],
+      ...(customer ? {
+        customer: {
+          name: customer.name,
+          email: customer.email,
+          ...(customer.document ? {
+            document: customer.document
+          } : {}),
+          ...(customer.phones?.length ? {
+            phones: Object.fromEntries(customer.phones.map(p => [p.type === "HOME" ? "home_phone" : "mobile_phone", {
+              country_code: p.countryCode,
+              area_code: p.areaCode,
+              number: p.number
+            }]))
+          } : {})
+        }
+      } : {})
+    };
   }
 }
