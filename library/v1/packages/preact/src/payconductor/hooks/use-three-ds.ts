@@ -14,7 +14,9 @@ export type UseThreeDSReturn = {
 export function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn {
   let handler: PayConductor3DSSDK | null = null;
   const handleChallenge = async (threeDSecure: ThreeDSecureData, providerData?: Record<string, unknown>): Promise<ThreeDSecureResult> => {
-    if (threeDSecure.status !== "NeedChallenge") {
+    // TODO: Definir tipagem do enum
+    const needs = threeDSecure.status === "NeedChallenge" || threeDSecure.statusDetail === "ThreeDsAwaitingChallenge";
+    if (!needs) {
       return {
         status: ThreeDSecureResultStatus.Success
       };

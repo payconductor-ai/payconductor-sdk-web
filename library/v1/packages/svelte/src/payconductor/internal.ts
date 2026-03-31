@@ -47,10 +47,13 @@ export async function confirmPayment(iframe: HTMLIFrameElement | Element | undef
   const result = await sendConfirmPayment(iframe, pendingMap, {
     orderId: options.orderId
   });
-  const needs3DS = result.statusDetail === "ThreeDsAwaitingChallenge" && result.threeDSecure?.status === "NeedChallenge";
+  const needs3DS = result.statusDetail === "ThreeDsAwaitingChallenge" || result.threeDSecure?.status === "NeedChallenge";
   if (!needs3DS || !result.threeDSecure) return result;
   options.onThreeDSChallenge?.();
-  const handler = new PayConductor3DSSDK(result.threeDSecure);
+  const handler = new PayConductor3DSSDK({
+    ...result.threeDSecure,
+    statusDetail: result.statusDetail
+  });
   const challengeResult = await handler.authenticate({
     onComplete: options.onThreeDSComplete,
     onError: options.onThreeDSError

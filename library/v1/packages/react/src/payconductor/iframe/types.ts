@@ -239,6 +239,7 @@ export type PaymentMethodResult = {
 export type PaymentResult = {
   orderId: string;
   status: PaymentStatus;
+  // TODO: Definir tipagem do enum
   statusDetail?: string;
   amount: number;
   currency: string;
@@ -246,6 +247,7 @@ export type PaymentResult = {
   errorCode?: string;
   errorMessage?: string;
   threeDSecure?: {
+    // TODO: Definir tipagem do enum
     status: string;
     acquirer?: string;
     environment?: "Sandbox" | "Production";

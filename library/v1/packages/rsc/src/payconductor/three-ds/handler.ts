@@ -8,7 +8,7 @@ export class PayConductor3DSSDK {
     this.data = threeDSecure;
   }
   get needsChallenge(): boolean {
-    return this.data.status === "NeedChallenge";
+    return this.data.status === "NeedChallenge" || this.data.statusDetail === "ThreeDsAwaitingChallenge";
   }
   get acquirer(): string | undefined {
     return this.data.acquirer;
@@ -23,8 +23,8 @@ export class PayConductor3DSSDK {
       ...options,
       threeDSecure: this.data
     };
-    const acquirer = (this.data.acquirer ?? "") as keyof typeof threeDSProviders;
-    const ProviderClass = threeDSProviders[acquirer];
+    const providerKey = this.resolveProvider();
+    const ProviderClass = providerKey ? threeDSProviders[providerKey as keyof typeof threeDSProviders] : undefined;
     if (ProviderClass) {
       this.provider = new ProviderClass(this.data, opts);
       return this.provider.authenticate();
@@ -38,7 +38,7 @@ export class PayConductor3DSSDK {
     }
     return {
       status: ThreeDSecureResultStatus.Failed,
-      error: new Error(`Unsupported 3DS provider: ${this.data.acquirer}`)
+      error: new Error(`Unsupported 3DS provider: ${providerKey ?? "unknown"}`)
     };
   }
   destroy(): void {
@@ -46,5 +46,15 @@ export class PayConductor3DSSDK {
       this.provider.cleanup();
       this.provider = null;
     }
+  }
+  private resolveProvider(): string | undefined {
+    if (this.data.acquirer) return this.data.acquirer;
+
+    // Lyra/PayConductor: has operationUrl + publicKey, no acquirer
+    if (this.data.operationUrl && this.data.publicKey) return "PayConductor";
+
+    // MercadoPago: has threeDsUrl + creq
+    if (this.data.threeDsUrl && this.data.creq) return "MercadoPago";
+    return undefined;
   }
 }

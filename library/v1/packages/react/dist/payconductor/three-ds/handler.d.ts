@@ -8,4 +8,5 @@ export declare class PayConductor3DSSDK {
     get acquirer(): string | undefined;
     authenticate(options?: Omit<ThreeDSecureOptions, "threeDSecure">): Promise<ThreeDSecureResult>;
     destroy(): void;
+    private resolveProvider;
 }

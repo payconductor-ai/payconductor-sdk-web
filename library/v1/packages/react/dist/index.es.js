@@ -1,10 +1,10 @@
 var Y = Object.defineProperty;
 var G = (e, t, n) => t in e ? Y(e, t, { enumerable: !0, configurable: !0, writable: !0, value: n }) : e[t] = n;
-var P = (e, t, n) => G(e, typeof t != "symbol" ? t + "" : t, n);
-import { jsx as M, jsxs as $ } from "react/jsx-runtime";
+var T = (e, t, n) => G(e, typeof t != "symbol" ? t + "" : t, n);
+import { jsx as A, jsxs as $ } from "react/jsx-runtime";
 import { useState as v, useEffect as L, useRef as J } from "react";
 const K = "https://iframe.payconductor.ai/v1", z = "http://localhost:5175/v1", Z = 3e4, Q = "600px";
-var X = /* @__PURE__ */ ((e) => (e.Pix = "Pix", e.CreditCard = "CreditCard", e.DebitCard = "DebitCard", e.BankSlip = "BankSlip", e.Crypto = "Crypto", e.ApplePay = "ApplePay", e.NuPay = "NuPay", e.PicPay = "PicPay", e.AmazonPay = "AmazonPay", e.SepaDebit = "SepaDebit", e.GooglePay = "GooglePay", e))(X || {}), ee = /* @__PURE__ */ ((e) => (e.Grid = "grid", e.Vertical = "vertical", e.Horizontal = "horizontal", e))(ee || {}), B = /* @__PURE__ */ ((e) => (e.Succeeded = "succeeded", e.Pending = "pending", e.Failed = "failed", e))(B || {}), te = /* @__PURE__ */ ((e) => (e.Android = "android", e.IOS = "ios", e.Web = "web", e))(te || {}), ne = /* @__PURE__ */ ((e) => (e.Padding = "padding", e.Radius = "radius", e.Color = "color", e.Background = "background", e.Shadow = "shadow", e))(ne || {}), b = /* @__PURE__ */ ((e) => (e.Init = "Init", e.Config = "Config", e.Update = "Update", e.ConfirmPayment = "ConfirmPayment", e.Validate = "Validate", e.Reset = "Reset", e))(b || {}), C = /* @__PURE__ */ ((e) => (e.Ready = "Ready", e.Error = "Error", e.PaymentComplete = "PaymentComplete", e.PaymentFailed = "PaymentFailed", e.PaymentPending = "PaymentPending", e.ValidationError = "ValidationError", e.PaymentMethodSelected = "PaymentMethodSelected", e.Resize = "Resize", e.ThreeDSChallenge = "ThreeDSChallenge", e.ThreeDSComplete = "ThreeDSComplete", e.ThreeDSFailed = "ThreeDSFailed", e))(C || {}), re = /* @__PURE__ */ ((e) => (e.InvalidClient = "InvalidClient", e.InvalidToken = "InvalidToken", e.NetworkError = "NetworkError", e.IframeNotReady = "IframeNotReady", e.PaymentDeclined = "PaymentDeclined", e.ValidationError = "ValidationError", e.Timeout = "Timeout", e))(re || {});
+var X = /* @__PURE__ */ ((e) => (e.Pix = "Pix", e.CreditCard = "CreditCard", e.DebitCard = "DebitCard", e.BankSlip = "BankSlip", e.Crypto = "Crypto", e.ApplePay = "ApplePay", e.NuPay = "NuPay", e.PicPay = "PicPay", e.AmazonPay = "AmazonPay", e.SepaDebit = "SepaDebit", e.GooglePay = "GooglePay", e))(X || {}), ee = /* @__PURE__ */ ((e) => (e.Grid = "grid", e.Vertical = "vertical", e.Horizontal = "horizontal", e))(ee || {}), B = /* @__PURE__ */ ((e) => (e.Succeeded = "succeeded", e.Pending = "pending", e.Failed = "failed", e))(B || {}), te = /* @__PURE__ */ ((e) => (e.Android = "android", e.IOS = "ios", e.Web = "web", e))(te || {}), ne = /* @__PURE__ */ ((e) => (e.Padding = "padding", e.Radius = "radius", e.Color = "color", e.Background = "background", e.Shadow = "shadow", e))(ne || {}), I = /* @__PURE__ */ ((e) => (e.Init = "Init", e.Config = "Config", e.Update = "Update", e.ConfirmPayment = "ConfirmPayment", e.Validate = "Validate", e.Reset = "Reset", e))(I || {}), C = /* @__PURE__ */ ((e) => (e.Ready = "Ready", e.Error = "Error", e.PaymentComplete = "PaymentComplete", e.PaymentFailed = "PaymentFailed", e.PaymentPending = "PaymentPending", e.ValidationError = "ValidationError", e.PaymentMethodSelected = "PaymentMethodSelected", e.Resize = "Resize", e.ThreeDSChallenge = "ThreeDSChallenge", e.ThreeDSComplete = "ThreeDSComplete", e.ThreeDSFailed = "ThreeDSFailed", e))(C || {}), re = /* @__PURE__ */ ((e) => (e.InvalidClient = "InvalidClient", e.InvalidToken = "InvalidToken", e.NetworkError = "NetworkError", e.IframeNotReady = "IframeNotReady", e.PaymentDeclined = "PaymentDeclined", e.ValidationError = "ValidationError", e.Timeout = "Timeout", e))(re || {});
 const He = {
   primaryColor: "#0066ff",
   secondaryColor: "#5a6b7c",
@@ -53,12 +53,12 @@ const He = {
   transitionDuration: "0.2s",
   transitionTimingFunction: "ease"
 }, ae = typeof window < "u" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && !window.location.search.includes("production"), oe = ae ? z : K, ie = [z, K], O = Q, se = Z, E = {
-  INIT: b.Init,
-  CONFIG: b.Config,
-  UPDATE: b.Update,
-  CONFIRM_PAYMENT: b.ConfirmPayment,
-  VALIDATE: b.Validate,
-  RESET: b.Reset,
+  INIT: I.Init,
+  CONFIG: I.Config,
+  UPDATE: I.Update,
+  CONFIRM_PAYMENT: I.ConfirmPayment,
+  VALIDATE: I.Validate,
+  RESET: I.Reset,
   READY: C.Ready,
   ERROR: C.Error,
   PAYMENT_COMPLETE: C.PaymentComplete,
@@ -89,10 +89,10 @@ function de() {
   };
 }
 var g = /* @__PURE__ */ ((e) => (e.Success = "Success", e.Failed = "Failed", e.Timeout = "Timeout", e))(g || {});
-class A {
+class M {
   constructor(t, n) {
-    P(this, "overlay", null);
-    P(this, "modalContent", null);
+    T(this, "overlay", null);
+    T(this, "modalContent", null);
     this.data = t, this.options = n;
   }
   fail(t) {
@@ -156,12 +156,12 @@ class A {
   //#endregion
 }
 const ce = 5 * 60 * 1e3;
-class le extends A {
+class le extends M {
   constructor() {
     super(...arguments);
-    P(this, "iframe", null);
-    P(this, "messageListener", null);
-    P(this, "timeoutId", null);
+    T(this, "iframe", null);
+    T(this, "messageListener", null);
+    T(this, "timeoutId", null);
   }
   async authenticate() {
     const {
@@ -216,10 +216,10 @@ function _(e) {
   return N.set(e, n), n;
 }
 const ue = "https://static.payzen.lat/static/js/authenticate-client/V1.0/kr-authenticate.umd", he = 10 * 60 * 1e3;
-class me extends A {
+class me extends M {
   constructor() {
     super(...arguments);
-    P(this, "timeoutId", null);
+    T(this, "timeoutId", null);
   }
   async authenticate() {
     const {
@@ -264,11 +264,11 @@ function we() {
   const e = window.innerWidth;
   return e <= 480 ? "01" : e <= 768 ? "02" : e <= 1024 ? "03" : "04";
 }
-class Ee extends A {
+class Ee extends M {
   constructor() {
     super(...arguments);
-    P(this, "timeoutId", null);
-    P(this, "methodContainer", null);
+    T(this, "timeoutId", null);
+    T(this, "methodContainer", null);
   }
   async authenticate() {
     const {
@@ -321,7 +321,7 @@ class Ee extends A {
   }
 }
 const ge = "https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min";
-class Se extends A {
+class Pe extends M {
   async authenticate() {
     var s, d;
     const {
@@ -361,20 +361,20 @@ class Se extends A {
     this.closeModal();
   }
 }
-const Pe = {
+const Te = {
   MercadoPago: le,
   PayConductor: me,
   PagarMe: Ee,
-  PagSeguro: Se
+  PagSeguro: Pe
 };
 class H {
   constructor(t) {
-    P(this, "data");
-    P(this, "provider", null);
+    T(this, "data");
+    T(this, "provider", null);
     this.data = t;
   }
   get needsChallenge() {
-    return this.data.status === "NeedChallenge";
+    return this.data.status === "NeedChallenge" || this.data.statusDetail === "ThreeDsAwaitingChallenge";
   }
   get acquirer() {
     return this.data.acquirer;
@@ -387,21 +387,26 @@ class H {
     const n = {
       ...t,
       threeDSecure: this.data
-    }, r = this.data.acquirer ?? "", a = Pe[r];
+    }, r = this.resolveProvider(), a = r ? Te[r] : void 0;
     return a ? (this.provider = new a(this.data, n), this.provider.authenticate()) : this.data.authToken && !this.data.operationUrl && !this.data.threeDsUrl ? {
       status: g.Success,
       authToken: this.data.authToken,
       dsTransactionId: this.data.dsTransactionId
     } : {
       status: g.Failed,
-      error: new Error(`Unsupported 3DS provider: ${this.data.acquirer}`)
+      error: new Error(`Unsupported 3DS provider: ${r ?? "unknown"}`)
     };
   }
   destroy() {
     this.provider && (this.provider.cleanup(), this.provider = null);
   }
+  resolveProvider() {
+    if (this.data.acquirer) return this.data.acquirer;
+    if (this.data.operationUrl && this.data.publicKey) return "PayConductor";
+    if (this.data.threeDsUrl && this.data.creq) return "MercadoPago";
+  }
 }
-const F = "payconductor-skeleton-style", Te = `
+const F = "payconductor-skeleton-style", Se = `
 	@keyframes payconductor-shimmer {
 	  0% { background-position: -200% 0; }
 	  100% { background-position: 200% 0; }
@@ -462,17 +467,20 @@ function D(e, t, n, r) {
     }, se);
   });
 }
-function Ie(e, t, n) {
+function be(e, t, n) {
   return D(e, t, E.CONFIRM_PAYMENT, n);
 }
-async function be(e, t, n) {
+async function Ie(e, t, n) {
   var o, i, u, h, y;
-  const r = await Ie(e, t, {
+  const r = await be(e, t, {
     orderId: n.orderId
   });
-  if (!(r.statusDetail === "ThreeDsAwaitingChallenge" && ((o = r.threeDSecure) == null ? void 0 : o.status) === "NeedChallenge") || !r.threeDSecure) return r;
+  if (!(r.statusDetail === "ThreeDsAwaitingChallenge" || ((o = r.threeDSecure) == null ? void 0 : o.status) === "NeedChallenge") || !r.threeDSecure) return r;
   (i = n.onThreeDSChallenge) == null || i.call(n);
-  const s = new H(r.threeDSecure), d = await s.authenticate({
+  const s = new H({
+    ...r.threeDSecure,
+    statusDetail: r.statusDetail
+  }), d = await s.authenticate({
     onComplete: n.onThreeDSComplete,
     onError: n.onThreeDSError
   });
@@ -497,10 +505,10 @@ function De(e, t, n) {
 function ke(e, t) {
   return D(e, t, E.RESET);
 }
-function Me(e, t, n) {
+function Ae(e, t, n) {
   return D(e, t, E.CONFIG, n);
 }
-function Ae(e, t, n) {
+function Me(e, t, n) {
   return D(e, t, E.INIT, n);
 }
 function _e(e, t, n, r, a, s, d, o, i) {
@@ -513,19 +521,19 @@ function _e(e, t, n, r, a, s, d, o, i) {
   if (y === E.READY) {
     if (r == null || r(), h && (t != null && t.has(h))) {
       const {
-        resolve: T
+        resolve: S
       } = t.get(h);
-      t.delete(h), T(c);
+      t.delete(h), S(c);
     }
     return;
   }
   if (ve(e.origin, ie)) {
     if (h && t && t.has(h)) {
       const {
-        resolve: T,
-        reject: I
+        resolve: S,
+        reject: b
       } = t.get(h);
-      t.delete(h), w ? I(new Error(String(w.message))) : T(c);
+      t.delete(h), w ? b(new Error(String(w.message))) : S(c);
       return;
     }
     if (y === E.ERROR) {
@@ -568,8 +576,8 @@ function je(e) {
     let c = !1;
     u("init", e.publicKey), u("iframeUrl", h);
     const w = () => {
-      var S, m;
-      const l = (m = (S = window.PayConductor) == null ? void 0 : S.frame) == null ? void 0 : m.iframe;
+      var P, m;
+      const l = (m = (P = window.PayConductor) == null ? void 0 : P.frame) == null ? void 0 : m.iframe;
       if (l) {
         if (l instanceof HTMLIFrameElement) return l;
         if (typeof l == "object" && l !== null) {
@@ -584,7 +592,7 @@ function je(e) {
       return document.querySelector(
         ".payconductor-element iframe"
       ) ?? void 0;
-    }, T = {
+    }, S = {
       get iframe() {
         return document.querySelector(
           ".payconductor-element iframe"
@@ -594,7 +602,7 @@ function je(e) {
       },
       iframeUrl: h,
       error: null
-    }, I = {
+    }, b = {
       publicKey: e.publicKey,
       theme: e.theme,
       locale: e.locale,
@@ -606,8 +614,8 @@ function je(e) {
         u("→ CONFIRM_PAYMENT", {
           orderId: l.orderId
         });
-        const S = w();
-        return S != null && S.contentWindow && S.contentWindow.postMessage(
+        const P = w();
+        return P != null && P.contentWindow && P.contentWindow.postMessage(
           {
             type: E.CONFIG,
             data: {
@@ -622,15 +630,15 @@ function je(e) {
             }
           },
           "*"
-        ), I.orderId = l.orderId, (m = window.PayConductor) != null && m.config && (window.PayConductor.config.orderId = l.orderId), be(S, y, l);
+        ), b.orderId = l.orderId, (m = window.PayConductor) != null && m.config && (window.PayConductor.config.orderId = l.orderId), Ie(P, y, l);
       },
       validate: (l) => (u("→ VALIDATE", l), De(w(), y, l)),
       reset: () => (u("→ RESET"), ke(w(), y)),
       getSelectedPaymentMethod: () => o
     };
     window.PayConductor = {
-      frame: T,
-      config: I,
+      frame: S,
+      config: b,
       api: k,
       selectedPaymentMethod: o
     }, u("registered"), window.dispatchEvent(
@@ -651,7 +659,7 @@ function je(e) {
           paymentMethods: e.paymentMethods,
           defaultPaymentMethod: e.defaultPaymentMethod,
           showPaymentButtons: e.showPaymentButtons
-        }), Me(l, y, {
+        }), Ae(l, y, {
           theme: e.theme,
           locale: e.locale,
           paymentMethods: e.paymentMethods,
@@ -661,13 +669,13 @@ function je(e) {
         });
       }
     }, V = (l) => {
-      var S;
-      (S = l.data) != null && S.type && u("←", l.data.type, l.data.data ?? ""), _e(
+      var P;
+      (P = l.data) != null && P.type && u("←", l.data.type, l.data.data ?? ""), _e(
         l,
         y,
         (m) => {
           var f;
-          a(m), T.error = m, (f = window.PayConductor) != null && f.frame && (window.PayConductor.frame.error = m);
+          a(m), S.error = m, (f = window.PayConductor) != null && f.frame && (window.PayConductor.frame.error = m);
         },
         () => {
           var m;
@@ -697,11 +705,11 @@ function je(e) {
     };
     window.addEventListener("message", V);
     const W = () => {
-      var S, m, f;
+      var P, m, f;
       const l = w();
       if (!l) return !1;
       try {
-        if ((((S = l.contentDocument) == null ? void 0 : S.readyState) ?? ((f = (m = l.contentWindow) == null ? void 0 : m.document) == null ? void 0 : f.readyState)) === "complete")
+        if ((((P = l.contentDocument) == null ? void 0 : P.readyState) ?? ((f = (m = l.contentWindow) == null ? void 0 : m.document) == null ? void 0 : f.readyState)) === "complete")
           return p(), !0;
       } catch {
       }
@@ -718,7 +726,7 @@ function je(e) {
       setTimeout(U, 50);
     };
     U();
-  }, []), /* @__PURE__ */ M(
+  }, []), /* @__PURE__ */ A(
     "div",
     {
       className: "payconductor",
@@ -735,7 +743,7 @@ function Ve(e) {
   return L(() => {
     if (typeof document < "u" && !document.getElementById(F)) {
       const c = document.createElement("style");
-      c.id = F, c.textContent = Te, document.head.appendChild(c);
+      c.id = F, c.textContent = Se, document.head.appendChild(c);
     }
     const i = (c) => {
       c != null && c.frame && (r(c.frame.iframeUrl || ""), s(!0), console.log("init", {
@@ -752,8 +760,8 @@ function Ve(e) {
     }
     let h = !1;
     const y = (c) => {
-      var w, T, I, k;
-      if (((w = c.data) == null ? void 0 : w.type) === E.RESIZE && ((I = (T = c.data) == null ? void 0 : T.data) != null && I.height) && o(c.data.data.height + "px"), ((k = c.data) == null ? void 0 : k.type) === E.READY && e.height && !h) {
+      var w, S, b, k;
+      if (((w = c.data) == null ? void 0 : w.type) === E.RESIZE && ((b = (S = c.data) == null ? void 0 : S.data) != null && b.height) && o(c.data.data.height + "px"), ((k = c.data) == null ? void 0 : k.type) === E.READY && e.height && !h) {
         h = !0;
         const p = document.querySelector(
           ".payconductor-element iframe"
@@ -779,7 +787,7 @@ function Ve(e) {
         width: "100%"
       },
       children: [
-        a ? null : /* @__PURE__ */ M(
+        a ? null : /* @__PURE__ */ A(
           "div",
           {
             className: "payconductor-skeleton",
@@ -788,7 +796,7 @@ function Ve(e) {
             }
           }
         ),
-        a && n ? /* @__PURE__ */ M(
+        a && n ? /* @__PURE__ */ A(
           "iframe",
           {
             allow: "payment",
@@ -821,7 +829,7 @@ function We(e) {
     }, window.dispatchEvent(new CustomEvent("payconductor:3ds:registered"))), () => {
       window.removeEventListener("payconductor:3ds:show", r), window.removeEventListener("payconductor:3ds:hide", a), window.PayConductor3DS = null;
     };
-  }, []), /* @__PURE__ */ M(
+  }, []), /* @__PURE__ */ A(
     "div",
     {
       className: "payconductor-three-ds",
@@ -883,7 +891,7 @@ function Ge() {
   return {
     init: async (n) => {
       const r = R(e()), a = x();
-      return Ae(r || void 0, a, n);
+      return Me(r || void 0, a, n);
     },
     confirmPayment: async (n) => {
       if (!n.orderId)
@@ -951,19 +959,19 @@ function $e(e) {
   let t = null;
   return {
     handleChallenge: async (a, s) => {
-      var o;
-      if (a.status !== "NeedChallenge")
+      var i;
+      if (!(a.status === "NeedChallenge" || a.statusDetail === "ThreeDsAwaitingChallenge"))
         return {
           status: g.Success
         };
-      (o = e == null ? void 0 : e.onChallenge) == null || o.call(e), t = new H(a);
-      const d = await t.authenticate({
+      (i = e == null ? void 0 : e.onChallenge) == null || i.call(e), t = new H(a);
+      const o = await t.authenticate({
         providerData: s,
         onComplete: e == null ? void 0 : e.onComplete,
         onError: e == null ? void 0 : e.onError,
         onTimeout: e == null ? void 0 : e.onTimeout
       });
-      return t.destroy(), t = null, d;
+      return t.destroy(), t = null, o;
     },
     destroy: () => {
       t == null || t.destroy(), t = null;
@@ -1031,7 +1039,7 @@ class xe {
 class Le extends xe {
   constructor() {
     super(...arguments);
-    P(this, "scriptUrl", "https://sdk.mercadopago.com/js/v2");
+    T(this, "scriptUrl", "https://sdk.mercadopago.com/js/v2");
   }
   async tokenize() {
     if (!("publicKey" in this.input.setting))
@@ -1062,7 +1070,7 @@ const Ue = {
 };
 class Oe {
   constructor(t) {
-    P(this, "api");
+    T(this, "api");
     this.publicKey = t, this.api = new Re(this.publicKey);
   }
   async tokenizeCard(t) {
@@ -1126,7 +1134,7 @@ export {
   O as IFRAME_DEFAULT_HEIGHT_VALUE,
   C as IncomingMessage,
   ne as InputStyleKey,
-  b as OutgoingMessage,
+  I as OutgoingMessage,
   E as POST_MESSAGES,
   je as PayConductor,
   H as PayConductor3DSSDK,
@@ -1137,7 +1145,7 @@ export {
   ee as PaymentMethodLayout,
   B as PaymentStatus,
   se as REQUEST_TIMEOUT,
-  Te as SKELETON_CSS,
+  Se as SKELETON_CSS,
   F as SKELETON_STYLE_ID,
   Ce as buildIframeUrl,
   je as default,

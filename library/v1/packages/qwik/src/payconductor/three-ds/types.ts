@@ -1,5 +1,6 @@
 export type ThreeDSecureData = {
-  status: string;
+  status?: string;
+  statusDetail?: string;
   acquirer?: string;
   environment?: "Sandbox" | "Production";
   authToken?: string;
