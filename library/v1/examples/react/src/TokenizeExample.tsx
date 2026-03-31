@@ -21,9 +21,9 @@ export default function TokenizeExample() {
 			customer: {
 				name: "Customer Name",
 				email: "customer@example.com",
-				documentNumber: "12345678900",
+				documentNumber: "12345678909",
 				documentType: "Cpf",
-				phoneNumber: "11999999999",
+				phoneNumber: "+55 11 987654321",
 			},
 			card: {
 				number: "4111111111111111",

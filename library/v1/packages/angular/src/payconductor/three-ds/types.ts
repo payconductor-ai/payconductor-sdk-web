@@ -1,4 +1,5 @@
 export type ThreeDSecureData = {
+  // TODO: Definir enum tipado
   status: string;
   acquirer?: string;
   environment?: "Sandbox" | "Production";
