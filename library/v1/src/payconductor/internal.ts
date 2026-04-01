@@ -11,7 +11,7 @@ export function sendMessageToIframe(
     iframe: HTMLIFrameElement | Element | undefined,
     pendingMap: Map<string, PendingRequest> | null,
     type: OutgoingMessage | IncomingMessage,
-    data?: unknown,
+    data?: Record<string, unknown>,
 ): Promise<unknown> {
     return new Promise((resolve, reject) => {
         if (!iframe || !("contentWindow" in iframe)) {
@@ -62,7 +62,7 @@ export async function confirmPayment(
 export function validatePayment(
     iframe: HTMLIFrameElement | Element | undefined,
     pendingMap: Map<string, PendingRequest> | null,
-    data: unknown,
+    data: Record<string, unknown>,
 ): Promise<boolean> {
     return sendMessageToIframe(
         iframe,

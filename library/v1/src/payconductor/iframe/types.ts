@@ -70,8 +70,6 @@ export enum IntegrationProvider {
 	PagSmileA55 = "PagSmileA55",
 	Avantti = "Avantti",
 	MonsterGateway = "MonsterGateway",
-	Shield = "Shield",
-	Hopy = "Hopy",
 	SAC = "SAC",
 }
 
@@ -354,7 +352,7 @@ export type PaymentResult = {
 	errorMessage?: string;
 	threeDSecure?: {
 		status: ThreeDsAuthenticationStatus | string;
-		acquirer?: IntegrationProvider;
+		acquirer?: IntegrationProvider | "PayConductor" | string;
 		environment?: OrganizationEnvironment;
 		authToken?: string;
 		threeDsUrl?: string;
