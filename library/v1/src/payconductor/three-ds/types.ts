@@ -1,4 +1,5 @@
 export type ThreeDSecureData = {
+	orderId?: string;
 	status?: string;
 	statusDetail?: string;
 	acquirer?: string;
