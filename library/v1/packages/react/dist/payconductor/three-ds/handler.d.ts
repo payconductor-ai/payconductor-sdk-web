@@ -6,7 +6,7 @@ export declare class PayConductor3DSSDK {
     private provider;
     constructor(threeDSecure: ThreeDSecureData);
     get needsChallenge(): boolean;
-    get acquirer(): IntegrationProvider | undefined;
+    get acquirer(): IntegrationProvider | "PayConductor" | undefined;
     authenticate(options?: Omit<ThreeDSecureOptions, "threeDSecure">): Promise<ThreeDSecureResult>;
     destroy(): void;
 }

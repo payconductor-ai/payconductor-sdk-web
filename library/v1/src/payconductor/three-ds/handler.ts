@@ -5,7 +5,7 @@ import { PayConductorThreeDSApi } from "./api";
 import { IntegrationProvider } from "../iframe/types";
 
 // ? Acquirers that require a server-side notification after a successful 3DS native challenge
-const MANUAL_AUTH_ACQUIRERS: IntegrationProvider[] = [IntegrationProvider.PagSeguro];
+const MANUAL_AUTH_ACQUIRERS: (IntegrationProvider | string)[] = [IntegrationProvider.PagSeguro];
 
 export class PayConductor3DSSDK {
 	private readonly data: ThreeDSecureData;

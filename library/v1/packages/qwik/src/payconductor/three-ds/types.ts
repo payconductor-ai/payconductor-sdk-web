@@ -1,9 +1,9 @@
 import { IntegrationProvider, OrganizationEnvironment } from "../iframe/types";
 export type ThreeDSecureData = {
-  orderId?: string;
+  orderId: string;
   status?: string;
   statusDetail?: string;
-  acquirer?: IntegrationProvider;
+  acquirer?: IntegrationProvider | "PayConductor";
   environment?: OrganizationEnvironment;
   authToken?: string;
   threeDsUrl?: string;
