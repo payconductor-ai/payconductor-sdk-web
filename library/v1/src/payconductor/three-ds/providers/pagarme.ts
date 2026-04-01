@@ -1,11 +1,12 @@
 import { loadScript } from "../../loader";
 import { AbstractThreeDSProvider, ThreeDSecureResultStatus } from "../types";
 import type { ThreeDSecureResult } from "../types";
+import { OrganizationEnvironment } from "../../iframe/types";
 
-const SDK_URLS = {
-	Production: "https://3ds-nx-js.stone.com.br/live/v2/3ds2.min.js",
-	Sandbox: "https://3ds-nx-js.stone.com.br/test/v2/3ds2.min.js",
-} as const;
+const SDK_URLS: Record<OrganizationEnvironment, string> = {
+	[OrganizationEnvironment.Production]: "https://3ds-nx-js.stone.com.br/live/v2/3ds2.min.js",
+	[OrganizationEnvironment.Sandbox]: "https://3ds-nx-js.stone.com.br/test/v2/3ds2.min.js",
+};
 
 const DEFAULT_TIMEOUT_MS = 5 * 60 * 1000;
 
@@ -27,7 +28,7 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 		if (!authToken) return this.fail("Missing authToken for PagarMe 3DS");
 		if (!card) return this.fail("Missing card data for PagarMe 3DS");
 
-		const env = this.data.environment ?? "Production";
+		const env = this.data.environment ?? OrganizationEnvironment.Production;
 
 		try { await loadScript(SDK_URLS[env]); }
 		catch { return this.fail("Failed to load Stone 3DS SDK"); }

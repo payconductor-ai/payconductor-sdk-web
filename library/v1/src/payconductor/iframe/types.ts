@@ -50,6 +50,31 @@ export enum DocumentType {
 	Cnpj = "Cnpj",
 }
 
+export enum IntegrationProvider {
+	Asaas = "Asaas",
+	Sandbox = "Sandbox",
+	SandboxSplit = "SandboxSplit",
+	MercadoPago = "MercadoPago",
+	NuPay = "NuPay",
+	PicPay = "PicPay",
+	Woovi = "Woovi",
+	EfiBank = "EfiBank",
+	BrasPag = "BrasPag",
+	PagarMe = "PagarMe",
+	BancoDoBrasil = "BancoDoBrasil",
+	PagSeguro = "PagSeguro",
+	Ebanx = "Ebanx",
+	OnlyUp = "OnlyUp",
+	Barte = "Barte",
+	BarteSplit = "BarteSplit",
+	PagSmileA55 = "PagSmileA55",
+	Avantti = "Avantti",
+	MonsterGateway = "MonsterGateway",
+	Shield = "Shield",
+	Hopy = "Hopy",
+	SAC = "SAC",
+}
+
 export enum CardBrand {
 	Visa = "Visa",
 	Mastercard = "Mastercard",
@@ -329,7 +354,7 @@ export type PaymentResult = {
 	errorMessage?: string;
 	threeDSecure?: {
 		status: ThreeDsAuthenticationStatus | string;
-		acquirer?: string;
+		acquirer?: IntegrationProvider;
 		environment?: OrganizationEnvironment;
 		authToken?: string;
 		threeDsUrl?: string;
