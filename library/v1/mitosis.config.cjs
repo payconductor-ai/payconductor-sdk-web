@@ -7,12 +7,9 @@ module.exports = {
     "react",
     "svelte",
     "qwik",
-    "rsc",
     "vue",
     "angular",
-    "webcomponent",
     "solid",
-    "preact"
   ],
   "dest": "packages",
   "commonOptions": {
@@ -24,11 +21,8 @@ module.exports = {
     },
     "svelte": {},
     "qwik": {},
-    "rsc":{},
     "vue": {},
     "angular": {},
-    "webcomponent": {},
-    "customElement": {},
     "solid": {}
   }
 }

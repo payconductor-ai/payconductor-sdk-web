@@ -1,8 +1,8 @@
 import type {
 	CreateCustomerCard,
-	IntegrationProvider,
 	SaveTokensBody,
 } from "./types";
+import { IntegrationProvider } from "../iframe/types";
 
 export class PayConductorTokenizeApiError extends Error {
 	constructor(
@@ -25,7 +25,7 @@ export class PayConductorTokenizeApi {
 
 		if (!res.ok) await this.parseResponseError("Failed to fetch settings", res);
 
-		return res.json() as Promise<{
+		return await res.json() as Promise<{
 			settings: {
 				settings: Record<string, string | number | boolean>;
 				key: IntegrationProvider;
@@ -44,7 +44,7 @@ export class PayConductorTokenizeApi {
 		if (!res.ok)
 			await this.parseResponseError("Failed to generate token", res);
 
-		return res.json() as Promise<{ token: string; customerId: string }>;
+		return await res.json() as Promise<{ token: string; customerId: string }>;
 	}
 
 	async saveTokens(
