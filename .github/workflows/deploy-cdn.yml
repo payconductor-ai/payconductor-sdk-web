@@ -1,0 +1,85 @@
+name: Deploy SDK to CDN
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "package.json"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check if version changed
+        id: version_check
+        run: |
+          PREV=$(git show HEAD~1:package.json 2>/dev/null | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).version" 2>/dev/null || echo "none")
+          CURR=$(node -p "require('./package.json').version")
+          echo "previous=$PREV" >> $GITHUB_OUTPUT
+          echo "current=$CURR" >> $GITHUB_OUTPUT
+          if [ "$PREV" != "$CURR" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: oven-sh/setup-bun@v2
+        if: steps.version_check.outputs.changed == 'true'
+        with:
+          bun-version: "1.x"
+
+      - name: Install dependencies
+        if: steps.version_check.outputs.changed == 'true'
+        working-directory: library/v1
+        run: bun install
+
+      - name: Build SDK bundles
+        if: steps.version_check.outputs.changed == 'true'
+        working-directory: library/v1
+        run: bun run scripts/build-esm.ts
+
+      - name: Read SDK version
+        if: steps.version_check.outputs.changed == 'true'
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "sdk_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS credentials
+        if: steps.version_check.outputs.changed == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload versioned files
+        if: steps.version_check.outputs.changed == 'true'
+        run: |
+          aws s3 sync library/v1/dist/ \
+            s3://${{ secrets.S3_BUCKET }}/sdk/v1/${{ steps.version.outputs.sdk_version }}/ \
+            --cache-control "public, max-age=31536000, immutable" \
+            --only-show-errors
+
+      - name: Upload to latest
+        if: steps.version_check.outputs.changed == 'true'
+        run: |
+          aws s3 sync library/v1/dist/ \
+            s3://${{ secrets.S3_BUCKET }}/sdk/v1/latest/ \
+            --cache-control "public, max-age=300, s-maxage=60" \
+            --delete \
+            --only-show-errors
+
+      - name: Invalidate CloudFront latest
+        if: steps.version_check.outputs.changed == 'true'
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/sdk/v1/latest/*"
