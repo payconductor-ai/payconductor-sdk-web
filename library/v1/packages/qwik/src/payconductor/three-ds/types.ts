@@ -3,7 +3,7 @@ export type ThreeDSecureData = {
   orderId: string;
   status?: string;
   statusDetail?: string;
-  acquirer?: IntegrationProvider | "PayConductor";
+  acquirer?: IntegrationProvider | "PayConductor" | string;
   environment?: OrganizationEnvironment;
   authToken?: string;
   threeDsUrl?: string;
