@@ -1,11 +1,12 @@
-import type { CreateCustomerCard, IntegrationProvider, SaveTokensBody } from "./types";
-export class PayConductorApiError extends Error {
+import type { CreateCustomerCard, SaveTokensBody } from "./types";
+import { IntegrationProvider } from "../iframe/types";
+export class PayConductorTokenizeApiError extends Error {
   constructor(message: string, public readonly title?: unknown) {
     super(message);
-    this.name = "PayConductorApiError";
+    this.name = "PayConductorTokenizeApiError";
   }
 }
-export class PayConductorApi {
+export class PayConductorTokenizeApi {
   constructor(private readonly publicKey: string) {}
   async getSettings() {
     const res = await fetch(`${this.baseUrl}/card-tokenization/settings`, {
@@ -13,7 +14,7 @@ export class PayConductorApi {
       headers: this.headers
     });
     if (!res.ok) await this.parseResponseError("Failed to fetch settings", res);
-    return res.json() as Promise<{
+    return (await res.json()) as Promise<{
       settings: {
         settings: Record<string, string | number | boolean>;
         key: IntegrationProvider;
@@ -28,7 +29,7 @@ export class PayConductorApi {
       body: JSON.stringify(input)
     });
     if (!res.ok) await this.parseResponseError("Failed to generate token", res);
-    return res.json() as Promise<{
+    return (await res.json()) as Promise<{
       token: string;
       customerId: string;
     }>;
@@ -59,7 +60,7 @@ export class PayConductorApi {
     } catch {
       // Response wasn't JSON
     }
-    throw new PayConductorApiError(errorMessage, errorTitle);
+    throw new PayConductorTokenizeApiError(errorMessage, errorTitle);
   }
   private get baseUrl() {
     if (typeof window !== "undefined" && window.location.href.includes("localhost")) {

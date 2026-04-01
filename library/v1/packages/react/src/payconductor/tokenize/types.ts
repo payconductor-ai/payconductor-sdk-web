@@ -1,18 +1,4 @@
-export enum DocumentType {
-  Cpf = "Cpf",
-  Cnpj = "Cnpj",
-}
-export enum IntegrationProvider {
-  Asaas = "Asaas",
-  Sandbox = "Sandbox",
-  MercadoPago = "MercadoPago",
-  NuPay = "NuPay",
-  PicPay = "PicPay",
-  Woovi = "Woovi",
-  PagarMe = "PagarMe",
-  PagSeguro = "PagSeguro",
-  BancoDoBrasil = "BancoDoBrasil",
-}
+import { DocumentType, IntegrationProvider } from "../iframe/types";
 export type CreateCustomerInput = {
   documentNumber: string;
   documentType: `${DocumentType}`;

@@ -1,6 +1,7 @@
 import { loadScript } from "../../loader";
 import { AbstractThreeDSProvider, ThreeDSecureResultStatus } from "../types";
 import type { ThreeDSecureResult } from "../types";
+import { OrganizationEnvironment } from "../../iframe/types";
 const SDK_URL = "https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min";
 export class PagSeguroThreeDSProvider extends AbstractThreeDSProvider {
   async authenticate(): Promise<ThreeDSecureResult> {
@@ -17,7 +18,7 @@ export class PagSeguroThreeDSProvider extends AbstractThreeDSProvider {
     if (!customer) return this.fail("Missing customer data for PagSeguro 3DS");
     if (!amount) return this.fail("Missing amount for PagSeguro 3DS");
     if (!billingAddress) return this.fail("Missing billingAddress for PagSeguro 3DS");
-    const env = this.data.environment === "Sandbox" ? "SANDBOX" : "PROD";
+    const env = this.data.environment === OrganizationEnvironment.Sandbox ? "SANDBOX" : "PROD";
     try {
       await loadScript(SDK_URL);
     } catch {
