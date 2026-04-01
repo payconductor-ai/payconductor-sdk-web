@@ -10,6 +10,9 @@
     onPaymentFailed?: (result: PaymentResult) => void;
     onPaymentPending?: (result: PaymentResult) => void;
     onPaymentMethodSelected?: (method: PaymentMethod) => void;
+    onThreeDSChallenge?: () => void;
+    onThreeDSComplete?: () => void;
+    onThreeDSFailed?: () => void;
   }
 </script>
 
@@ -58,6 +61,12 @@
   export let onPaymentPending: PayConductorEmbedProps["onPaymentPending"] =
     undefined;
   export let onPaymentMethodSelected: PayConductorEmbedProps["onPaymentMethodSelected"] =
+    undefined;
+  export let onThreeDSChallenge: PayConductorEmbedProps["onThreeDSChallenge"] =
+    undefined;
+  export let onThreeDSComplete: PayConductorEmbedProps["onThreeDSComplete"] =
+    undefined;
+  export let onThreeDSFailed: PayConductorEmbedProps["onThreeDSFailed"] =
     undefined;
 
   function stringifyStyles(stylesObj) {
@@ -240,6 +249,15 @@
             window.PayConductor.selectedPaymentMethod = method;
           }
           onPaymentMethodSelected?.(method);
+        },
+        () => {
+          onThreeDSChallenge?.();
+        },
+        () => {
+          onThreeDSComplete?.();
+        },
+        () => {
+          onThreeDSFailed?.();
         }
       );
     };

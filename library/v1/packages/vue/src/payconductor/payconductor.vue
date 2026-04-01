@@ -46,6 +46,9 @@ export interface PayConductorEmbedProps
   onPaymentFailed?: (result: PaymentResult) => void;
   onPaymentPending?: (result: PaymentResult) => void;
   onPaymentMethodSelected?: (method: PaymentMethod) => void;
+  onThreeDSChallenge?: () => void;
+  onThreeDSComplete?: () => void;
+  onThreeDSFailed?: () => void;
 }
 
 export default defineComponent({
@@ -66,6 +69,9 @@ export default defineComponent({
     "onPaymentFailed",
     "onPaymentPending",
     "onPaymentMethodSelected",
+    "onThreeDSChallenge",
+    "onThreeDSComplete",
+    "onThreeDSFailed",
   ],
 
   data() {
@@ -241,6 +247,15 @@ export default defineComponent({
             window.PayConductor.selectedPaymentMethod = method;
           }
           this.onPaymentMethodSelected?.(method);
+        },
+        () => {
+          this.onThreeDSChallenge?.();
+        },
+        () => {
+          this.onThreeDSComplete?.();
+        },
+        () => {
+          this.onThreeDSFailed?.();
         }
       );
     };

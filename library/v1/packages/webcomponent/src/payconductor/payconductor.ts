@@ -9,6 +9,9 @@ export interface PayConductorEmbedProps
   onPaymentFailed?: (result: PaymentResult) => void;
   onPaymentPending?: (result: PaymentResult) => void;
   onPaymentMethodSelected?: (method: PaymentMethod) => void;
+  onThreeDSChallenge?: () => void;
+  onThreeDSComplete?: () => void;
+  onThreeDSFailed?: () => void;
 }
 
 import type {
@@ -73,6 +76,9 @@ class PayConductor extends HTMLElement {
       "onPaymentFailed",
       "onPaymentPending",
       "onPaymentMethodSelected",
+      "onThreeDSChallenge",
+      "onThreeDSComplete",
+      "onThreeDSFailed",
       "children",
     ];
 
@@ -287,6 +293,15 @@ class PayConductor extends HTMLElement {
             window.PayConductor.selectedPaymentMethod = method;
           }
           this.props.onPaymentMethodSelected?.(method);
+        },
+        () => {
+          this.props.onThreeDSChallenge?.();
+        },
+        () => {
+          this.props.onThreeDSComplete?.();
+        },
+        () => {
+          this.props.onThreeDSFailed?.();
         }
       );
     };

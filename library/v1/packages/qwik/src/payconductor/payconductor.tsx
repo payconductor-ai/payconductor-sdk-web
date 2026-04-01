@@ -44,6 +44,9 @@ export interface PayConductorEmbedProps
   onPaymentFailed?: (result: PaymentResult) => void;
   onPaymentPending?: (result: PaymentResult) => void;
   onPaymentMethodSelected?: (method: PaymentMethod) => void;
+  onThreeDSChallenge?: () => void;
+  onThreeDSComplete?: () => void;
+  onThreeDSFailed?: () => void;
 }
 export const PayConductor = component$((props: PayConductorEmbedProps) => {
   const state = useStore<any>({
@@ -216,6 +219,15 @@ export const PayConductor = component$((props: PayConductorEmbedProps) => {
             window.PayConductor.selectedPaymentMethod = method;
           }
           props.onPaymentMethodSelected?.(method);
+        },
+        () => {
+          props.onThreeDSChallenge?.();
+        },
+        () => {
+          props.onThreeDSComplete?.();
+        },
+        () => {
+          props.onThreeDSFailed?.();
         }
       );
     };

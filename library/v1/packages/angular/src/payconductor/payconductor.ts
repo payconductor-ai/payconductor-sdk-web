@@ -14,6 +14,9 @@ export interface PayConductorEmbedProps
   onPaymentFailed?: (result: PaymentResult) => void;
   onPaymentPending?: (result: PaymentResult) => void;
   onPaymentMethodSelected?: (method: PaymentMethod) => void;
+  onThreeDSChallenge?: () => void;
+  onThreeDSComplete?: () => void;
+  onThreeDSFailed?: () => void;
 }
 
 import type {
@@ -76,6 +79,9 @@ export default class PayConductor {
   @Input() onPaymentPending!: PayConductorEmbedProps["onPaymentPending"];
   @Input()
   onPaymentMethodSelected!: PayConductorEmbedProps["onPaymentMethodSelected"];
+  @Input() onThreeDSChallenge!: PayConductorEmbedProps["onThreeDSChallenge"];
+  @Input() onThreeDSComplete!: PayConductorEmbedProps["onThreeDSComplete"];
+  @Input() onThreeDSFailed!: PayConductorEmbedProps["onThreeDSFailed"];
 
   isLoaded: PayConductorState["isLoaded"] = false;
   error: PayConductorState["error"] = null;
@@ -248,6 +254,15 @@ export default class PayConductor {
               window.PayConductor.selectedPaymentMethod = method;
             }
             this.onPaymentMethodSelected?.(method);
+          },
+          () => {
+            this.onThreeDSChallenge?.();
+          },
+          () => {
+            this.onThreeDSComplete?.();
+          },
+          () => {
+            this.onThreeDSFailed?.();
           }
         );
       };

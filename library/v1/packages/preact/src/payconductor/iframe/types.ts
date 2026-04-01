@@ -25,6 +25,65 @@ export enum PaymentStatus {
   Pending = "pending",
   Failed = "failed",
 }
+export enum StatusDetail {
+  ThreeDsAwaitingChallenge = "ThreeDsAwaitingChallenge",
+}
+export enum ThreeDsAuthenticationStatus {
+  Authenticated = "Authenticated",
+  NotAuthenticated = "NotAuthenticated",
+  NeedChallenge = "NeedChallenge",
+}
+export enum ThreeDSResultStatus {
+  Pending = "Pending",
+  Authenticated = "Authenticated",
+  Failed = "Failed",
+  NotEnrolled = "NotEnrolled",
+}
+export enum DocumentType {
+  Cpf = "Cpf",
+  Cnpj = "Cnpj",
+}
+export enum CardBrand {
+  Visa = "Visa",
+  Mastercard = "Mastercard",
+  AmericanExpress = "AmericanExpress",
+  DinersClub = "DinersClub",
+  Discover = "Discover",
+  JCB = "JCB",
+  UnionPay = "UnionPay",
+  Maestro = "Maestro",
+  Mir = "Mir",
+  Elo = "Elo",
+  Hiper = "Hiper",
+  Hipercard = "Hipercard",
+  Verve = "Verve",
+  Unknown = "Unknown",
+}
+export enum OrganizationEnvironment {
+  Production = "Production",
+  Sandbox = "Sandbox",
+}
+export enum CurrencyType {
+  USD = "USD",
+  EUR = "EUR",
+  BRL = "BRL",
+  ARS = "ARS",
+  CAD = "CAD",
+  COP = "COP",
+  GBP = "GBP",
+  JPY = "JPY",
+  MXN = "MXN",
+  MZN = "MZN",
+  CNY = "CNY",
+  SAR = "SAR",
+  ETH = "ETH",
+  BNB = "BNB",
+  BTC = "BTC",
+  USDT = "USDT",
+  USDC = "USDC",
+  DOGE = "DOGE",
+  SOL = "SOL",
+}
 export enum DeviceType {
   Android = "android",
   IOS = "ios",
@@ -239,18 +298,16 @@ export type PaymentMethodResult = {
 export type PaymentResult = {
   orderId: string;
   status: PaymentStatus;
-  // TODO: Definir tipagem do enum
-  statusDetail?: string;
+  statusDetail?: StatusDetail | string;
   amount: number;
-  currency: string;
+  currency: CurrencyType | string;
   message?: string;
   errorCode?: string;
   errorMessage?: string;
   threeDSecure?: {
-    // TODO: Definir tipagem do enum
-    status: string;
+    status: ThreeDsAuthenticationStatus | string;
     acquirer?: string;
-    environment?: "Sandbox" | "Production";
+    environment?: OrganizationEnvironment;
     authToken?: string;
     threeDsUrl?: string;
     creq?: string;
