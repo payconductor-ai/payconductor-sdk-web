@@ -1,10 +1,11 @@
-import { CreateCustomerCard, IntegrationProvider, SaveTokensBody } from './types';
+import { CreateCustomerCard, SaveTokensBody } from './types';
+import { IntegrationProvider } from '../iframe/types';
 
-export declare class PayConductorApiError extends Error {
+export declare class PayConductorTokenizeApiError extends Error {
     readonly title?: unknown | undefined;
     constructor(message: string, title?: unknown | undefined);
 }
-export declare class PayConductorApi {
+export declare class PayConductorTokenizeApi {
     private readonly publicKey;
     constructor(publicKey: string);
     getSettings(): Promise<{

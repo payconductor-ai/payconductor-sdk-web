@@ -21,6 +21,89 @@ export declare enum PaymentStatus {
     Pending = "pending",
     Failed = "failed"
 }
+export declare enum StatusDetail {
+    ThreeDsAwaitingChallenge = "ThreeDsAwaitingChallenge"
+}
+export declare enum ThreeDsAuthenticationStatus {
+    Authenticated = "Authenticated",
+    NotAuthenticated = "NotAuthenticated",
+    NeedChallenge = "NeedChallenge"
+}
+export declare enum ThreeDSResultStatus {
+    Pending = "Pending",
+    Authenticated = "Authenticated",
+    Failed = "Failed",
+    NotEnrolled = "NotEnrolled"
+}
+export declare enum DocumentType {
+    Cpf = "Cpf",
+    Cnpj = "Cnpj"
+}
+export declare enum IntegrationProvider {
+    Asaas = "Asaas",
+    Sandbox = "Sandbox",
+    SandboxSplit = "SandboxSplit",
+    MercadoPago = "MercadoPago",
+    NuPay = "NuPay",
+    PicPay = "PicPay",
+    Woovi = "Woovi",
+    EfiBank = "EfiBank",
+    BrasPag = "BrasPag",
+    PagarMe = "PagarMe",
+    BancoDoBrasil = "BancoDoBrasil",
+    PagSeguro = "PagSeguro",
+    Ebanx = "Ebanx",
+    OnlyUp = "OnlyUp",
+    Barte = "Barte",
+    BarteSplit = "BarteSplit",
+    PagSmileA55 = "PagSmileA55",
+    Avantti = "Avantti",
+    MonsterGateway = "MonsterGateway",
+    Shield = "Shield",
+    Hopy = "Hopy",
+    SAC = "SAC"
+}
+export declare enum CardBrand {
+    Visa = "Visa",
+    Mastercard = "Mastercard",
+    AmericanExpress = "AmericanExpress",
+    DinersClub = "DinersClub",
+    Discover = "Discover",
+    JCB = "JCB",
+    UnionPay = "UnionPay",
+    Maestro = "Maestro",
+    Mir = "Mir",
+    Elo = "Elo",
+    Hiper = "Hiper",
+    Hipercard = "Hipercard",
+    Verve = "Verve",
+    Unknown = "Unknown"
+}
+export declare enum OrganizationEnvironment {
+    Production = "Production",
+    Sandbox = "Sandbox"
+}
+export declare enum CurrencyType {
+    USD = "USD",
+    EUR = "EUR",
+    BRL = "BRL",
+    ARS = "ARS",
+    CAD = "CAD",
+    COP = "COP",
+    GBP = "GBP",
+    JPY = "JPY",
+    MXN = "MXN",
+    MZN = "MZN",
+    CNY = "CNY",
+    SAR = "SAR",
+    ETH = "ETH",
+    BNB = "BNB",
+    BTC = "BTC",
+    USDT = "USDT",
+    USDC = "USDC",
+    DOGE = "DOGE",
+    SOL = "SOL"
+}
 export declare enum DeviceType {
     Android = "android",
     IOS = "ios",
@@ -188,16 +271,16 @@ export type PaymentMethodResult = {
 export type PaymentResult = {
     orderId: string;
     status: PaymentStatus;
-    statusDetail?: string;
+    statusDetail?: StatusDetail | string;
     amount: number;
-    currency: string;
+    currency: CurrencyType | string;
     message?: string;
     errorCode?: string;
     errorMessage?: string;
     threeDSecure?: {
-        status: string;
-        acquirer?: string;
-        environment?: "Sandbox" | "Production";
+        status: ThreeDsAuthenticationStatus | string;
+        acquirer?: IntegrationProvider;
+        environment?: OrganizationEnvironment;
         authToken?: string;
         threeDsUrl?: string;
         creq?: string;

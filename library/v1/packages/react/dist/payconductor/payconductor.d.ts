@@ -9,6 +9,9 @@ export interface PayConductorEmbedProps extends Omit<PayConductorConfig, "orderI
     onPaymentFailed?: (result: PaymentResult) => void;
     onPaymentPending?: (result: PaymentResult) => void;
     onPaymentMethodSelected?: (method: PaymentMethod) => void;
+    onThreeDSChallenge?: () => void;
+    onThreeDSComplete?: () => void;
+    onThreeDSFailed?: () => void;
 }
 declare function PayConductor(props: PayConductorEmbedProps): import("react/jsx-runtime").JSX.Element;
 export default PayConductor;

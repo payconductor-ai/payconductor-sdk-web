@@ -1,8 +1,11 @@
+import { IntegrationProvider, OrganizationEnvironment } from '../iframe/types';
+
 export type ThreeDSecureData = {
+    orderId?: string;
     status?: string;
     statusDetail?: string;
-    acquirer?: string;
-    environment?: "Sandbox" | "Production";
+    acquirer?: IntegrationProvider;
+    environment?: OrganizationEnvironment;
     authToken?: string;
     threeDsUrl?: string;
     creq?: string;
