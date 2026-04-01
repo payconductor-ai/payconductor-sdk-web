@@ -4,17 +4,17 @@ import type {
 	SaveTokensBody,
 } from "./types";
 
-export class PayConductorApiError extends Error {
+export class PayConductorTokenizeApiError extends Error {
 	constructor(
 		message: string,
 		public readonly title?: unknown,
 	) {
 		super(message);
-		this.name = "PayConductorApiError";
+		this.name = "PayConductorTokenizeApiError";
 	}
 }
 
-export class PayConductorApi {
+export class PayConductorTokenizeApi {
 	constructor(private readonly publicKey: string) {}
 
 	async getSettings() {
@@ -85,7 +85,7 @@ export class PayConductorApi {
 		} catch {
 			// Response wasn't JSON
 		}
-		throw new PayConductorApiError(errorMessage, errorTitle);
+		throw new PayConductorTokenizeApiError(errorMessage, errorTitle);
 	}
 
 	private get baseUrl() {
