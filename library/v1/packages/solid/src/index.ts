@@ -7,5 +7,5 @@ export * from './payconductor/constants';
 export * from './payconductor/utils';
 export * from './payconductor/hooks';
 export { PayConductor3DSSDK } from './payconductor/three-ds';
-export { PayConductorTokenizeSDK } from './payconductor/tokenize';
+export { PayConductorTokenizerSDK } from './payconductor/tokenizer';
 export { loadScript } from './payconductor/loader'
