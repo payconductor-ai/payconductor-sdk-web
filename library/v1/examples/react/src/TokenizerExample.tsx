@@ -1,15 +1,15 @@
-import { useTokenize } from "@payconductor/react";
+import { useTokenizer } from "@payconductor/react";
 import { useState } from "react";
 
-export default function TokenizeExample() {
+export default function TokenizerExample() {
 	const [token, setToken] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [isProcessing, setIsProcessing] = useState(false);
 
-	const { tokenizeCard } = useTokenize({
+	const { tokenizeCard } = useTokenizer({
 		publicKey: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || "your_client_id",
 		onSuccess: (t) => console.log("Card tokenized:", t),
-		onError: (err) => console.error("Tokenize error:", err),
+		onError: (err) => console.error("Tokenizer error:", err),
 	});
 
 	const handleTokenize = async () => {
@@ -44,13 +44,13 @@ export default function TokenizeExample() {
 
 	return (
 		<div style={{ maxWidth: "560px", margin: "0 auto", padding: "24px" }}>
-			<h1>PayConductor Tokenize</h1>
+			<h1>PayConductor Tokenizer</h1>
 
 			<div style={{ marginTop: "24px", padding: "24px", border: "1px solid #e2e8f0", borderRadius: "8px" }}>
 				<h2 style={{ margin: "0 0 16px", fontSize: "18px" }}>Test Card Tokenization</h2>
 
 				<p style={{ color: "#64748b", fontSize: "14px", margin: "0 0 16px" }}>
-					Uses the useTokenize hook from @payconductor/react with test card data.
+					Uses the useTokenizer hook from @payconductor/react with test card data.
 				</p>
 
 				<div style={{ padding: "16px", backgroundColor: "#f8fafc", borderRadius: "8px", marginBottom: "16px" }}>

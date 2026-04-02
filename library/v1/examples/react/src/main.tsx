@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import TokenizeExample from './TokenizeExample';
-import { TokenizeDirectExample } from './TokenizeDirectExample';
+import TokenizerExample from './TokenizerExample';
+import { TokenizerDirectExample } from './TokenizerDirectExample';
 import { ThreeDSExample } from './ThreeDSExample';
 
 const path = window.location.pathname;
 
 function Route() {
-  if (path === '/tokenize') return <TokenizeExample />;
-  if (path === '/tokenize-direct') return <TokenizeDirectExample />;
+  if (path === '/tokenizer') return <TokenizerExample />;
+  if (path === '/tokenizer-direct') return <TokenizerDirectExample />;
   if (path === '/3ds') return <ThreeDSExample />;
   return <App />;
 }

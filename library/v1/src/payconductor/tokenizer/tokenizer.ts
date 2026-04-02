@@ -1,7 +1,7 @@
 import { loadScript } from "../loader";
 import { PayConductorTokenizerApi } from "./api";
 import { tokenizerProviders } from "./providers";
-import type { CardTokenizeRequest, SaveTokensBody } from "./types";
+import type { CardTokenizerRequest, SaveTokensBody } from "./types";
 
 export class PayConductorTokenizerSDK {
 	private readonly api: PayConductorTokenizerApi;
@@ -10,7 +10,7 @@ export class PayConductorTokenizerSDK {
 		this.api = new PayConductorTokenizerApi(this.publicKey);
 	}
 
-	async tokenizeCard(input: CardTokenizeRequest): Promise<string> {
+	async tokenizeCard(input: CardTokenizerRequest): Promise<string> {
 		this.validateCard(input);
 
 		const { customerId, token: cardToken } = await this.api.createToken({
@@ -47,7 +47,7 @@ export class PayConductorTokenizerSDK {
 		return cardToken;
 	}
 
-	private validateCard(input: CardTokenizeRequest) {
+	private validateCard(input: CardTokenizerRequest) {
 		const { number, cvv, expiration, holderName } = input.card;
 		if (!number || !cvv || !expiration?.month || !expiration?.year || !holderName) {
 			throw new Error("Invalid card data");

@@ -1,5 +1,5 @@
 import { PayConductorTokenizerSDK } from "../tokenizer";
-import type { CardTokenizeRequest } from "../tokenizer/types";
+import type { CardTokenizerRequest } from "../tokenizer/types";
 
 export type UseTokenizerOptions = {
 	publicKey: string;
@@ -8,13 +8,13 @@ export type UseTokenizerOptions = {
 };
 
 export type UseTokenizerReturn = {
-	tokenizeCard: (input: CardTokenizeRequest) => Promise<string | null>;
+	tokenizeCard: (input: CardTokenizerRequest) => Promise<string | null>;
 };
 
 export function useTokenizer(options: UseTokenizerOptions): UseTokenizerReturn {
 	const sdk = new PayConductorTokenizerSDK(options.publicKey);
 
-	const tokenizeCard = async (input: CardTokenizeRequest): Promise<string | null> => {
+	const tokenizeCard = async (input: CardTokenizerRequest): Promise<string | null> => {
 		try {
 			const token = await sdk.tokenizeCard(input);
 			options.onSuccess?.(token);

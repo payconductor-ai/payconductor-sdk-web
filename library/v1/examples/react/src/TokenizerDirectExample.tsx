@@ -1,4 +1,4 @@
-import { PayConductorTokenizeSDK } from "@payconductor/react";
+import { PayConductorTokenizerSDK } from "@payconductor/react";
 import {
 	Configuration,
 	DocumentType,
@@ -16,9 +16,9 @@ const sdkConfig = new Configuration({
 });
 
 const orderApi = new OrderApi(sdkConfig);
-const tokenizeSDK = new PayConductorTokenizeSDK(publicKey);
+const tokenizerSDK = new PayConductorTokenizerSDK(publicKey);
 
-export function TokenizeDirectExample() {
+export function TokenizerDirectExample() {
 	const [step, setStep] = useState<"idle" | "tokenizing" | "creating_order" | "done">("idle");
 	const [token, setToken] = useState<string | null>(null);
 	const [orderId, setOrderId] = useState<string | null>(null);
@@ -29,11 +29,11 @@ export function TokenizeDirectExample() {
 		setError(null);
 		setToken(null);
 		setOrderId(null);
-		
+
 		const cardNumber = "4235647728025682"
 
 		try {
-			const cardToken = await tokenizeSDK.tokenizeCard({
+			const cardToken = await tokenizerSDK.tokenizeCard({
 				customer: {
 					name: "Joao Silva",
 					email: "joao@teste.com",
@@ -62,7 +62,7 @@ export function TokenizeDirectExample() {
 					name: "Joao Silva",
 				},
 				discountAmount: 0,
-				externalId: `tokenize-test-${Date.now()}`,
+				externalId: `tokenizer-test-${Date.now()}`,
 				payment: {
 					paymentMethod: "CreditCard",
 					card: {
@@ -86,9 +86,9 @@ export function TokenizeDirectExample() {
 
 	return (
 		<div style={{maxWidth: "560px", margin: "0 auto", padding: "24px"}}>
-			<h1>PayConductor - Tokenize Direct</h1>
+			<h1>PayConductor - Tokenizer Direct</h1>
 			<p style={{color: "#64748b", fontSize: "14px"}}>
-				Uses PayConductorTokenizeSDK directly (no checkout element).
+				Uses PayConductorTokenizerSDK directly (no checkout element).
 			</p>
 
 			<div style={{marginTop: "24px", padding: "24px", border: "1px solid #e2e8f0", borderRadius: "8px"}}>

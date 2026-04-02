@@ -34,7 +34,7 @@ export type TokenizerProviderInput = {
 	saveCard?: boolean;
 };
 
-export type CardTokenizeRequest = Omit<TokenizerProviderInput, "setting">;
+export type CardTokenizerRequest = Omit<TokenizerProviderInput, "setting">;
 
 export abstract class AbstractTokenizerProvider {
 	constructor(protected readonly input: TokenizerProviderInput) {}
