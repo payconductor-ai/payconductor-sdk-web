@@ -1,5 +1,5 @@
-import { PayConductorTokenizeSDK } from "../tokenize";
-import type { CardTokenizeRequest } from "../tokenize/types";
+import { PayConductorTokenizeSDK } from "../tokenizer";
+import type { CardTokenizeRequest } from "../tokenizer/types";
 
 export type UseTokenizeOptions = {
 	publicKey: string;

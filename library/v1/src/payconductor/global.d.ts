@@ -1,6 +1,6 @@
 import { PayConductorContextValue } from "./types";
 import { PayConductor3DSSDK } from "./three-ds";
-import { PayConductorTokenizeSDK } from "./tokenize";
+import { PayConductorTokenizeSDK } from "./tokenizer";
 
 export interface PayConductor3DSElement {
 	container: () => HTMLElement | null;

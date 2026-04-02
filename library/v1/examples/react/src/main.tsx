@@ -8,8 +8,8 @@ import { ThreeDSExample } from './ThreeDSExample';
 const path = window.location.pathname;
 
 function Route() {
-  if (path === '/tokenize') return <TokenizeExample />;
-  if (path === '/tokenize-direct') return <TokenizeDirectExample />;
+  if (path === '/tokenizer') return <TokenizeExample />;
+  if (path === '/tokenizer-direct') return <TokenizeDirectExample />;
   if (path === '/3ds') return <ThreeDSExample />;
   return <App />;
 }
