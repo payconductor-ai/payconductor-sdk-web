@@ -13,7 +13,7 @@
   "exports": {
     "./*": "./output/*/src/index.js",
     "./sdk/three-ds": "./dist/payconductor-3ds.js",
-    "./sdk/tokenize": "./dist/payconductor-tokenize.js"
+    "./sdk/tokenizer": "./dist/payconductor-tokenizer.js"
   },
   "dependencies": {
     "@builder.io/eslint-plugin-mitosis": "^0.0.15",

@@ -23,8 +23,8 @@ async function main() {
 		}),
 		build({
 			...shared,
-			entryPoints: ["src/esm/tokenize.ts"],
-			outfile: `${outdir}/payconductor-tokenize.js`,
+			entryPoints: ["src/esm/tokenizer.ts"],
+			outfile: `${outdir}/payconductor-tokenizer.js`,
 		}),
 	]);
 

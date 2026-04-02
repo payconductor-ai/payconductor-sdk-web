@@ -1,18 +1,18 @@
-import { PayConductorTokenizeSDK } from "../tokenize";
-import type { CardTokenizeRequest } from "../tokenize/types";
+import { PayConductorTokenizerSDK } from "../tokenizer";
+import type { CardTokenizeRequest } from "../tokenizer/types";
 
-export type UseTokenizeOptions = {
+export type UseTokenizerOptions = {
 	publicKey: string;
 	onSuccess?: (token: string) => void;
 	onError?: (error: Error) => void;
 };
 
-export type UseTokenizeReturn = {
+export type UseTokenizerReturn = {
 	tokenizeCard: (input: CardTokenizeRequest) => Promise<string | null>;
 };
 
-export function useTokenize(options: UseTokenizeOptions): UseTokenizeReturn {
-	const sdk = new PayConductorTokenizeSDK(options.publicKey);
+export function useTokenizer(options: UseTokenizerOptions): UseTokenizerReturn {
+	const sdk = new PayConductorTokenizerSDK(options.publicKey);
 
 	const tokenizeCard = async (input: CardTokenizeRequest): Promise<string | null> => {
 		try {

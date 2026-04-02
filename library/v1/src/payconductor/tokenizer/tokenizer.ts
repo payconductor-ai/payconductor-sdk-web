@@ -1,13 +1,13 @@
 import { loadScript } from "../loader";
-import { PayConductorTokenizeApi } from "./api";
-import { tokenizeProviders } from "./providers";
+import { PayConductorTokenizerApi } from "./api";
+import { tokenizerProviders } from "./providers";
 import type { CardTokenizeRequest, SaveTokensBody } from "./types";
 
-export class PayConductorTokenizeSDK {
-	private readonly api: PayConductorTokenizeApi;
+export class PayConductorTokenizerSDK {
+	private readonly api: PayConductorTokenizerApi;
 
 	constructor(private readonly publicKey: string) {
-		this.api = new PayConductorTokenizeApi(this.publicKey);
+		this.api = new PayConductorTokenizerApi(this.publicKey);
 	}
 
 	async tokenizeCard(input: CardTokenizeRequest): Promise<string> {
@@ -23,7 +23,7 @@ export class PayConductorTokenizeSDK {
 
 		const results = await Promise.all(
 			settings.map(async (setting) => {
-				const ProviderClass = tokenizeProviders[setting.key];
+				const ProviderClass = tokenizerProviders[setting.key];
 				if (!ProviderClass) return null;
 
 				const provider = new ProviderClass({ ...input, setting: setting.settings });
