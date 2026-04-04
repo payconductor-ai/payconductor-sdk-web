@@ -4,17 +4,17 @@ import type {
 } from "./types";
 import { IntegrationProvider } from "../iframe/types";
 
-export class PayConductorTokenizeApiError extends Error {
+export class PayConductorTokenizerApiError extends Error {
 	constructor(
 		message: string,
 		public readonly title?: unknown,
 	) {
 		super(message);
-		this.name = "PayConductorTokenizeApiError";
+		this.name = "PayConductorTokenizerApiError";
 	}
 }
 
-export class PayConductorTokenizeApi {
+export class PayConductorTokenizerApi {
 	constructor(private readonly publicKey: string) {}
 
 	async getSettings() {
@@ -85,7 +85,7 @@ export class PayConductorTokenizeApi {
 		} catch {
 			// Response wasn't JSON
 		}
-		throw new PayConductorTokenizeApiError(errorMessage, errorTitle);
+		throw new PayConductorTokenizerApiError(errorMessage, errorTitle);
 	}
 
 	private get baseUrl() {

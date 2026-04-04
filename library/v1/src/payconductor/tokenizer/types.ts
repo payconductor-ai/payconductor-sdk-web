@@ -27,17 +27,17 @@ export type CreateCardInput = {
 	number: string;
 };
 
-export type TokenizeProviderInput = {
+export type TokenizerProviderInput = {
 	customer: CreateCustomerInput;
 	card: CreateCardInput;
 	setting: Record<string, string | number | boolean>;
 	saveCard?: boolean;
 };
 
-export type CardTokenizeRequest = Omit<TokenizeProviderInput, "setting">;
+export type CardTokenizerRequest = Omit<TokenizerProviderInput, "setting">;
 
-export abstract class AbstractTokenizeProvider {
-	constructor(protected readonly input: TokenizeProviderInput) {}
+export abstract class AbstractTokenizerProvider {
+	constructor(protected readonly input: TokenizerProviderInput) {}
 
 	abstract scriptUrl: string;
 	abstract tokenize(): Promise<string>;

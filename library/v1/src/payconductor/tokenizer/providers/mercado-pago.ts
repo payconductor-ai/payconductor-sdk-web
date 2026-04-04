@@ -1,7 +1,7 @@
-import { AbstractTokenizeProvider } from "../types";
+import { AbstractTokenizerProvider } from "../types";
 import { DocumentType } from "../../iframe/types";
 
-export class MercadoPagoTokenizeProvider extends AbstractTokenizeProvider {
+export class MercadoPagoTokenizerProvider extends AbstractTokenizerProvider {
 	scriptUrl = "https://sdk.mercadopago.com/js/v2";
 
 	async tokenize(): Promise<string> {
