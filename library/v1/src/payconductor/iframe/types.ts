@@ -28,7 +28,7 @@ export enum PaymentStatus {
 	Failed = "failed",
 }
 
-export enum StatusDetail {
+export enum ChargeStatusDetail {
 	ThreeDsAwaitingChallenge = "ThreeDsAwaitingChallenge",
 }
 
@@ -121,6 +121,8 @@ export enum DeviceType {
 	Android = "android",
 	IOS = "ios",
 	Web = "web",
+	Chrome = "chrome",
+	Safari = "safari",
 }
 
 export enum InputStyleKey {
@@ -143,6 +145,7 @@ export enum OutgoingMessage {
 export enum IncomingMessage {
 	Ready = "Ready",
 	Error = "Error",
+	CheckoutSessionCreated = "CheckoutSessionCreated",
 	PaymentComplete = "PaymentComplete",
 	PaymentFailed = "PaymentFailed",
 	PaymentPending = "PaymentPending",
@@ -185,8 +188,22 @@ export type PaymentMethodConfig = {
 	installments?: { count: number; amount: number }[];
 };
 
+export type PaymentMethodsWalletsConfig = {
+	googlePay?: {
+		gateway: string;
+		gatewayMerchantId: string;
+		merchantName: string;
+	};
+	applePay?: {
+		gateway: string;
+		merchantId: string;
+		merchantName: string;
+	};
+};
+
 export type PaymentMethodsResponse = {
 	methods: PaymentMethod[];
+	wallets: PaymentMethodsWalletsConfig;
 	config: PaymentMethodsConfig;
 };
 
@@ -290,7 +307,6 @@ export const defaultTheme: PayConductorTheme = {
 
 export type PayConductorConfig = {
 	publicKey: string;
-	orderId?: string;
 	theme?: PayConductorTheme;
 	locale?: string;
 	paymentMethods?: PaymentMethod[] | "all";
@@ -341,40 +357,6 @@ export type PaymentMethodResult = {
 	billingDetails?: BillingDetails;
 };
 
-export type PaymentResult = {
-	orderId: string;
-	status: PaymentStatus;
-	statusDetail?: StatusDetail | string;
-	amount: number;
-	currency: CurrencyType | string;
-	message?: string;
-	errorCode?: string;
-	errorMessage?: string;
-	threeDSecure?: {
-		status: ThreeDsAuthenticationStatus | string;
-		acquirer?: IntegrationProvider | "PayConductor" | string;
-		environment?: OrganizationEnvironment;
-		authToken?: string;
-		threeDsUrl?: string;
-		creq?: string;
-		operationUrl?: string;
-		publicKey?: string;
-		dsTransactionId?: string;
-		version?: string;
-	};
-};
-
-export interface MessagePayload {
-	type: OutgoingMessage | IncomingMessage;
-	data?: unknown;
-	requestId?: string;
-	error?: {
-		code: string;
-		message: string;
-		field?: string;
-	};
-}
-
 export type ThreeDSecureBrowserData = {
 	ip?: string;
 	userAgent?: string;
@@ -409,9 +391,72 @@ export type ThreeDSecureExternalInput = {
 
 export type ThreeDSecureInput = ThreeDSecureInternalInput | ThreeDSecureExternalInput;
 
+export type PaymentResult = {
+	orderId: string;
+	status: PaymentStatus;
+	statusDetail?: ChargeStatusDetail | string;
+	amount: number;
+	currency: CurrencyType | string;
+	message?: string;
+	errorCode?: string;
+	errorMessage?: string;
+	threeDSecure?: {
+		status: ThreeDsAuthenticationStatus | string;
+		acquirer?: IntegrationProvider | "PayConductor" | string;
+		environment?: OrganizationEnvironment;
+		authToken?: string;
+		threeDsUrl?: string;
+		creq?: string;
+		operationUrl?: string;
+		publicKey?: string;
+		dsTransactionId?: string;
+		version?: string;
+		card?: {
+			number: string;
+			expMonth: string;
+			expYear: string;
+			holderName: string;
+		};
+		customer?: {
+			name: string;
+			email: string;
+			document?: string;
+			phones?: Array<{
+				countryCode: string;
+				areaCode: string;
+				number: string;
+				type?: string;
+			}>;
+		};
+		amount?: number;
+		currency?: string;
+		installments?: number;
+		billingAddress?: {
+			street: string;
+			number: string;
+			complement?: string;
+			district?: string;
+			state: string;
+			country: string;
+			city: string;
+			zipCode: string;
+		};
+	};
+};
+
+export interface MessagePayload {
+	type: OutgoingMessage | IncomingMessage;
+	data?: unknown;
+	requestId?: string;
+	error?: {
+		code: string;
+		message: string;
+		field?: string;
+	};
+}
+
 export type CardTokenData = {
 	token: string;
-	firstSixCardNumber?: string;
 };
 
 export type CardFullData = {
@@ -425,6 +470,8 @@ export type CardFullData = {
 };
 
 export type CardPaymentData = CardTokenData | CardFullData;
+
+// ------- payment-methods.ts -------
 
 export type PixPaymentData = {
 	paymentMethod: PaymentMethod.Pix;
@@ -459,9 +506,61 @@ export type PicPayPaymentData = {
 	paymentMethod: PaymentMethod.PicPay;
 };
 
+export type GooglePayToken = {
+	signature: string;
+	intermediateSigningKey: {
+		signedKey: string;
+		signatures: string[];
+	};
+	protocolVersion: string;
+	signedMessage: string;
+};
+
+export type ApplePayToken = {
+	version: string;
+	data: string;
+	signature: string;
+	header: {
+		ephemeralPublicKey: string;
+		publicKeyHash: string;
+		transactionId: string;
+	};
+};
+
+export type GooglePayPaymentData = {
+	paymentMethod: PaymentMethod.GooglePay;
+	googlePay: {
+		signature: string;
+		intermediateSigningKey: {
+			signedKey: string;
+			signatures: string[];
+		};
+		protocolVersion: string;
+		signedMessage: string;
+	};
+	installments?: number;
+};
+
+export type ApplePayPaymentData = {
+	paymentMethod: PaymentMethod.ApplePay;
+	applePay: {
+		version: string;
+		data: string;
+		signature: string;
+		header: {
+			ephemeralPublicKey: string;
+			publicKeyHash: string;
+			transactionId: string;
+		};
+	};
+	installments?: number;
+};
+
 export type PaymentConfirmData =
 	| PixPaymentData
 	| CreditCardPaymentData
 	| BankSlipPaymentData
 	| NuPayPaymentData
-	| PicPayPaymentData;
+	| PicPayPaymentData
+	| GooglePayPaymentData
+	| ApplePayPaymentData;
