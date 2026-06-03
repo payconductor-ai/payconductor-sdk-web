@@ -1,2 +1,2 @@
-import { PayConductorTokenizerSDK } from "../payconductor/tokenizer/tokenizer";
+import { PayConductorTokenizerSDK } from "../payconductor/tokenizer";
 window.PayConductorTokenizerSDK = PayConductorTokenizerSDK
