@@ -318,6 +318,7 @@ export type PayConductorConfig = {
 	height?: string;
 	/** Required when NuPay is an available payment method */
 	nuPayConfig?: NuPayData;
+	orderId?: string;
 };
 
 export type BillingDetails = {

@@ -1,1 +1,1 @@
-export { PayConductorTokenizerSDK } from './tokenizer';
+export { PayConductorTokenizerSDK } from './handler';
