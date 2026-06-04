@@ -64,6 +64,7 @@ export enum IntegrationProvider {
   Avantti = "Avantti",
   MonsterGateway = "MonsterGateway",
   SAC = "SAC",
+  Lyra = "Lyra",
 }
 export enum CardBrand {
   Visa = "Visa",
