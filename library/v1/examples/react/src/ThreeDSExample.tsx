@@ -148,17 +148,11 @@ export function ThreeDSExample() {
 			log(`3DS required. Acquirer: ${threeDSecure?.acquirer ?? "PayConductor (inferred)"}`);
 			setStep("challenging");
 
+			// O SDK recebe apenas os dados resumidos; o restante é carregado
+			// internamente pelo endpoint /three-ds/challenge/{orderId}.
 			const result = await handleChallenge({
-				statusDetail,
-				status: threeDSecure?.status,
-				acquirer: threeDSecure?.acquirer,
-				authToken: threeDSecure?.authToken,
-				threeDsUrl: threeDSecure?.threeDsUrl,
-				dsTransactionId: threeDSecure?.dsTransactionId,
-				version: threeDSecure?.version,
-				operationUrl: threeDSecure?.operationUrl,
-				publicKey: threeDSecure?.publicKey,
-				environment: threeDSecure?.environment,
+				orderId: data.id,
+				publicKey: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || "your_client_id",
 			});
 
 			log(`3DS result: ${result.status}`);

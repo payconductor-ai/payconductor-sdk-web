@@ -1,3 +1,5 @@
+import type { ThreeDSecureData } from "./types";
+
 export class PayConductorThreeDSApiError extends Error {
 	constructor(
 		message: string,
@@ -19,6 +21,21 @@ export class PayConductorThreeDSApi {
 		});
 
 		if (!res.ok) await this.parseResponseError("Failed to complete native 3DS challenge", res);
+	}
+
+	async getThreeDSecureData(orderId: string): Promise<ThreeDSecureData> {
+		const res = await fetch(`${this.baseUrl}/three-ds/challenge/${orderId}`, {
+			method: "GET",
+			headers: this.headers,
+		});
+		if (!res.ok) await this.parseResponseError("Failed to fetch 3DS data", res);
+		const json = (await res.json()) as ThreeDSecureData;
+
+		// Remove chaves nulas/indefinidas para que não sobrescrevam os dados
+		// resumidos já informados na instância do SDK (ex.: publicKey).
+		return Object.fromEntries(
+			Object.entries(json).filter(([, value]) => value !== null && value !== undefined),
+		) as ThreeDSecureData;
 	}
 
 	private async parseResponseError(

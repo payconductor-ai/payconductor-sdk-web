@@ -11,6 +11,6 @@ export {
 	ThreeDSecureResultStatus,
 	ThreeDSTransStatus,
 } from './payconductor/three-ds';
-export type { ThreeDSecureData, ThreeDSecureResult } from './payconductor/three-ds';
+export type { ThreeDSecureData, ThreeDSecureInit, ThreeDSecureResult } from './payconductor/three-ds';
 export { PayConductorTokenizerSDK } from './payconductor/tokenizer';
 export { loadScript } from './payconductor/loader';

@@ -1,6 +1,5 @@
 import { PayConductor3DSSDK } from "../three-ds";
-import type { ThreeDSecureData, ThreeDSecureResult } from "../three-ds/types";
-import { ThreeDSecureResultStatus } from "../three-ds/types";
+import type { ThreeDSecureInit, ThreeDSecureResult } from "../three-ds/types";
 
 export type UseThreeDSOptions = {
 	onChallenge?: () => void;
@@ -10,31 +9,30 @@ export type UseThreeDSOptions = {
 };
 
 export type UseThreeDSReturn = {
-	handleChallenge: (threeDSecure: ThreeDSecureData) => Promise<ThreeDSecureResult>;
+	handleChallenge: (threeDSecure: ThreeDSecureInit) => Promise<ThreeDSecureResult>;
 	destroy: () => void;
 };
 
 export function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn {
 	let handler: PayConductor3DSSDK | null = null;
 
-	const handleChallenge = async (threeDSecure: ThreeDSecureData): Promise<ThreeDSecureResult> => {
-		const needs = threeDSecure.status === "NeedChallenge" || threeDSecure.statusDetail === "ThreeDsAwaitingChallenge";
-		if (!needs) {
-			return { status: ThreeDSecureResultStatus.Success };
+	const handleChallenge = async (threeDSecure: ThreeDSecureInit): Promise<ThreeDSecureResult> => {
+		// O SDK carrega o restante dos dados pela API e só dispara
+		// `onChallenge` quando uma challenge é realmente necessária.
+		const sdk = new PayConductor3DSSDK(threeDSecure);
+		handler = sdk;
+
+		try {
+			return await sdk.authenticate({
+				onChallenge: options?.onChallenge,
+				onComplete: options?.onComplete,
+				onError: options?.onError,
+				onTimeout: options?.onTimeout,
+			});
+		} finally {
+			sdk.destroy();
+			handler = null;
 		}
-
-		options?.onChallenge?.();
-		handler = new PayConductor3DSSDK(threeDSecure);
-
-		const result = await handler.authenticate({
-			onComplete: options?.onComplete,
-			onError: options?.onError,
-			onTimeout: options?.onTimeout,
-		});
-
-		handler.destroy();
-		handler = null;
-		return result;
 	};
 
 	const destroy = () => {

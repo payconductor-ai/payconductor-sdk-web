@@ -2,6 +2,8 @@ import { IntegrationProvider, OrganizationEnvironment } from "../iframe/types";
 
 export type ThreeDSecureData = {
 	orderId: string;
+	publicKey: string;
+
 	status?: string;
 	statusDetail?: string;
 	acquirer?: IntegrationProvider | "PayConductor" | string;
@@ -10,7 +12,6 @@ export type ThreeDSecureData = {
 	threeDsUrl?: string;
 	creq?: string;
 	operationUrl?: string;
-	publicKey?: string;
 	dsTransactionId?: string;
 	version?: string;
 	card?: {
@@ -41,8 +42,16 @@ export type ThreeDSecureData = {
 	};
 };
 
+/**
+ * Dados mínimos para instanciar o SDK de 3DS.
+ * O restante (status, acquirer, authToken, card, etc.) é obtido
+ * pela API através do `orderId` ao chamar `authenticate`.
+ */
+export type ThreeDSecureInit = Pick<ThreeDSecureData, "orderId" | "publicKey">;
+
 export type ThreeDSecureOptions = {
 	threeDSecure: ThreeDSecureData;
+	onChallenge?: () => void;
 	onComplete?: () => void;
 	onError?: (error: Error) => void;
 	onTimeout?: () => void;

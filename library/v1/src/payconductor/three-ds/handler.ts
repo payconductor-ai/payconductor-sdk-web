@@ -1,4 +1,4 @@
-import type { ThreeDSecureData, ThreeDSecureOptions, ThreeDSecureResult, AbstractThreeDSProvider } from "./types";
+import type { ThreeDSecureData, ThreeDSecureInit, ThreeDSecureOptions, ThreeDSecureResult, AbstractThreeDSProvider } from "./types";
 import { ThreeDSecureResultStatus } from "./types";
 import { threeDSProviders } from "./providers";
 import { PayConductorThreeDSApi } from "./api";
@@ -8,11 +8,13 @@ import { IntegrationProvider } from "../iframe/types";
 const MANUAL_AUTH_ACQUIRERS: (IntegrationProvider | string)[] = [IntegrationProvider.PagSeguro];
 
 export class PayConductor3DSSDK {
-	private readonly data: ThreeDSecureData;
+	private data: ThreeDSecureData;
 	private provider: AbstractThreeDSProvider | null = null;
+	private api: PayConductorThreeDSApi;
 
-	constructor(threeDSecure: ThreeDSecureData) {
+	constructor(threeDSecure: ThreeDSecureInit) {
 		this.data = threeDSecure;
+		this.api = new PayConductorThreeDSApi(this.data.publicKey);
 	}
 
 	get needsChallenge() {
@@ -27,6 +29,10 @@ export class PayConductor3DSSDK {
 	}
 
 	async authenticate(options?: Omit<ThreeDSecureOptions, "threeDSecure">): Promise<ThreeDSecureResult> {
+		// O SDK é instanciado com dados resumidos; o restante é carregado aqui.
+		const fullData = await this.api.getThreeDSecureData(this.data.orderId);
+		this.data = { ...this.data, ...fullData };
+
 		if (!this.needsChallenge) {
 			return { status: ThreeDSecureResultStatus.Success };
 		}
@@ -43,6 +49,8 @@ export class PayConductor3DSSDK {
 			return { status: ThreeDSecureResultStatus.Failed, error: new Error(`Unsupported 3DS provider: ${acquirer}`) };
 		}
 
+		options?.onChallenge?.();
+
 		const opts: ThreeDSecureOptions = { ...options, threeDSecure: this.data };
 		this.provider = new ProviderClass(this.data, opts);
 		const result = await this.provider.authenticate();
@@ -50,12 +58,9 @@ export class PayConductor3DSSDK {
 		if (
 			result.status === ThreeDSecureResultStatus.Success &&
 			result.dsTransactionId &&
-			MANUAL_AUTH_ACQUIRERS.includes(acquirer) &&
-			this.data.orderId &&
-			this.data.publicKey
+			MANUAL_AUTH_ACQUIRERS.includes(acquirer)
 		) {
-			const api = new PayConductorThreeDSApi(this.data.publicKey);
-			await api.completeManualChallenge(this.data.orderId, result.dsTransactionId);
+			await this.api.completeManualChallenge(this.data.orderId, result.dsTransactionId);
 		}
 
 		return result;
