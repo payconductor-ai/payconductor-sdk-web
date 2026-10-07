@@ -1,5 +1,6 @@
 import type { CreateCustomerCard, SaveTokensBody } from "./types";
 import { IntegrationProvider } from "../iframe/types";
+import { SDK_API_BASE_URL } from "../constants";
 export class PayConductorTokenizerApiError extends Error {
   constructor(message: string, public readonly title?: unknown) {
     super(message);
@@ -9,7 +10,7 @@ export class PayConductorTokenizerApiError extends Error {
 export class PayConductorTokenizerApi {
   constructor(private readonly publicKey: string) {}
   async getSettings() {
-    const res = await fetch(`${this.baseUrl}/card-tokenization/settings`, {
+    const res = await fetch(`${SDK_API_BASE_URL}/card-tokenization/settings`, {
       method: "GET",
       headers: this.headers
     });
@@ -23,7 +24,7 @@ export class PayConductorTokenizerApi {
     }>;
   }
   async createToken(input: CreateCustomerCard) {
-    const res = await fetch(`${this.baseUrl}/card-tokenization/tokenize`, {
+    const res = await fetch(`${SDK_API_BASE_URL}/card-tokenization/tokenize`, {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify(input)
@@ -35,7 +36,7 @@ export class PayConductorTokenizerApi {
     }>;
   }
   async saveTokens(data: SaveTokensBody[], customerId: string, cardToken: string) {
-    const res = await fetch(`${this.baseUrl}/card-tokenization/save-tokens/${customerId}/${cardToken}`, {
+    const res = await fetch(`${SDK_API_BASE_URL}/card-tokenization/save-tokens/${customerId}/${cardToken}`, {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify(data)
@@ -61,12 +62,6 @@ export class PayConductorTokenizerApi {
       // Response wasn't JSON
     }
     throw new PayConductorTokenizerApiError(errorMessage, errorTitle);
-  }
-  private get baseUrl() {
-    if (typeof window !== "undefined" && window.location.href.includes("localhost")) {
-      return "http://localhost:3000/api/v1/sdk";
-    }
-    return "https://payconductor.ai/api/v1/sdk";
   }
   private get headers() {
     return {

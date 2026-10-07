@@ -23,6 +23,14 @@ interface MercadoPagoInstance {
     id: string;
     first_six_digits: string;
     last_four_digits: string;
+  } | {
+    message: string;
+    error?: string;
+    status?: number;
+    cause?: {
+      code: string | number;
+      description: string;
+    }[];
   }>;
 }
 interface MercadoPagoConstructor {
