@@ -26,7 +26,7 @@ export class PayConductorThreeDSApi {
 	}
 
 	async getThreeDSecureData(orderId: string): Promise<ThreeDSecureData> {
-		const res = await fetch(`${this.baseUrl}/three-ds/challenge/${orderId}`, {
+		const res = await fetch(`${SDK_API_BASE_URL}/three-ds/challenge/${orderId}`, {
 			method: "GET",
 			headers: this.headers,
 		});
