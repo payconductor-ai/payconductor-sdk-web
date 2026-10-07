@@ -1,3 +1,5 @@
+import { SDK_API_BASE_URL } from "../constants";
+
 import type { ThreeDSecureData } from "./types";
 
 export class PayConductorThreeDSApiError extends Error {
@@ -14,7 +16,7 @@ export class PayConductorThreeDSApi {
 	constructor(private readonly publicKey: string) {}
 
 	async completeManualChallenge(orderId: string, providerTransactionId: string): Promise<void> {
-		const res = await fetch(`${this.baseUrl}/three-ds/complete/${orderId}`, {
+		const res = await fetch(`${SDK_API_BASE_URL}/three-ds/complete/${orderId}`, {
 			method: "POST",
 			headers: this.headers,
 			body: JSON.stringify({ providerTransactionId }),
@@ -60,16 +62,6 @@ export class PayConductorThreeDSApi {
 			// Response wasn't JSON
 		}
 		throw new PayConductorThreeDSApiError(errorMessage, errorTitle);
-	}
-
-	private get baseUrl() {
-		if (
-			typeof window !== "undefined" &&
-			window.location.href.includes("localhost")
-		) {
-			return "http://localhost:3000/api/v1/sdk";
-		}
-		return "https://payconductor.ai/api/v1/sdk";
 	}
 
 	private get headers() {
