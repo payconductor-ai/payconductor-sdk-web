@@ -1,8 +1,9 @@
-import { APP_BASE_URL_DEV, APP_BASE_URL_PROD, IFRAME_BASE_URL_DEV, IFRAME_BASE_URL_PROD, IFRAME_DEFAULT_HEIGHT, REQUEST_TIMEOUT_MS } from "./iframe/constants";
+import { API_BASE_URL_DEV, API_BASE_URL_PROD, IFRAME_BASE_URL_DEV, IFRAME_BASE_URL_PROD, IFRAME_DEFAULT_HEIGHT, REQUEST_TIMEOUT_MS } from "./iframe/constants";
 import { IncomingMessage, OutgoingMessage } from "./iframe/types";
-const isDev = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && !window.location.search.includes("production");
+const isDev = window.location.search.includes("development");
 export const IFRAME_BASE_URL = isDev ? IFRAME_BASE_URL_DEV : IFRAME_BASE_URL_PROD;
-export const SDK_API_BASE_URL = `${isDev ? APP_BASE_URL_DEV : APP_BASE_URL_PROD}/api/v1/sdk`;
+export const SDK_API_BASE_URL = isDev ? `${API_BASE_URL_DEV}/sdk` : `${API_BASE_URL_PROD}/sdk`;
+export const API_BASE_URL = isDev ? API_BASE_URL_DEV : API_BASE_URL_PROD;
 export const ALLOWED_ORIGINS = [IFRAME_BASE_URL_DEV, IFRAME_BASE_URL_PROD];
 export const IFRAME_DEFAULT_HEIGHT_VALUE = IFRAME_DEFAULT_HEIGHT;
 export const REQUEST_TIMEOUT = REQUEST_TIMEOUT_MS;

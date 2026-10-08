@@ -1,20 +1,23 @@
 import { PayConductor3DSSDK } from "../three-ds";
-import type { ThreeDSecureInit, ThreeDSecureResult } from "../three-ds/types";
+import type { ThreeDSecureInit, ThreeDSecurePollingOptions, ThreeDSecureResult } from "../three-ds/types";
 export type UseThreeDSOptions = {
   onChallenge?: () => void;
-  onComplete?: () => void;
+  onComplete?: (result: ThreeDSecureResult) => void;
   onError?: (error: Error) => void;
   onTimeout?: () => void;
+  complete?: boolean;
+  poll?: boolean;
+  polling?: ThreeDSecurePollingOptions;
 };
 export type UseThreeDSReturn = {
-  handleChallenge: (threeDSecure: ThreeDSecureInit) => Promise<ThreeDSecureResult>;
+  authenticate: (threeDSecure: ThreeDSecureInit) => Promise<ThreeDSecureResult>;
   destroy: () => void;
 };
 export function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn {
   let handler: PayConductor3DSSDK | null = null;
-  const handleChallenge = async (threeDSecure: ThreeDSecureInit): Promise<ThreeDSecureResult> => {
-    // O SDK carrega o restante dos dados pela API e só dispara
-    // `onChallenge` quando uma challenge é realmente necessária.
+  const authenticate = async (threeDSecure: ThreeDSecureInit): Promise<ThreeDSecureResult> => {
+    // O SDK carrega o restante dos dados pela API e conduz o fluxo inteiro
+    // (desafio + complete + polling).
     const sdk = new PayConductor3DSSDK(threeDSecure);
     handler = sdk;
     try {
@@ -22,7 +25,10 @@ export function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn {
         onChallenge: options?.onChallenge,
         onComplete: options?.onComplete,
         onError: options?.onError,
-        onTimeout: options?.onTimeout
+        onTimeout: options?.onTimeout,
+        complete: options?.complete,
+        poll: options?.poll,
+        polling: options?.polling
       });
     } finally {
       sdk.destroy();
@@ -34,7 +40,7 @@ export function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn {
     handler = null;
   };
   return {
-    handleChallenge,
+    authenticate,
     destroy
   };
 }

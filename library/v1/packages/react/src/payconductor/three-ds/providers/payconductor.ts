@@ -23,7 +23,6 @@ export class PayConductorThreeDSProvider extends AbstractThreeDSProvider {
     return new Promise<ThreeDSecureResult>(resolve => {
       this.timeoutId = setTimeout(() => {
         this.cleanup();
-        this.options.onTimeout?.();
         resolve({
           status: ThreeDSecureResultStatus.Timeout
         });
@@ -31,7 +30,6 @@ export class PayConductorThreeDSProvider extends AbstractThreeDSProvider {
       const sdk = new KrAuthenticate(publicKey);
       sdk.authenticate(operationUrl, () => {
         this.cleanup();
-        this.options.onComplete?.();
         resolve({
           status: ThreeDSecureResultStatus.Success
         });

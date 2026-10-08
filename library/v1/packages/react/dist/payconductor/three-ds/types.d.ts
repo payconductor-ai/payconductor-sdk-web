@@ -1,10 +1,12 @@
-import { IntegrationProvider, OrganizationEnvironment } from '../iframe/types';
+import { IntegrationProvider, OrganizationEnvironment, PaymentResult } from '../iframe/types';
 
 export type ThreeDSecureData = {
     orderId: string;
     publicKey: string;
     status?: string;
     statusDetail?: string;
+    /** Modo do 3DS resolvido pelo backend. Uso interno do SDK. */
+    mode?: ThreeDSMode;
     acquirer?: IntegrationProvider | "PayConductor" | string;
     environment?: OrganizationEnvironment;
     authToken?: string;
@@ -15,9 +17,11 @@ export type ThreeDSecureData = {
     version?: string;
     card?: {
         number: string;
-        expMonth: string;
-        expYear: string;
         holderName: string;
+        expiration: {
+            month: number;
+            year: number;
+        };
     };
     customer?: {
         name: string;
@@ -51,14 +55,12 @@ export type ThreeDSecureData = {
  * pela API através do `orderId` ao chamar `authenticate`.
  */
 export type ThreeDSecureInit = Pick<ThreeDSecureData, "orderId" | "publicKey" | "card">;
-export type ThreeDSecureOptions = {
-    threeDSecure: ThreeDSecureData;
-    onChallenge?: () => void;
-    onComplete?: () => void;
-    onError?: (error: Error) => void;
-    onTimeout?: () => void;
-    timeoutMs?: number;
-};
+/** Modo de condução do desafio 3DS, resolvido pelo backend. */
+export declare enum ThreeDSMode {
+    Auto = "Auto",
+    Manual = "Manual",
+    Agnostic = "Agnostic"
+}
 export declare enum ThreeDSecureResultStatus {
     Success = "Success",
     Failed = "Failed",
@@ -73,14 +75,53 @@ export declare enum ThreeDSTransStatus {
     Rejected = "R",
     InformationOnly = "I"
 }
-export type ThreeDSecureResult = {
-    status: ThreeDSecureResultStatus;
-    error?: Error;
-    authToken?: string;
-    dsTransactionId?: string;
+/** Corpo de `POST /api/v1/sdk/three-ds/complete/:orderId`. */
+export type ThreeDSecureCompletionPayload = {
     providerTransactionId?: string;
     transStatus?: ThreeDSTransStatus;
     challengeCanceled?: boolean;
+    failureReason?: string;
+};
+/** Resultado normalizado do desafio, independente do provedor. */
+export type ThreeDSecureChallengeOutcome = {
+    status: ThreeDSecureResultStatus;
+    error?: Error;
+    /** Mensagem amigável (pt-BR) da falha do desafio. Ausente em sucesso. */
+    failureReason?: string;
+    /** `transStatus` bruto do emissor (EMVCo), quando o provedor devolver. */
+    transStatus?: ThreeDSTransStatus;
+    /** Identificador da transação no provedor/adquirente (fallback de `dsTransactionId`). */
+    providerTransactionId?: string;
+    /** O portador fechou/cancelou o desafio. */
+    challengeCanceled?: boolean;
+    /** Mantido para o fallback de `providerTransactionId` e uso interno dos provedores. */
+    dsTransactionId?: string;
+    authToken?: string;
+};
+export type ThreeDSecurePollingOptions = {
+    /** Default: 30 */
+    maxAttempts?: number;
+    /** Default: 2000 */
+    intervalMs?: number;
+};
+export type ThreeDSecureResult = ThreeDSecureChallengeOutcome & {
+    /** Último status conhecido do pedido. Presente quando `poll` (ou `complete`) rodou. */
+    order?: PaymentResult;
+    /** `true` quando o polling esgotou as tentativas sem sair de `ThreeDsAwaitingChallenge`. */
+    timedOut?: boolean;
+};
+export type ThreeDSecureOptions = {
+    threeDSecure: ThreeDSecureData;
+    onChallenge?: () => void;
+    onComplete?: (result: ThreeDSecureResult) => void;
+    onError?: (error: Error) => void;
+    onTimeout?: () => void;
+    timeoutMs?: number;
+    /** Envia o resultado ao backend (`POST /three-ds/complete/:orderId`). Default: `true`. */
+    complete?: boolean;
+    /** Faz polling de `GET /orders/:id/status`. Default: `true`. */
+    poll?: boolean;
+    polling?: ThreeDSecurePollingOptions;
 };
 export declare abstract class AbstractThreeDSProvider {
     protected readonly data: ThreeDSecureData;

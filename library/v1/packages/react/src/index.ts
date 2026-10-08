@@ -6,7 +6,7 @@ export * from './payconductor/types';
 export * from './payconductor/constants';
 export * from './payconductor/utils';
 export * from './payconductor/hooks';
-export { PayConductor3DSSDK, ThreeDSecureResultStatus, ThreeDSTransStatus } from './payconductor/three-ds';
-export type { ThreeDSecureData, ThreeDSecureInit, ThreeDSecureResult } from './payconductor/three-ds';
+export { PayConductor3DSSDK, ThreeDSMode, ThreeDSecureResultStatus, ThreeDSTransStatus } from './payconductor/three-ds';
+export type { ThreeDSecureData, ThreeDSecureInit, ThreeDSecureResult, ThreeDSecureChallengeOutcome, ThreeDSecureCompletionPayload, ThreeDSecurePollingOptions, ThreeDSecureOptions } from './payconductor/three-ds';
 export { PayConductorTokenizerSDK } from './payconductor/tokenizer';
 export { loadScript } from './payconductor/loader'

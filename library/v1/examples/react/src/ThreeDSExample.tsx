@@ -1,4 +1,4 @@
-import { useThreeDS } from "@payconductor/react";
+import { PayConductor3DSSDK, useThreeDS } from "@payconductor/react";
 import {
 	Configuration,
 	DocumentType,
@@ -85,9 +85,9 @@ export function ThreeDSExample() {
 
 	const log = (msg: string) => setLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ${msg}`]);
 
-	const { handleChallenge } = useThreeDS({
+	const { authenticate } = useThreeDS({
 		onChallenge: () => log("3DS challenge started"),
-		onComplete: () => log("3DS challenge completed"),
+		onComplete: (result) => log(`3DS finalizado: order=${result.order?.status ?? "-"}`),
 		onError: (err) => log(`3DS error: ${err.message}`),
 		onTimeout: () => log("3DS challenge timed out"),
 	});
@@ -134,34 +134,28 @@ export function ThreeDSExample() {
 			const statusDetail = data.statusDetail;
 			const threeDSecure = data.threeDSecure;
 
-			const needs3DS =
-				statusDetail === "ThreeDsAwaitingChallenge" ||
-				threeDSecure?.status === "NeedChallenge";
-
-			if (!needs3DS) {
+			if (!PayConductor3DSSDK.requiresChallenge(data)) {
 				log(`No 3DS needed. Order status: ${data.status}`);
 				setChallengeResult(data.status);
 				setStep("done");
 				return;
 			}
 
-			log(`3DS required. Acquirer: ${threeDSecure?.acquirer ?? "PayConductor (inferred)"}`);
+			log(`3DS required. Acquirer: ${threeDSecure?.acquirer ?? "PayConductor (inferred)"} | statusDetail: ${statusDetail ?? "-"}`);
 			setStep("challenging");
 
-			// O SDK recebe apenas os dados resumidos; o restante é carregado
-			// internamente pelo endpoint /three-ds/challenge/{orderId}.
-			const result = await handleChallenge({
+			// O SDK conduz o fluxo inteiro: carrega os dados, faz o desafio,
+			// envia o `complete` (só no modo Manual) e faz o polling do pedido.
+			const result = await authenticate({
 				orderId: data.id,
 				publicKey: import.meta.env.VITE_PAYCONDUCTOR_CLIENT_ID || "your_client_id",
 			});
 
 			log(`3DS result: ${result.status}`);
-			setChallengeResult(result.status);
+			log(`Order status: ${result.order?.status ?? "-"}${result.timedOut ? " (polling timeout)" : ""}`);
+			if (result.failureReason) log(`Failure: ${result.failureReason}`);
 
-			if (result.status === "Success") {
-				log("3DS concluido. Servidor esta processando o pagamento automaticamente.");
-			}
-
+			setChallengeResult(result.order?.status ?? result.status);
 			setStep("done");
 		} catch (err) {
 			const msg = err instanceof Error ? err.message : "Unknown error";
@@ -276,9 +270,9 @@ export function ThreeDSExample() {
 
 				{challengeResult && (
 					<ResultBox
-						color={challengeResult === "Success" || challengeResult === "Completed" ? "#16a34a" : "#dc2626"}
-						bg={challengeResult === "Success" || challengeResult === "Completed" ? "#f0fdf4" : "#fef2f2"}
-						border={challengeResult === "Success" || challengeResult === "Completed" ? "#bbf7d0" : "#fecaca"}
+						color={challengeResult === "succeeded" || challengeResult === "Success" || challengeResult === "Completed" ? "#16a34a" : "#dc2626"}
+						bg={challengeResult === "succeeded" || challengeResult === "Success" || challengeResult === "Completed" ? "#f0fdf4" : "#fef2f2"}
+						border={challengeResult === "succeeded" || challengeResult === "Success" || challengeResult === "Completed" ? "#bbf7d0" : "#fecaca"}
 						label="3DS Result"
 						lines={[["Status", challengeResult]]}
 					/>

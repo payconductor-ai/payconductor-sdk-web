@@ -13,7 +13,6 @@ export class SandboxThreeDSProvider extends AbstractThreeDSProvider {
     return new Promise<ThreeDSecureResult>(resolve => {
       this.timeoutId = setTimeout(() => {
         this.cleanup();
-        this.options.onTimeout?.();
         resolve({
           status: ThreeDSecureResultStatus.Timeout
         });
@@ -21,7 +20,6 @@ export class SandboxThreeDSProvider extends AbstractThreeDSProvider {
       this.renderChallenge(container, {
         onConfirm: () => {
           this.cleanup();
-          this.options.onComplete?.();
           resolve({
             status: ThreeDSecureResultStatus.Success,
             transStatus: ThreeDSTransStatus.Authenticated,

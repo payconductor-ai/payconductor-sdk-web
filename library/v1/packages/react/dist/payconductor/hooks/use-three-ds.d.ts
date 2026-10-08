@@ -1,13 +1,16 @@
-import { ThreeDSecureInit, ThreeDSecureResult } from '../three-ds/types';
+import { ThreeDSecureInit, ThreeDSecurePollingOptions, ThreeDSecureResult } from '../three-ds/types';
 
 export type UseThreeDSOptions = {
     onChallenge?: () => void;
-    onComplete?: () => void;
+    onComplete?: (result: ThreeDSecureResult) => void;
     onError?: (error: Error) => void;
     onTimeout?: () => void;
+    complete?: boolean;
+    poll?: boolean;
+    polling?: ThreeDSecurePollingOptions;
 };
 export type UseThreeDSReturn = {
-    handleChallenge: (threeDSecure: ThreeDSecureInit) => Promise<ThreeDSecureResult>;
+    authenticate: (threeDSecure: ThreeDSecureInit) => Promise<ThreeDSecureResult>;
     destroy: () => void;
 };
 export declare function useThreeDS(options?: UseThreeDSOptions): UseThreeDSReturn;
