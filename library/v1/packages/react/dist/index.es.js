@@ -97,7 +97,7 @@ function be(e) {
 function Pe() {
   return crypto.randomUUID();
 }
-function Ce(e, a) {
+function Se(e, a) {
   return a.some((t) => {
     try {
       return new URL(t).origin === e;
@@ -136,11 +136,11 @@ function x(e, a, t, n) {
     }, we);
   });
 }
-function Se(e, a, t) {
+function Ce(e, a, t) {
   return x(e, a, p.CONFIRM_PAYMENT, t);
 }
 async function Ae(e, a, t) {
-  return await Se(e, a, {
+  return await Ce(e, a, {
     orderId: t.orderId
   });
 }
@@ -161,7 +161,7 @@ function xe(e, a, t, n, i, r, s, d, o, c, w, E) {
     requestId: f,
     type: u,
     data: g,
-    error: S
+    error: C
   } = m;
   if (u === p.READY) {
     if (n == null || n(), f && (a != null && a.has(f))) {
@@ -172,17 +172,17 @@ function xe(e, a, t, n, i, r, s, d, o, c, w, E) {
     }
     return;
   }
-  if (Ce(e.origin, ge)) {
+  if (Se(e.origin, ge)) {
     if (f && a && a.has(f)) {
       const {
         resolve: A,
         reject: O
       } = a.get(f);
-      a.delete(f), S ? O(new Error(String(S.message))) : A(g);
+      a.delete(f), C ? O(new Error(String(C.message))) : A(g);
       return;
     }
     if (u === p.ERROR) {
-      t((S == null ? void 0 : S.message) || "Unknown error"), i == null || i(new Error(String(S == null ? void 0 : S.message)));
+      t((C == null ? void 0 : C.message) || "Unknown error"), i == null || i(new Error(String(C == null ? void 0 : C.message)));
       return;
     }
     if (u === p.PAYMENT_COMPLETE) {
@@ -234,8 +234,8 @@ function rt(e) {
     let m = !1;
     c("init", e.publicKey), c("iframeUrl", w);
     const f = () => {
-      var C, l;
-      const h = (l = (C = window.PayConductor) == null ? void 0 : C.frame) == null ? void 0 : l.iframe;
+      var S, l;
+      const h = (l = (S = window.PayConductor) == null ? void 0 : S.frame) == null ? void 0 : l.iframe;
       if (h) {
         if (h instanceof HTMLIFrameElement) return h;
         if (typeof h == "object" && h !== null) {
@@ -266,14 +266,14 @@ function rt(e) {
       locale: e.locale,
       paymentMethods: e.paymentMethods,
       defaultPaymentMethod: e.defaultPaymentMethod
-    }, S = {
+    }, C = {
       confirmPayment: (h) => {
         var l;
         c("→ CONFIRM_PAYMENT", {
           orderId: h.orderId
         });
-        const C = f();
-        return C != null && C.contentWindow && C.contentWindow.postMessage(
+        const S = f();
+        return S != null && S.contentWindow && S.contentWindow.postMessage(
           {
             type: p.CONFIG,
             data: {
@@ -288,7 +288,7 @@ function rt(e) {
             }
           },
           "*"
-        ), g.orderId = h.orderId, (l = window.PayConductor) != null && l.config && (window.PayConductor.config.orderId = h.orderId), Ae(C, E, h);
+        ), g.orderId = h.orderId, (l = window.PayConductor) != null && l.config && (window.PayConductor.config.orderId = h.orderId), Ae(S, E, h);
       },
       validate: (h) => (c("→ VALIDATE", h), Te(f(), E, h)),
       reset: () => (c("→ RESET"), ve(f(), E)),
@@ -297,7 +297,7 @@ function rt(e) {
     window.PayConductor = {
       frame: u,
       config: g,
-      api: S,
+      api: C,
       selectedPaymentMethod: d
     }, c("registered"), window.dispatchEvent(
       new CustomEvent("payconductor:registered", {
@@ -327,8 +327,8 @@ function rt(e) {
         });
       }
     }, O = (h) => {
-      var C;
-      (C = h.data) != null && C.type && c("←", h.data.type, h.data.data ?? ""), xe(
+      var S;
+      (S = h.data) != null && S.type && c("←", h.data.type, h.data.data ?? ""), xe(
         h,
         E,
         (l) => {
@@ -375,11 +375,11 @@ function rt(e) {
     };
     window.addEventListener("message", O);
     const J = () => {
-      var C, l, y;
+      var S, l, y;
       const h = f();
       if (!h) return !1;
       try {
-        if ((((C = h.contentDocument) == null ? void 0 : C.readyState) ?? ((y = (l = h.contentWindow) == null ? void 0 : l.document) == null ? void 0 : y.readyState)) === "complete")
+        if ((((S = h.contentDocument) == null ? void 0 : S.readyState) ?? ((y = (l = h.contentWindow) == null ? void 0 : l.document) == null ? void 0 : y.readyState)) === "complete")
           return A(), !0;
       } catch {
       }
@@ -430,8 +430,8 @@ function ot(e) {
     }
     let w = !1;
     const E = (m) => {
-      var f, u, g, S;
-      if (((f = m.data) == null ? void 0 : f.type) === p.RESIZE && ((g = (u = m.data) == null ? void 0 : u.data) != null && g.height) && d(m.data.data.height + "px"), ((S = m.data) == null ? void 0 : S.type) === p.READY && e.height && !w) {
+      var f, u, g, C;
+      if (((f = m.data) == null ? void 0 : f.type) === p.RESIZE && ((g = (u = m.data) == null ? void 0 : u.data) != null && g.height) && d(m.data.data.height + "px"), ((C = m.data) == null ? void 0 : C.type) === p.READY && e.height && !w) {
         w = !0;
         const A = document.querySelector(
           ".payconductor-element iframe"
@@ -1102,7 +1102,7 @@ class Ye {
     });
     t.ok || await this.parseResponseError("Failed to fetch 3DS data", t);
     const n = await t.json();
-    return Object.fromEntries(Object.entries(n).filter(([, i]) => i != null));
+    return Object.fromEntries(Object.entries(n.threeDSecure).filter(([, i]) => i != null));
   }
   async parseResponseError(a, t) {
     var i, r, s, d;
@@ -1391,7 +1391,7 @@ export {
   rt as default,
   at as defaultTheme,
   Pe as generateRequestId,
-  Ce as isValidOrigin,
+  Se as isValidOrigin,
   L as loadScript,
   dt as usePayConductor,
   ct as usePayconductorElement,
