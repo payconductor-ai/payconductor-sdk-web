@@ -21,6 +21,5 @@ export declare class PayConductorTokenizerApi {
     }>;
     saveTokens(data: SaveTokensBody[], customerId: string, cardToken: string): Promise<void>;
     private parseResponseError;
-    private get baseUrl();
     private get headers();
 }

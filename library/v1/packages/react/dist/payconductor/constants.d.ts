@@ -1,6 +1,7 @@
 import { IncomingMessage, OutgoingMessage } from './iframe/types';
 
 export declare const IFRAME_BASE_URL: string;
+export declare const SDK_API_BASE_URL: string;
 export declare const ALLOWED_ORIGINS: string[];
 export declare const IFRAME_DEFAULT_HEIGHT_VALUE = "600px";
 export declare const REQUEST_TIMEOUT = 300000;
