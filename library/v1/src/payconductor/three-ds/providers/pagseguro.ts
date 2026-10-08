@@ -51,8 +51,8 @@ export class PagSeguroThreeDSProvider extends AbstractThreeDSProvider {
 						installments: this.data.installments ?? 1,
 						card: {
 							number: card.number,
-							expMonth: card.expMonth,
-							expYear: card.expYear,
+							expMonth: card.expiration.month,
+							expYear: card.expiration.year,
 							holder: { name: card.holderName },
 						},
 					},
@@ -71,7 +71,6 @@ export class PagSeguroThreeDSProvider extends AbstractThreeDSProvider {
 			});
 
 			if (result.status === "AUTH_FLOW_COMPLETED" || result.status === "AUTH_NOT_SUPPORTED") {
-				this.options.onComplete?.();
 				return { status: ThreeDSecureResultStatus.Success, dsTransactionId: result.id };
 			}
 

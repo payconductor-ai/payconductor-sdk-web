@@ -26,7 +26,6 @@ export class MercadoPagoThreeDSProvider extends AbstractThreeDSProvider {
 			this.messageListener = (event: MessageEvent) => {
 				if (event.data?.status === "COMPLETE") {
 					this.cleanup();
-					this.options.onComplete?.();
 					resolve({ status: ThreeDSecureResultStatus.Success });
 				}
 			};
@@ -34,7 +33,6 @@ export class MercadoPagoThreeDSProvider extends AbstractThreeDSProvider {
 
 			this.timeoutId = setTimeout(() => {
 				this.cleanup();
-				this.options.onTimeout?.();
 				resolve({ status: ThreeDSecureResultStatus.Timeout });
 			}, this.options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
 

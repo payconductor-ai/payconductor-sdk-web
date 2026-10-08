@@ -49,7 +49,6 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 		return new Promise<ThreeDSecureResult>((resolve) => {
 			this.timeoutId = setTimeout(() => {
 				this.cleanup();
-				this.options.onTimeout?.();
 				resolve({ status: ThreeDSecureResultStatus.Timeout });
 			}, this.options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
 
@@ -88,7 +87,6 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 					transStatus === ThreeDSTransStatus.Authenticated ||
 					transStatus === ThreeDSTransStatus.Attempted
 				) {
-					this.options.onComplete?.();
 					resolve({
 						...details,
 						status: ThreeDSecureResultStatus.Success,
@@ -120,8 +118,8 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
 					card: {
 						number: card?.number,
 						holder_name: card?.holderName,
-						exp_month: Number(card?.expMonth),
-						exp_year: Number(card?.expYear),
+							exp_month: Number(card?.expiration.month),
+							exp_year: Number(card?.expiration.year),
 						billing_address: billingAddress ? {
 							country: billingAddress.country,
 							state: billingAddress.state,

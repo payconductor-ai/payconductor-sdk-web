@@ -53,8 +53,8 @@ interface PagSeguroAuthRequest {
 			installments: number;
 			card: {
 				number: string;
-				expMonth: string;
-				expYear: string;
+				expMonth: number;
+				expYear: number;
 				holder: { name: string };
 			};
 		};

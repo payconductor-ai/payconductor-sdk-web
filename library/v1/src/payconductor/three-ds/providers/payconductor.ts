@@ -24,7 +24,6 @@ export class PayConductorThreeDSProvider extends AbstractThreeDSProvider {
 		return new Promise<ThreeDSecureResult>((resolve) => {
 			this.timeoutId = setTimeout(() => {
 				this.cleanup();
-				this.options.onTimeout?.();
 				resolve({ status: ThreeDSecureResultStatus.Timeout });
 			}, this.options.timeoutMs ?? TIMEOUT_MS);
 
@@ -32,7 +31,6 @@ export class PayConductorThreeDSProvider extends AbstractThreeDSProvider {
 
 			sdk.authenticate(operationUrl, () => {
 				this.cleanup();
-				this.options.onComplete?.();
 				resolve({ status: ThreeDSecureResultStatus.Success });
 			});
 		});

@@ -1,6 +1,6 @@
 // PayConductor Shared Types
 // Served statically at iframe.payconductor.ai/types.ts
-// Used by the iFrame (imported directly) and the SDK Web (synced with: bun sync)
+// Used by the iFrame (imported directly) and the SDK Web (synced with bun sync)
 
 export enum PaymentMethod {
 	Pix = "Pix",
@@ -14,6 +14,17 @@ export enum PaymentMethod {
 	AmazonPay = "AmazonPay",
 	SepaDebit = "SepaDebit",
 	GooglePay = "GooglePay",
+	Spei = "Spei",
+}
+
+export enum CryptoNetwork {
+	Ethereum = "ETH",
+	Tron = "TRX",
+	Polygon = "MATIC",
+	Ton = "TON",
+	Solana = "SOL",
+	Bitcoin = "BTC",
+	BinanceSmartChain = "BSC",
 }
 
 export enum PaymentMethodLayout {
@@ -48,6 +59,18 @@ export enum ThreeDSResultStatus {
 export enum DocumentType {
 	Cpf = "Cpf",
 	Cnpj = "Cnpj",
+
+	Ssn = "Ssn",
+	Nif = "Nif",
+	Dni = "Dni",
+	Sin = "Sin",
+	Nid = "Nid",
+	Cf = "Cf",
+	SteuerId = "SteuerId",
+	Cic = "Cic",
+	Id = "Id",
+	Ci = "Ci",
+	Passport = "Passport",
 }
 
 export enum IntegrationProvider {
@@ -71,7 +94,6 @@ export enum IntegrationProvider {
 	Avantti = "Avantti",
 	MonsterGateway = "MonsterGateway",
 	SAC = "SAC",
-	Lyra = "Lyra",
 }
 
 export enum CardBrand {
@@ -106,6 +128,8 @@ export enum CurrencyType {
 	GBP = "GBP",
 	JPY = "JPY",
 	MXN = "MXN",
+	CLP = "CLP",
+	PEN = "PEN",
 	MZN = "MZN",
 	CNY = "CNY",
 	SAR = "SAR",
@@ -196,8 +220,6 @@ export type PaymentMethodsWalletsConfig = {
 		merchantName: string;
 	};
 	applePay?: {
-		gateway: string;
-		merchantId: string;
 		merchantName: string;
 	};
 };
@@ -205,7 +227,21 @@ export type PaymentMethodsWalletsConfig = {
 export type PaymentMethodsResponse = {
 	methods: PaymentMethod[];
 	wallets: PaymentMethodsWalletsConfig;
-	config: PaymentMethodsConfig;
+};
+
+export type ApplePayMerchantValidationResponse = {
+	session: {
+		epochTimestamp: number;
+		expiresAt: number;
+		merchantSessionIdentifier: string;
+		nonce: string;
+		merchantIdentifier: string;
+		domainName: string;
+		displayName: string;
+		signature: string;
+		operationalAnalyticsIdentifier: string;
+		// Pode conter outros campos, Apple não documenta todos
+	};
 };
 
 export type PayConductorTheme = {
@@ -308,6 +344,7 @@ export const defaultTheme: PayConductorTheme = {
 
 export type PayConductorConfig = {
 	publicKey: string;
+	merchantId?: string;
 	theme?: PayConductorTheme;
 	locale?: string;
 	paymentMethods?: PaymentMethod[] | "all";
@@ -318,7 +355,6 @@ export type PayConductorConfig = {
 	height?: string;
 	/** Required when NuPay is an available payment method */
 	nuPayConfig?: NuPayData;
-	orderId?: string;
 };
 
 export type BillingDetails = {
@@ -393,7 +429,106 @@ export type ThreeDSecureExternalInput = {
 
 export type ThreeDSecureInput = ThreeDSecureInternalInput | ThreeDSecureExternalInput;
 
+// ---------- Payment Result ----------
+// Espelha `orderConfirmedResponseModel` do servidor de forma autossuficiente,
+// sem importar de `@server/models`, mantendo compatibilidade com
+// `OrderConfirmedResponseSerialized`.
+
+export type TransactionParty = {
+	name: string | null;
+	document: string | null;
+	bankIspb: string | null;
+	bankAccount: string | null;
+	bankBranch: string | null;
+	bankName: string | null;
+};
+
+export type ThreeDSecureCustomer = {
+	name: string;
+	email: string;
+	document?: string;
+	phones?: { countryCode: string; areaCode: string; number: string }[];
+};
+
+export type ThreeDSecureBillingAddress = {
+	street: string;
+	number: string;
+	complement?: string;
+	district?: string;
+	city: string;
+	state: string;
+	country: string;
+	zipCode: string;
+};
+
+export type ThreeDSecureOrderResponse = {
+	authToken?: string;
+	threeDsUrl?: string;
+	creq?: string;
+	dsTransactionId?: string;
+	version?: string;
+	status: ThreeDsAuthenticationStatus | string;
+	acquirer?: IntegrationProvider | "PayConductor" | string;
+	operationUrl?: string;
+	publicKey?: string;
+	environment?: OrganizationEnvironment | string;
+	customer?: ThreeDSecureCustomer;
+	amount?: number;
+	currency?: CurrencyType | string;
+	installments?: number;
+	billingAddress?: ThreeDSecureBillingAddress;
+};
+
+export type PixInfo = {
+	copyAndPasteCode: string;
+	qrCodeUrl: string;
+	endToEndId: string | null;
+	payer: TransactionParty | null;
+	receiver: TransactionParty | null;
+};
+
+export type CreditCardInfo = {
+	authorizationCode?: string;
+	threeDSecure?: ThreeDSecureOrderResponse;
+	cardToken?: string | null;
+};
+
+export type BankSlipInfo = {
+	barCode: string;
+	digitableLine: string;
+	pdfUrl?: string;
+	emvCode?: string;
+};
+
+export type NuPayInfo = {
+	paymentUrl: string;
+};
+
+export type PicPayInfo = {
+	copyAndPasteCode: string;
+	qrCodeUrl: string;
+};
+
+export type CryptoInfo = {
+	address: string;
+	qrCodePayload: string | null;
+};
+
+export type SpeiInfo = {
+	clabe: string;
+	bankName: string | null;
+	beneficiaryName: string | null;
+	reference: string | null;
+};
+
 export type PaymentResult = {
+	pix?: PixInfo;
+	creditCard?: CreditCardInfo;
+	bankSlip?: BankSlipInfo;
+	nuPay?: NuPayInfo;
+	picPay?: PicPayInfo;
+	crypto?: CryptoInfo;
+	spei?: SpeiInfo;
 	orderId: string;
 	status: PaymentStatus;
 	statusDetail?: ChargeStatusDetail | string;
@@ -402,48 +537,6 @@ export type PaymentResult = {
 	message?: string;
 	errorCode?: string;
 	errorMessage?: string;
-	threeDSecure?: {
-		status: ThreeDsAuthenticationStatus | string;
-		acquirer?: IntegrationProvider | "PayConductor" | string;
-		environment?: OrganizationEnvironment;
-		authToken?: string;
-		threeDsUrl?: string;
-		creq?: string;
-		operationUrl?: string;
-		publicKey?: string;
-		dsTransactionId?: string;
-		version?: string;
-		card?: {
-			number: string;
-			expMonth: string;
-			expYear: string;
-			holderName: string;
-		};
-		customer?: {
-			name: string;
-			email: string;
-			document?: string;
-			phones?: Array<{
-				countryCode: string;
-				areaCode: string;
-				number: string;
-				type?: string;
-			}>;
-		};
-		amount?: number;
-		currency?: string;
-		installments?: number;
-		billingAddress?: {
-			street: string;
-			number: string;
-			complement?: string;
-			district?: string;
-			state: string;
-			country: string;
-			city: string;
-			zipCode: string;
-		};
-	};
 };
 
 export interface MessagePayload {
@@ -508,6 +601,16 @@ export type PicPayPaymentData = {
 	paymentMethod: PaymentMethod.PicPay;
 };
 
+export type CryptoPaymentData = {
+	paymentMethod: PaymentMethod.Crypto;
+	network: CryptoNetwork;
+};
+
+export type SpeiPaymentData = {
+	paymentMethod: PaymentMethod.Spei;
+	expirationInSeconds?: number;
+};
+
 export type GooglePayToken = {
 	signature: string;
 	intermediateSigningKey: {
@@ -564,5 +667,7 @@ export type PaymentConfirmData =
 	| BankSlipPaymentData
 	| NuPayPaymentData
 	| PicPayPaymentData
+	| CryptoPaymentData
+	| SpeiPaymentData
 	| GooglePayPaymentData
 	| ApplePayPaymentData;
