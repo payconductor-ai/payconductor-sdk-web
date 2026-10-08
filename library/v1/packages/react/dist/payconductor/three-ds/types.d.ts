@@ -50,7 +50,7 @@ export type ThreeDSecureData = {
  * O restante (status, acquirer, authToken, card, etc.) é obtido
  * pela API através do `orderId` ao chamar `authenticate`.
  */
-export type ThreeDSecureInit = Pick<ThreeDSecureData, "orderId" | "publicKey">;
+export type ThreeDSecureInit = Pick<ThreeDSecureData, "orderId" | "publicKey" | "card">;
 export type ThreeDSecureOptions = {
     threeDSecure: ThreeDSecureData;
     onChallenge?: () => void;
