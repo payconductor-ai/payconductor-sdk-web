@@ -4,12 +4,7 @@
 module.exports = {
   "files": "src/**",
   "targets": [
-    "react",
-    "svelte",
-    "qwik",
-    "vue",
-    "angular",
-    "solid",
+    "react"
   ],
   "dest": "packages",
   "commonOptions": {
