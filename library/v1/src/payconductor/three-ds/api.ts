@@ -31,12 +31,12 @@ export class PayConductorThreeDSApi {
 			headers: this.headers,
 		});
 		if (!res.ok) await this.parseResponseError("Failed to fetch 3DS data", res);
-		const json = (await res.json()) as ThreeDSecureData;
+		const json = (await res.json()) as { threeDSecure: ThreeDSecureData };
 
 		// Remove chaves nulas/indefinidas para que não sobrescrevam os dados
 		// resumidos já informados na instância do SDK (ex.: publicKey).
 		return Object.fromEntries(
-			Object.entries(json).filter(([, value]) => value !== null && value !== undefined),
+			Object.entries(json.threeDSecure).filter(([, value]) => value !== null && value !== undefined),
 		) as ThreeDSecureData;
 	}
 
