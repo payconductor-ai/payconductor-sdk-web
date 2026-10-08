@@ -419,6 +419,70 @@ const theme = {
 };
 ```
 
+## 3D Secure (3DS)
+
+Headless 3DS authentication. A single `authenticate()` call drives the whole flow: it loads the
+challenge data, resolves the acquirer, runs the challenge, sends the completion to the backend
+(only for the native `Manual` mode) and polls the order until it settles.
+
+```ts
+import { PayConductor3DSSDK } from '@payconductor/react';
+
+// Vanilla / any framework
+const sdk = new PayConductor3DSSDK({ orderId, publicKey, card });
+const result = await sdk.authenticate();
+sdk.destroy();
+
+result.status;          // 'Success' | 'Failed' | 'Timeout'
+result.order?.status;   // 'succeeded' | 'pending' | 'failed'
+result.failureReason;   // friendly pt-BR message when the challenge fails
+```
+
+```tsx
+// React
+import { useThreeDS } from '@payconductor/react';
+
+const { authenticate } = useThreeDS({ onError: (err) => console.error(err) });
+const result = await authenticate({ orderId, publicKey });
+```
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `onChallenge` | `() => void` | — | Called right before the challenge is rendered |
+| `onComplete` | `(result: ThreeDSecureResult) => void` | — | Called when the flow finishes |
+| `onError` | `(error: Error) => void` | — | Called when there is a `failureReason` |
+| `onTimeout` | `() => void` | — | Called on challenge or polling timeout |
+| `complete` | `boolean` | `true` | Send the result to `POST /three-ds/complete/:orderId` |
+| `poll` | `boolean` | `true` | Poll `GET /orders/:id/status` until the order settles |
+| `polling` | `{ maxAttempts?: number; intervalMs?: number }` | `{ 30, 2000 }` | Polling tuning |
+
+### Result
+
+| Field | Description |
+|-------|-------------|
+| `status` | Challenge outcome: `Success`, `Failed` or `Timeout` |
+| `failureReason` | Friendly pt-BR message, present only on failure |
+| `order` | Last known order status (present when `poll` runs) |
+| `timedOut` | `true` when polling exhausted its attempts |
+
+> The SDK handles the three 3DS modes internally (`Manual`, `Agnostic`, `Auto`). Only the native
+> `Manual` mode has a pending backend request and therefore sends `complete`; in `Auto`
+> (MercadoPago) and `Agnostic` (Lyra) the order settles via the provider webhook. Integrators never
+> branch on the mode.
+
+### Helpers
+
+```ts
+import { PayConductor3DSSDK } from '@payconductor/react';
+
+// Check whether an order still needs a 3DS challenge
+if (PayConductor3DSSDK.requiresChallenge(order)) {
+  await authenticate({ orderId: order.id, publicKey });
+}
+```
+
 ## Supported Frameworks
 
 | Framework | Package |
