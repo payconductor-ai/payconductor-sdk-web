@@ -346,6 +346,7 @@ export const defaultTheme: PayConductorTheme = {
 export type PayConductorConfig = {
 	publicKey: string;
 	merchantId?: string;
+	orderId?: string;
 	theme?: PayConductorTheme;
 	locale?: string;
 	paymentMethods?: PaymentMethod[] | "all";

@@ -112,16 +112,16 @@ export type ThreeDSecureResult = ThreeDSecureChallengeOutcome & {
 };
 export type ThreeDSecureOptions = {
     threeDSecure: ThreeDSecureData;
-    onChallenge?: () => void;
-    onComplete?: (result: ThreeDSecureResult) => void;
-    onError?: (error: Error) => void;
-    onTimeout?: () => void;
     timeoutMs?: number;
     /** Envia o resultado ao backend (`POST /three-ds/complete/:orderId`). Default: `true`. */
     complete?: boolean;
     /** Faz polling de `GET /orders/:id/status`. Default: `true`. */
     poll?: boolean;
     polling?: ThreeDSecurePollingOptions;
+    onChallenge?: () => void;
+    onComplete?: (result: ThreeDSecureResult) => void;
+    onError?: (error: Error) => void;
+    onTimeout?: () => void;
 };
 export declare abstract class AbstractThreeDSProvider {
     protected readonly data: ThreeDSecureData;

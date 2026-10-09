@@ -1,5 +1,5 @@
-export declare const APP_BASE_URL_PROD = "https://app.payconductor.ai";
-export declare const APP_BASE_URL_DEV = "http://localhost:3000";
+export declare const API_BASE_URL_PROD = "https://app.payconductor.ai/api/v1";
+export declare const API_BASE_URL_DEV = "http://localhost:3000/api/v1";
 export declare const IFRAME_BASE_URL_PROD = "https://iframe.payconductor.ai/v1";
 export declare const IFRAME_BASE_URL_DEV = "http://localhost:5175/v1";
 export declare const DEFAULT_LOCALE = "pt-BR";

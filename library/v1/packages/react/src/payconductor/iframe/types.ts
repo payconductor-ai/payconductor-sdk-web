@@ -26,14 +26,14 @@ export enum CryptoNetwork {
   BinanceSmartChain = "BSC",
 }
 export enum PaymentMethodLayout {
-  Grid = "grid",
-  Vertical = "vertical",
-  Horizontal = "horizontal",
+  Grid = "Grid",
+  Vertical = "Vertical",
+  Horizontal = "Horizontal",
 }
 export enum PaymentStatus {
-  Succeeded = "succeeded",
-  Pending = "pending",
-  Failed = "failed",
+  Succeeded = "Succeeded",
+  Pending = "Pending",
+  Failed = "Failed",
 }
 export enum ChargeStatusDetail {
   ThreeDsAwaitingChallenge = "ThreeDsAwaitingChallenge",
@@ -132,18 +132,18 @@ export enum CurrencyType {
   SOL = "SOL",
 }
 export enum DeviceType {
-  Android = "android",
-  IOS = "ios",
-  Web = "web",
-  Chrome = "chrome",
-  Safari = "safari",
+  Android = "Android",
+  IOS = "Ios",
+  Web = "Web",
+  Chrome = "Chrome",
+  Safari = "Safari",
 }
 export enum InputStyleKey {
-  Padding = "padding",
-  Radius = "radius",
-  Color = "color",
-  Background = "background",
-  Shadow = "shadow",
+  Padding = "Padding",
+  Radius = "Radius",
+  Color = "Color",
+  Background = "Background",
+  Shadow = "Shadow",
 }
 export enum OutgoingMessage {
   Init = "Init",
@@ -324,6 +324,7 @@ export const defaultTheme: PayConductorTheme = {
 export type PayConductorConfig = {
   publicKey: string;
   merchantId?: string;
+  orderId?: string;
   theme?: PayConductorTheme;
   locale?: string;
   paymentMethods?: PaymentMethod[] | "all";

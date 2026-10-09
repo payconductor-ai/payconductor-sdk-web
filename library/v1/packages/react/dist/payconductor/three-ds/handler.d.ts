@@ -9,6 +9,7 @@ export declare class PayConductor3DSSDK {
     get acquirer(): string | undefined;
     /** Indica se o pedido precisa de autenticação 3DS. */
     static requiresChallenge(order: {
+        status?: string | null;
         statusDetail?: string | null;
         threeDSecure?: {
             status?: string;
