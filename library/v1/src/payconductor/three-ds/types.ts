@@ -45,6 +45,7 @@ export type ThreeDSecureData = {
 		city: string;
 		zipCode: string;
 	};
+	hasPhysicalItems?: boolean;
 };
 
 /**

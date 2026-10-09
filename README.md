@@ -438,6 +438,8 @@ result.order?.status;   // 'succeeded' | 'pending' | 'failed'
 result.failureReason;   // friendly pt-BR message when the challenge fails
 ```
 
+For Stone/Pagar.me 3DS, the backend challenge response supplies `hasPhysicalItems` and `billingAddress`; checkout does not need to pass product or shipping data in the SDK init. When `hasPhysicalItems` is `true`, the SDK uses `billingAddress` as the Stone delivery address. It requires a two-letter country code plus state, city, ZIP code, number, street and district, and fails before loading the provider SDK if the address is incomplete. When `hasPhysicalItems` is `false`, the SDK marks the delivery as electronic; if it is omitted, the SDK preserves the legacy behavior and omits shipping data.
+
 ```tsx
 // React
 import { useThreeDS } from '@payconductor/react';
