@@ -12,6 +12,7 @@ export const threeDSProviders: Partial<Record<IntegrationProvider, ThreeDSProvid
   // Acquirer-specific providers
   [IntegrationProvider.MercadoPago]: MercadoPagoThreeDSProvider,
   [IntegrationProvider.PagarMe]: PagarMeThreeDSProvider,
+  [IntegrationProvider.PagarMeSplit]: PagarMeThreeDSProvider,
   [IntegrationProvider.PagSeguro]: PagSeguroThreeDSProvider,
   [IntegrationProvider.Sandbox]: SandboxThreeDSProvider,
   [IntegrationProvider.SandboxSplit]: SandboxThreeDSProvider

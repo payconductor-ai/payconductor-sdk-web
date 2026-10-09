@@ -75,6 +75,7 @@ export enum IntegrationProvider {
   EfiBank = "EfiBank",
   BrasPag = "BrasPag",
   PagarMe = "PagarMe",
+  PagarMeSplit = "PagarMeSplit",
   BancoDoBrasil = "BancoDoBrasil",
   PagSeguro = "PagSeguro",
   Ebanx = "Ebanx",
@@ -85,6 +86,7 @@ export enum IntegrationProvider {
   Avantti = "Avantti",
   MonsterGateway = "MonsterGateway",
   SAC = "SAC",
+  Lyra = "Lyra",
 }
 export enum CardBrand {
   Visa = "Visa",
