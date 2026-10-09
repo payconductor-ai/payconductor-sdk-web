@@ -48,6 +48,7 @@ export type ThreeDSecureData = {
         city: string;
         zipCode: string;
     };
+    hasPhysicalItems?: boolean;
 };
 /**
  * Dados mínimos para instanciar o SDK de 3DS.

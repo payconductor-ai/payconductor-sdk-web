@@ -1,12 +1,28 @@
 import { loadScript } from "../../loader";
 import { AbstractThreeDSProvider, ThreeDSecureResultStatus, ThreeDSTransStatus } from "../types";
-import type { ThreeDSecureResult } from "../types";
+import type { ThreeDSecureData, ThreeDSecureResult } from "../types";
 import { OrganizationEnvironment } from "../../iframe/types";
 const SDK_URLS: Record<OrganizationEnvironment, string> = {
   [OrganizationEnvironment.Production]: `https://3ds-nx-js.stone.com.br/live/v2/3ds2.min.js`,
   [OrganizationEnvironment.Sandbox]: `https://3ds-nx-js.stone.com.br/test/v2/3ds2.min.js`
 };
 const DEFAULT_TIMEOUT_MS = 5 * 60 * 1000;
+type ThreeDSecureAddress = NonNullable<ThreeDSecureData["billingAddress"]>;
+function toStoneAddress(address: ThreeDSecureAddress) {
+  return {
+    country: address.country,
+    state: address.state,
+    city: address.city,
+    zip_code: address.zipCode,
+    line_1: `${address.number}, ${address.street}${address.district ? `, ${address.district}` : ""}`,
+    line_2: address.complement ?? ""
+  };
+}
+function hasCompleteStoneShippingAddress(address: ThreeDSecureAddress | undefined): address is ThreeDSecureAddress {
+  if (!address) return false;
+  const requiredFields: Array<keyof ThreeDSecureAddress> = ["country", "state", "city", "zipCode", "number", "street", "district"];
+  return requiredFields.every(field => address[field]?.trim()) && /^[A-Za-z]{2}$/.test(address.country.trim());
+}
 function detectWindowSize(): "01" | "02" | "03" | "04" | "05" {
   const w = window.innerWidth;
   if (w <= 480) return "01";
@@ -22,6 +38,13 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
       authToken,
       card
     } = this.data;
+    const {
+      hasPhysicalItems,
+      billingAddress
+    } = this.data;
+    if (hasPhysicalItems === true && !hasCompleteStoneShippingAddress(billingAddress)) {
+      return this.fail("Incomplete delivery address for PagarMe 3DS");
+    }
     if (!authToken) return this.fail("Missing authToken for PagarMe 3DS");
     if (!card) return this.fail("Missing card data for PagarMe 3DS");
     const env = this.data.environment ?? OrganizationEnvironment.Production;
@@ -96,7 +119,8 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
     const {
       card,
       customer,
-      billingAddress
+      billingAddress,
+      hasPhysicalItems
     } = this.data;
     return {
       payments: [{
@@ -107,14 +131,7 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
             holder_name: card?.holderName,
             exp_month: Number(card?.expiration.month),
             exp_year: Number(card?.expiration.year),
-            billing_address: billingAddress ? {
-              country: billingAddress.country,
-              state: billingAddress.state,
-              city: billingAddress.city,
-              zip_code: billingAddress.zipCode,
-              line_1: `${billingAddress.number}, ${billingAddress.street}${billingAddress.district ? `, ${billingAddress.district}` : ""}`,
-              line_2: billingAddress.complement ?? ""
-            } : undefined
+            billing_address: billingAddress ? toStoneAddress(billingAddress) : undefined
           }
         },
         amount: this.amountInCents
@@ -133,6 +150,18 @@ export class PagarMeThreeDSProvider extends AbstractThreeDSProvider {
               number: p.number
             }]))
           } : {})
+        }
+      } : {}),
+      ...(hasPhysicalItems === true ? {
+        shipping: {
+          recipient_name: customer?.name || card?.holderName,
+          electronic_delivery: false,
+          address: toStoneAddress(billingAddress!)
+        }
+      } : hasPhysicalItems === false ? {
+        shipping: {
+          recipient_name: customer?.name || card?.holderName,
+          electronic_delivery: true
         }
       } : {})
     };
