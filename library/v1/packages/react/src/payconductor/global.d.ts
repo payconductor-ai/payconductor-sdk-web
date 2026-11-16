@@ -1,6 +1,7 @@
 import { PayConductorContextValue } from "./types";
 import { PayConductor3DSSDK } from "./three-ds";
 import { PayConductorTokenizerSDK } from "./tokenizer";
+import { PayConductorShopifyStorefrontSDK } from "./shopify-storefront";
 export interface PayConductor3DSElement {
   container: () => HTMLElement | null;
   show: () => void;
@@ -139,5 +140,11 @@ declare global {
     KrAuthenticate?: KrAuthenticateConstructor;
     PayConductor3DSSDK?: typeof PayConductor3DSSDK;
     PayConductorTokenizerSDK?: typeof PayConductorTokenizerSDK;
+    PayConductorShopifyStorefrontSDK?: typeof PayConductorShopifyStorefrontSDK;
+    Shopify?: {
+      routes?: {
+        root?: string;
+      };
+    };
   }
 }

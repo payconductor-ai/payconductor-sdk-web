@@ -26,6 +26,11 @@ async function main() {
 			entryPoints: ["src/esm/tokenizer.ts"],
 			outfile: `${outdir}/payconductor-tokenizer.js`,
 		}),
+		build({
+			...shared,
+			entryPoints: ["src/esm/shopify-storefront.ts"],
+			outfile: `${outdir}/payconductor-shopify-storefront.js`,
+		}),
 	]);
 
 	console.log("Build complete: dist/");
