@@ -22,4 +22,5 @@ export type {
 	ThreeDSecureOptions,
 } from './payconductor/three-ds';
 export { PayConductorTokenizerSDK } from './payconductor/tokenizer';
+export { PayConductorShopifyStorefrontSDK } from './payconductor/shopify-storefront';
 export { loadScript } from './payconductor/loader';
