@@ -133,10 +133,14 @@ export class PayConductorShopifyStorefrontSDK {
     if (cart.token === pending.cartToken && view.availability.isAvailable) {
       return;
     }
-    if (cart.token === pending.cartToken && view.availability.reason === "exhausted") {
+    const paid = cart.token === pending.cartToken && view.availability.reason === "exhausted";
+    if (paid) {
       await this.cart.clear();
     }
     localStorage.removeItem(ShopifyStorefrontStorageKey.PendingCart);
+    if (paid && cart.items.length > 0) {
+      window.location.reload();
+    }
   }
   private showError(): void {
     const sdk = PayConductorShopifyStorefrontSDK;
