@@ -28,11 +28,17 @@ export class PayConductorTokenizerSDK {
         setting: setting.settings
       });
       await loadScript(provider.scriptUrl);
+
+      // Antes da tokenização: o Mercado Pago só coleta o device id com o security.js já carregado.
+      const fingerprints = await provider.getFingerprints();
       const token = await provider.tokenize();
       return {
         token,
         integrationId: setting.integrationId,
-        providerKey: setting.key
+        providerKey: setting.key,
+        ...(fingerprints ? {
+          fingerprints
+        } : {})
       } satisfies SaveTokensBody;
     }));
     const filtered = results.filter(e => e !== null);
