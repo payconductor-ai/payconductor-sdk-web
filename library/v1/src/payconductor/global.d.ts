@@ -129,6 +129,8 @@ declare global {
 
 	interface Window extends PayConductorWindow {
 		MercadoPago?: MercadoPagoConstructor;
+		/** Device session id coletado pelo security.js do Mercado Pago (`X-meli-session-id`). */
+		MP_DEVICE_SESSION_ID?: string;
 		PagSeguro?: PagSeguroSDK;
 		TDS?: TDSSDK;
 		KrAuthenticate?: KrAuthenticateConstructor;

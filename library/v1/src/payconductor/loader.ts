@@ -1,26 +1,44 @@
 const loaded = new Map<string, Promise<void>>();
 
-export function loadScript(url: string): Promise<void> {
-	const existing = loaded.get(url);
-	if (existing) return existing;
+type LoadScriptOptions = {
+    /** Atributos aplicados à tag antes da inserção (ex: { view: "checkout" }). */
+    attributes?: Record<string, string>;
+    /** Sobrescreve o `async` padrão. */
+    async?: boolean;
+    /** Onde inserir a tag (padrão: document.head). */
+    parent?: HTMLElement;
+};
 
-	const promise = new Promise<void>((resolve, reject) => {
-		if (document.querySelector(`script[src="${url}"]`)) {
-			resolve();
-			return;
-		}
+export function loadScript(
+    url: string,
+    { attributes, async = true, parent }: LoadScriptOptions = {},
+): Promise<void> {
+    const existing = loaded.get(url);
+    if (existing) return existing;
 
-		const script = document.createElement("script");
-		script.src = url;
-		script.async = true;
-		script.onload = () => resolve();
-		script.onerror = () => {
-			loaded.delete(url);
-			reject(new Error(`Failed to load script: ${url}`));
-		};
-		(document.head || document.body).appendChild(script);
-	});
+    const promise = new Promise<void>((resolve, reject) => {
+        if (document.querySelector(`script[src="${url}"]`)) {
+            resolve();
+            return;
+        }
 
-	loaded.set(url, promise);
-	return promise;
+        const script = document.createElement("script");
+        script.src = url;
+        script.async = async;
+
+        // Antes do append: alguns scripts leem os atributos na execução.
+        for (const [name, value] of Object.entries(attributes ?? {})) {
+            script.setAttribute(name, value);
+        }
+
+        script.onload = () => resolve();
+        script.onerror = () => {
+            loaded.delete(url);
+            reject(new Error(`Failed to load script: ${url}`));
+        };
+        (parent ?? document.head).appendChild(script);
+    });
+
+    loaded.set(url, promise);
+    return promise;
 }

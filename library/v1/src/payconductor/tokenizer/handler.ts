@@ -28,12 +28,17 @@ export class PayConductorTokenizerSDK {
 
 				const provider = new ProviderClass({ ...input, setting: setting.settings });
 				await loadScript(provider.scriptUrl);
+
+				// Antes da tokenização: Pois a adquirente geralmente gera o fingerprint antes
+				// e depois utiliza o fingerprint na tokenização.
+				const fingerprints = await provider.getFingerprints();
 				const token = await provider.tokenize();
 
 				return {
 					token,
 					integrationId: setting.integrationId,
 					providerKey: setting.key,
+					...(fingerprints ? { fingerprints } : {}),
 				} satisfies SaveTokensBody;
 			}),
 		);
